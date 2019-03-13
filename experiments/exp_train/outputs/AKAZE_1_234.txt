@@ -1,0 +1,24 @@
+/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/data/_1_SPRING.mov
+/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/data/_2_SUMMER.mov
+/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/data/_3_FALL.mov
+/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/data/_4_WINTER.mov
+mode: AKAZE
+video_frame,good_matches_1in0,all_matches_1in0,good_matches_2in0,all_matches_2in0,good_matches_3in0,all_matches_3in0
+0,126,636,102,624,9,1182
+1,123,618,105,639,6,1234
+2,125,622,108,620,9,1162
+3,100,584,96,613,10,1278
+4,117,592,102,607,13,1268
+5,108,585,101,587,9,1279
+6,111,576,93,572,12,1189
+7,109,591,83,551,6,1273
+8,121,597,124,579,6,1268
+9,114,606,113,583,8,1291
+10,123,607,102,564,7,1224
+11,110,601,87,544,11,1266
+12,110,589,113,571,6,1241
+13,103,584,98,564,8,1204
+14,101,583,99,565,12,1214
+15,96,588,102,555,6,1199
+16,117,585,108,562,10,1246
+17,99,577,100,546,9,1242

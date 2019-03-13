@@ -1,0 +1,17 @@
+/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/data/_1_SPRING.mov
+/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/data/_2_SUMMER.mov
+/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/data/_3_FALL.mov
+/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/data/_4_WINTER.mov
+mode: SIFT
+video_frame,good_matches_1in0,all_matches_1in0,good_matches_2in0,all_matches_2in0,good_matches_3in0,all_matches_3in0
+0,152,1328,113,1400,22,2313
+1,137,1349,100,1412,20,2352
+2,143,1341,113,1369,16,2231
+3,133,1200,117,1321,17,2421
+4,153,1269,110,1368,25,2331
+5,136,1304,124,1371,20,2456
+6,143,1243,120,1329,12,2205
+7,148,1308,122,1270,25,2508
+8,128,1323,106,1274,23,2380
+9,143,1324,106,1261,27,2528
+10,154,1287,105,1145,19,2367
