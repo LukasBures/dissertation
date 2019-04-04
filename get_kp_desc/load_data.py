@@ -2,7 +2,9 @@
 
 import pickle
 
-path = "/home/lukas/PycharmProjects/Dissertation/data/results/get_kp_desc/spring/surf_descs_10.pickle"
+# path = "/home/lukas/PycharmProjects/Dissertation/data/results/get_kp_desc/spring/surf_descs_10.pickle"
+path = "/home/lukas/PycharmProjects/Dissertation/data/results/get_kp_desc/spring/akaze_frames_3578.pickle"
+
 
 output = open(path, "rb")
 data = pickle.load(output)

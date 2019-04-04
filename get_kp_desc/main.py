@@ -12,7 +12,7 @@ fall_video_path = "/data3/nordlandsbanen.fall.sync.1920x1080.h264.nrk.mp4"
 winter_video_path = "/data4/nordlandsbanen.winter.sync.1920x1080.h264.nrk.mp4"
 seasons_video_paths = [spring_video_path, summer_video_path, fall_video_path, winter_video_path]
 season_names = ["spring", "summer", "fall", "winter"]
-methods = ["surf", "sift", "kaze", "akaze", "orb", "brisk"]
+methods = ["orb", "brisk", "surf", "sift", "kaze", "akaze"]
 root_folder = "../data/results/get_kp_desc"
 
 
@@ -32,7 +32,7 @@ def worker(data):
     elif method == "akaze":
         detector = cv2.AKAZE_create()
     elif method == "orb":
-        detector = cv2.ORB()
+        detector = cv2.ORB_create()
     elif method == "brisk":
         detector = cv2.BRISK_create()
 
@@ -45,8 +45,9 @@ def worker(data):
         all_descs = []
         frame_idx = 1
         frame_offset = 50
-        step = 1000
+        step = 250
         total_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        used_frames = []
 
         while cap.isOpened():
             current_frame = ((frame_idx - 1) * step) + frame_offset
@@ -55,27 +56,29 @@ def worker(data):
             else:
                 cap.set(cv2.CAP_PROP_POS_FRAMES, current_frame)
                 ret, frame = cap.read()
-                cv2.imshow(mp.current_process().name, frame)
-                cv2.waitKey(1)
+                # cv2.imshow(mp.current_process().name, frame)
+                # cv2.waitKey(1)
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 kps, descs = detector.detectAndCompute(gray, None)
                 all_kps.append(kps)
                 all_descs.append(descs)
+                used_frames.append(current_frame)
+                end_time = time.monotonic()
                 if frame_idx % 1000 == 0:
-                    end_time = time.monotonic()
                     save_data.save_desc(all_descs, "{0}/{1}/{2}_descs_{3}.pickle".format(root_folder, season, method, frame_idx))
                     save_data.save_kp(all_kps, "{0}/{1}/{2}_kps_{3}.pickle".format(root_folder, season, method, frame_idx))
                     all_kps = []
                     all_descs = []
-                elif (frame_idx - frame_offset) % 50000 == 0:
-                    print("{0} update: method {1: <5}, season {2: <6}, frame {3: <7}, time {4}".format(mp.current_process().name, method, season, frame_idx, timedelta(seconds=end_time - start_time)))
+                elif (frame_idx - frame_offset) % 100 == 0:
+                    print("{0} update: method {1}, season {2}, frame {3}, time {4}".format(mp.current_process().name, method, season, frame_idx, timedelta(seconds=end_time - start_time)))
             frame_idx += 1
 
         save_data.save_desc(all_descs, "{0}/{1}/{2}_descs_{3}.pickle".format(root_folder, season, method, frame_idx))
         save_data.save_kp(all_kps, "{0}/{1}/{2}_kps_{3}.pickle".format(root_folder, season, method, frame_idx))
+        save_data.save_frame_numbers(used_frames, "{0}/{1}/{2}_frames_{3}.pickle".format(root_folder, season, method, frame_idx))
 
         end_time = time.monotonic()
-        print("{0} update: method {1: <5}, season {2: <6}, frame {3: <7}, time {4}".format(mp.current_process().name, method, season, frame_idx, timedelta(seconds=end_time - start_time)))
+        print("{0} update: method {1}, season {2}, frame {3}, time {4}".format(mp.current_process().name, method, season, frame_idx, timedelta(seconds=end_time - start_time)))
 
 
 def generate_combinations(methods, seasons, video_paths):
