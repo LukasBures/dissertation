@@ -43,10 +43,12 @@ def worker(data):
         cap = cv2.VideoCapture(file_path)
         all_kps = []
         all_descs = []
+
         frame_idx = 1
         frame_offset = 50
         step = 250
-        total_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        current_frame = ((frame_idx - 1) * step) + frame_offset
         used_frames = []
 
         while cap.isOpened():
@@ -58,27 +60,26 @@ def worker(data):
                 ret, frame = cap.read()
                 # cv2.imshow(mp.current_process().name, frame)
                 # cv2.waitKey(1)
+                # if ret:
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 kps, descs = detector.detectAndCompute(gray, None)
+
                 all_kps.append(kps)
                 all_descs.append(descs)
                 used_frames.append(current_frame)
+
                 end_time = time.monotonic()
-                if frame_idx % 1000 == 0:
-                    save_data.save_desc(all_descs, "{0}/{1}/{2}_descs_{3}.pickle".format(root_folder, season, method, frame_idx))
-                    save_data.save_kp(all_kps, "{0}/{1}/{2}_kps_{3}.pickle".format(root_folder, season, method, frame_idx))
-                    all_kps = []
-                    all_descs = []
-                elif (frame_idx - frame_offset) % 100 == 0:
-                    print("{0} update: method {1}, season {2}, frame {3}, time {4}".format(mp.current_process().name, method, season, frame_idx, timedelta(seconds=end_time - start_time)))
-            frame_idx += 1
+
+                print("{0} update: method {1}, season {2}, frame {3} - {4}/{5}, time {6}".format(mp.current_process().name, method, season, frame_idx, current_frame, total_frames, timedelta(seconds=end_time - start_time)))
+                frame_idx += 1
 
         save_data.save_desc(all_descs, "{0}/{1}/{2}_descs_{3}.pickle".format(root_folder, season, method, frame_idx))
         save_data.save_kp(all_kps, "{0}/{1}/{2}_kps_{3}.pickle".format(root_folder, season, method, frame_idx))
         save_data.save_frame_numbers(used_frames, "{0}/{1}/{2}_frames_{3}.pickle".format(root_folder, season, method, frame_idx))
 
+
         end_time = time.monotonic()
-        print("{0} update: method {1}, season {2}, frame {3}, time {4}".format(mp.current_process().name, method, season, frame_idx, timedelta(seconds=end_time - start_time)))
+        print("{0} update: method {1}, season {2}, frame {3} - {4}/{5}, time {6}".format(mp.current_process().name, method, season, frame_idx, current_frame, total_frames, timedelta(seconds=end_time - start_time)))
 
 
 def generate_combinations(methods, seasons, video_paths):
@@ -91,7 +92,7 @@ def generate_combinations(methods, seasons, video_paths):
 
 if __name__ == '__main__':
     combinations = generate_combinations(methods, season_names, seasons_video_paths)
-    pool = mp.Pool(processes=2)
+    pool = mp.Pool(processes=1)
     pool.map(worker, combinations)
 
 
