@@ -6,7 +6,15 @@ import re
 import os
 import multiprocessing as mp
 # path = "/home/lukas/PycharmProjects/Dissertation/data/results/get_kp_desc/spring/surf_descs_10.pickle"
-path = "/home/lukas/PycharmProjects/Dissertation/data/results/get_kp_desc/spring/akaze_kps_3578.pickle"
+path = "/_my/data/results/get_kp_desc/spring/akaze_kps_3578.pickle"
+
+
+
+def load_kp_desc(path, method):
+    # temp_feature = cv2.KeyPoint(x=point[0][0], y=point[0][1], _size=point[1], _angle=point[2], _response=point[3], _octave=point[4], _class_id=point[5])
+    # temp_descriptor = point[6]
+    return 0
+
 
 
 def load_all_descs(path, method):
@@ -25,8 +33,8 @@ def load_all_descs(path, method):
     return data
 
 
-output = open(path, "rb")
-data = pickle.load(output)
-output.close()
+#output = open(path, "rb")
+#data = pickle.load(output)
+#output.close()
 
-print(data)
+#print(data)

@@ -2,9 +2,9 @@
 
 import multiprocessing as mp
 import time
-from datetime import timedelta
 import cv2
 import load_data
+
 
 season_names = ["spring", "summer", "fall", "winter"]
 methods = ["orb", "brisk", "surf", "sift", "kaze", "akaze"]

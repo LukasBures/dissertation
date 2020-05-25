@@ -52,6 +52,7 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
-data/
-experiments/exp_train/data/
-
+*.pyc
+__pycache__/
+_my/datasets/
+_my/experiments/exp_train/data/
