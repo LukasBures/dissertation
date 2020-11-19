@@ -54,5 +54,7 @@ fabric.properties
 
 *.pyc
 __pycache__/
-_my/datasets/
+datasets/
 _my/experiments/exp_train/data/
+
+*.h5

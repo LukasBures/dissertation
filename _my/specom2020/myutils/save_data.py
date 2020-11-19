@@ -3,6 +3,12 @@
 import pickle
 
 
+def save(data, path):
+    pickle_out = open(path, "wb")
+    pickle.dump(data, pickle_out)
+    pickle_out.close()
+
+
 def save_kp_desc(data, path):
     pickle_out = open(path, "wb")
     pickle.dump(data, pickle_out)
@@ -25,4 +31,3 @@ def save_frame_numbers(frame_numbers, path):
     pickle_out = open(path, "wb")
     pickle.dump(frame_numbers, pickle_out)
     pickle_out.close()
-

@@ -10,9 +10,18 @@
       <sourceFolder url="file://$MODULE_DIR$/_my/specom2020/imlib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/_my/specom2020/pylib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/_my/specom2020/tf2lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/_my/specom2020/SuperGlue" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/_my/_dissertation/hfnet" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/_my/_dissertation/r2d2" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Hierarchical-Localization" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Hierarchical-Localization/third_party" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Hierarchical-Localization/third_party/d2net" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Hierarchical-Localization/third_party/SuperGluePretrainedNetwork" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/_my/_dissertation/hfnet/venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/venvDissertation" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.7 (Dissertation)" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">

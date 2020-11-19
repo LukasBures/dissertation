@@ -1,9 +1,12 @@
 #!/usr/bin/env python
-# import multiprocessing as mp
 import time
 from datetime import timedelta
 import cv2
 import myutils
+import torch
+from SuperGlue.models import superpoint
+from SuperGlue.models.utils import frame2tensor
+import multiprocessing as mp
 
 spring_video_path = "/data1/nordlandsbanen.spring.sync.1920x1080.h264.nrk.mp4"
 summer_video_path = "/data2/nordlandsbanen.summer.sync.1920x1080.h264.nrk.mp4"
@@ -11,7 +14,9 @@ fall_video_path = "/data3/nordlandsbanen.fall.sync.1920x1080.h264.nrk.mp4"
 winter_video_path = "/data4/nordlandsbanen.winter.sync.1920x1080.h264.nrk.mp4"
 seasons_video_paths = [spring_video_path, summer_video_path, fall_video_path, winter_video_path]
 season_names = ["spring", "summer", "fall", "winter"]
-methods = ["orb", "brisk", "surf", "sift", "kaze", "akaze"]
+methods = ["akaze", "surf", "sift"]
+# methods = ["superpoint"]
+
 root_folder = "../datasets/results/specom2020"
 
 
@@ -34,6 +39,18 @@ def worker(data):
         detector = cv2.ORB_create()
     elif method == "brisk":
         detector = cv2.BRISK_create()
+    elif method == "superpoint":
+        # device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        device = "cpu"
+        print('Running inference on device \"{}\"'.format(device))
+        config = {
+            'superpoint': {
+                'nms_radius': 4,
+                'keypoint_threshold': 0.005,
+                'max_keypoints': -1
+            }
+        }
+        detector = superpoint.SuperPoint(config.get('superpoint', {})).eval().to(device)
 
     if not detector:
         # print("{0} unknown method: method {1}, season {2}, exiting ...".format(mp.current_process().name, method, season))
@@ -71,19 +88,26 @@ def worker(data):
 
                 # print(frame_resized.shape[:2])
                 # cv2.imshow("frame", frame)
-                # cv2.imshow(mp.current_process().name + " resized", frame_resized)
-                # cv2.waitKey(1)
+                # cv2.imshow("resized", frame_resized)
+                # cv2.waitKey(0)
                 # if ret:
 
                 gray = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2GRAY)
-                kps, descs = detector.detectAndCompute(gray, None)
+                if method == "superpoint":
+                    frame_tensor = frame2tensor(gray, device)
+                    data_kp_desc = detector.forward({'image': frame_tensor})
+                    del frame_tensor
+                    # kps = data["keypoints"]
+                    # descs = data["descriptors"]
 
-                data_kp_desc = []
-                if len(kps) > 0:
-                    for kp, desc in zip(kps, descs):
-                        data_kp_desc.append([kp.pt, kp.size, kp.angle, kp.response, kp.octave, kp.class_id, desc])
                 else:
-                    data_kp_desc.append([])
+                    kps, descs = detector.detectAndCompute(gray, None)
+                    data_kp_desc = []
+                    if len(kps) > 0:
+                        for kp, desc in zip(kps, descs):
+                            data_kp_desc.append([kp.pt, kp.size, kp.angle, kp.response, kp.octave, kp.class_id, desc])
+                    else:
+                        data_kp_desc.append([])
 
                 all_kp_desc.append(data_kp_desc)
                 used_frames.append(current_frame)
@@ -110,9 +134,10 @@ def generate_combinations(methods, seasons, video_paths):
 
 if __name__ == '__main__':
     combinations = generate_combinations(methods, season_names, seasons_video_paths)
-    # pool = mp.Pool(processes=1)
-    # pool.map(worker, combinations)
-    for combination in combinations:
-        worker(combination)
+    # for combination in combinations:
+    #     worker(combination)
 
+    pool = mp.Pool()
+    pool.map(worker, combinations)
 
+    # worker(["akaze", "summer", seasons_video_paths[1]])

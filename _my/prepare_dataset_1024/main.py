@@ -1,9 +1,9 @@
 import cv2
 
-video_path = "../datasets/nordlandsbanen/"
+video_path = "../../datasets/nordlandsbanen/"
 video_paths = [video_path + "spring.mp4", video_path + "summer.mp4", video_path + "fall.mp4", video_path + "winter.mp4"]
 seasons = ["spring", "summer", "fall", "winter"]
-output_path = "../datasets/nordlandsbanen_imgs"
+output_path = "../../datasets/nordlandsbanen_imgs"
 
 VISUALIZE = False
 

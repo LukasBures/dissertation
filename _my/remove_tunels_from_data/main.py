@@ -5,7 +5,7 @@ import fnmatch
 
 # seasons = ["spring", "summer", "fall", "winter"]
 seasons = ["winter"]
-data_path = "../datasets/nordlandsbanen_imgs/"
+data_path = "../../datasets/nordlandsbanen_imgs/"
 
 
 # tunnel_data_path = "../datasets/nordlandsbanen_imgs/tunnels/"
@@ -13,7 +13,7 @@ data_path = "../datasets/nordlandsbanen_imgs/"
 
 def th_filter():
     seasons = ["winter"]
-    data_path = "../datasets/nordlandsbanen_imgs/"
+    data_path = "../../datasets/nordlandsbanen_imgs/"
 
     for s in seasons:
         data = list()
@@ -51,7 +51,7 @@ def th_filter():
 
 def numbers_filter():
     seasons = ["winter"]
-    data_path = "../datasets/nordlandsbanen_imgs/"
+    data_path = "../../datasets/nordlandsbanen_imgs/"
     img_numbers = ["004000.jpg",
                    "004089.jpg",
                    "004178.jpg",

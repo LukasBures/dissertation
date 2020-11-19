@@ -5,7 +5,7 @@ import fnmatch
 from datetime import date
 import os
 
-data_path = "../datasets/nordlandsbanen_imgs/"
+data_path = "../../datasets/nordlandsbanen_imgs/"
 seasons = ["spring", "summer", "fall", "winter"]
 split = "split3"
 out_path = "../datasets/nordlandsbanen_imgs/" + split
