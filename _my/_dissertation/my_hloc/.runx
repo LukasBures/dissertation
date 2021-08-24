@@ -1,0 +1,19 @@
+# The log root directory:
+LOGROOT: logs
+
+# Code to ignore for copy
+CODE_IGNORE_PATTERNS: '*.pth,*.pyc,scripts,docs*,test*,.git,*__pycache__,runx,logs'
+
+# This is field optional. For the purpose of altering the default PYTHONPATH which is simply LOGDIR/code.
+# Can be a colon-separated list of paths. May include LOGDIR special variable.
+# PYTHONPATH: LOGDIR/code
+
+# Farm-specific items:
+FARM: raider
+
+raider:
+    SUBMIT_CMD: 'submit_job'
+    RESOURCES:
+        gpu: 2
+        cpu: 10
+        mem: 80
