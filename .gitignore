@@ -1,4 +1,21 @@
 
+/_my/dissertation/my_hloc/logs
+
+/visuallocalizationbenchmark
+/r2d2
+/PyTorch-Encoding
+/pytorch-CycleGAN-and-pix2pix
+/pycolmap
+/NetVLAD-pytorch
+/NetVlad
+/DCGAN-LSGAN-WGAN-GP-DRAGAN
+/d2-net
+/CycleGAN
+/cvf_paper_downloader
+/colmap
+/ceres-solver
+/apex
+
 /.venv/
 /datasets/
 /_my/experiments/exp_train/data/
