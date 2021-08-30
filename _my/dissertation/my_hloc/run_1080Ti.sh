@@ -1,7 +1,7 @@
 # python -m runx.runx scripts/aachen.yml -i -n
 
 # activate venv
-source /home/lukas/PycharmProjects/Dissertation/venvDissertation/bin/activate
+source /home/lukas/PycharmProjects/Dissertation/.venv/bin/activate
 
 selected_gpu=0
 root_folder=/media/lukas/WD_2TB/dissertation

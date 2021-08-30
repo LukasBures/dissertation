@@ -2,7 +2,7 @@
 # python -m runx.runx scripts/aachen.yml -i -n
 
 # activate venv
-source /home/lukas/PycharmProjects/Dissertation/venvDissertation/bin/activate
+source /home/lukas/PycharmProjects/Dissertation/.venv/bin/activate
 
 selected_gpu=1
 project_folder=/home/lukas/PycharmProjects/Dissertation/_my/_dissertation/my_hloc
