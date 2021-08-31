@@ -17,7 +17,6 @@
 /apex
 
 /.venv/
-/datasets/
 /_my/experiments/exp_train/data/
 *.h5
 *.pth
