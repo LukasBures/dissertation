@@ -18,7 +18,7 @@ aachen_outputs_folder=results
 # EXPERIMENTS
 # -----------------------------------------------------------------------------
 retrieval_conf="netvlad"
-feature_conf="superpoint_aachen"
+feature_conf="superpoint_max"
 matcher_conf="superglue"
 num_covis=20
 num_loc=50

@@ -18,3 +18,9 @@
 ```console
     cd /media/lukas/WD_2TB
 ```
+
+### Restart GUI from SSH terminal
+Test it!
+```console
+    gnome-shell --replace
+```
