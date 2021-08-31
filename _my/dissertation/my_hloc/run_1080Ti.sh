@@ -1,18 +1,18 @@
 # activate venv
-source /home/lukas/PycharmProjects/Dissertation/.venv/bin/activate
+source /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
 
 # Global settings
 selected_gpu=0
 output_root_folder=/media/lukas/WD_2TB/dissertation
-project_folder=/home/lukas/PycharmProjects/Dissertation/_my/dissertation/my_hloc
+project_folder=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc
 this_file_name=run_1080Ti.sh
 cd "$project_folder" || exit 1
 
 # Aachen dataset settings
 used_dataset="aachen"
 dataset_folder=/data512/datasets/aachen/
-pipeline=/home/lukas/PycharmProjects/Dissertation/_my/dissertation/my_hloc/pipelines/Aachen/pipeline.py
-configs=/home/lukas/PycharmProjects/Dissertation/_my/dissertation/my_hloc/configs/Aachen/configs.py
+pipeline=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen/pipeline.py
+configs=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/configs/Aachen/configs.py
 aachen_outputs_folder=results
 
 # EXPERIMENTS
