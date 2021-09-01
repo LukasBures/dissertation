@@ -28,7 +28,7 @@ cp $pipeline "$output_root_folder"/"$folder_name"/code
 cp $configs "$output_root_folder"/"$folder_name"/code
 cp $this_file_name "$output_root_folder"/"$folder_name"/code
 cd "$output_root_folder"/"$folder_name"/ || exit 1
-python "$output_root_folder"/"$folder_name"/code/pipeline.py --dataset $dataset_folder --outputs $aachen_outputs_folder --num_covis $num_covis --num_loc $num_loc --retrieval_conf $retrieval_conf --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu 2>&1 | tee mylog.log
+time python "$output_root_folder"/"$folder_name"/code/pipeline.py --dataset $dataset_folder --outputs $aachen_outputs_folder --num_covis $num_covis --num_loc $num_loc --retrieval_conf $retrieval_conf --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu 2>&1 | tee mylog.log
 cd "$project_folder" || exit 1
 
 
