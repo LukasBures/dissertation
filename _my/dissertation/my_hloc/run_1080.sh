@@ -12,7 +12,7 @@ cd "$project_folder" || exit 1
 used_dataset="aachen_v1_1"
 dataset_folder=/data512/datasets/aachen_v1_1/
 pipeline=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen_v1_1/pipeline.py
-configs=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/configs/Aachen_v1_1/configs.py
+configs=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen_v1_1/configs.py
 aachen_outputs_folder=results
 
 # EXPERIMENTS
