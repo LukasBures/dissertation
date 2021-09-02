@@ -6,10 +6,9 @@ import numpy as np
 from pathlib import Path
 import logging
 
-from ...colmap_from_nvm import (
-    recover_database_images_and_ids, camera_center_to_translation)
-from ...utils.read_write_model import Camera, Image, Point3D, CAMERA_MODEL_IDS
-from ...utils.read_write_model import write_model
+from hloc.colmap_from_nvm import (recover_database_images_and_ids, camera_center_to_translation)
+from hloc.utils.read_write_model import Camera, Image, Point3D, CAMERA_MODEL_IDS
+from hloc.utils.read_write_model import write_model
 
 
 def read_nvm_model(
@@ -18,7 +17,7 @@ def read_nvm_model(
     # Extract the intrinsics from the db file instead of the NVM model
     db = sqlite3.connect(str(database_path))
     ret = db.execute(
-        'SELECT camera_id, model, width, height, params FROM cameras;')
+        "SELECT camera_id, model, width, height, params FROM cameras;")
     cameras = {}
     for camera_id, camera_model, width, height, params in ret:
         params = np.fromstring(params, dtype=np.double).reshape(-1)
@@ -29,46 +28,46 @@ def read_nvm_model(
             width=int(width), height=int(height), params=params)
         cameras[camera_id] = camera
 
-    nvm_f = open(nvm_path, 'r')
+    nvm_f = open(nvm_path, "r")
     line = nvm_f.readline()
-    while line == '\n' or line.startswith('NVM_V3'):
+    while line == "\n" or line.startswith("NVM_V3"):
         line = nvm_f.readline()
     num_images = int(line)
     # assert num_images == len(cameras), (num_images, len(cameras))
 
-    logging.info(f'Reading {num_images} images...')
+    logging.info(f"Reading {num_images} images...")
     image_idx_to_db_image_id = []
     image_data = []
     i = 0
     while i < num_images:
         line = nvm_f.readline()
-        if line == '\n':
+        if line == "\n":
             continue
-        data = line.strip('\n').lstrip('./').split(' ')
+        data = line.strip("\n").lstrip("./").split(" ")
         image_data.append(data)
         image_idx_to_db_image_id.append(image_ids[data[0]])
         i += 1
 
     line = nvm_f.readline()
-    while line == '\n':
+    while line == "\n":
         line = nvm_f.readline()
     num_points = int(line)
 
     if skip_points:
-        logging.info(f'Skipping {num_points} points.')
+        logging.info(f"Skipping {num_points} points.")
         num_points = 0
     else:
-        logging.info(f'Reading {num_points} points...')
+        logging.info(f"Reading {num_points} points...")
     points3D = {}
     image_idx_to_keypoints = defaultdict(list)
     i = 0
-    pbar = tqdm(total=num_points, unit='pts')
+    pbar = tqdm(total=num_points, unit="pts")
     while i < num_points:
         line = nvm_f.readline()
-        if line == '\n':
+        if line == "\n":
             continue
 
-        data = line.strip('\n').split(' ')
+        data = line.strip("\n").split(" ")
         x, y, z, r, g, b, num_observations = data[:7]
         obs_image_ids, point2D_idxs = [], []
         for j in range(int(num_observations)):
@@ -93,7 +92,7 @@ def read_nvm_model(
         pbar.update(1)
     pbar.close()
 
-    logging.info('Parsing image data...')
+    logging.info("Parsing image data...")
     images = {}
     for i, data in enumerate(image_data):
         # Skip the focal length. Skip the distortion and terminal 0.
@@ -124,7 +123,7 @@ def read_nvm_model(
             qvec=qvec,
             tvec=t,
             camera_id=camera_ids[name],
-            name=name.replace('png', 'jpg'),  # some hack required for RobotCar
+            name=name.replace("png", "jpg"),  # some hack required for RobotCar
             xys=xys,
             point3D_ids=point3D_ids)
         images[image_id] = image
@@ -138,22 +137,22 @@ def main(nvm, database, output, skip_points=False):
 
     image_ids, camera_ids = recover_database_images_and_ids(database)
 
-    logging.info('Reading the NVM model...')
+    logging.info("Reading the NVM model...")
     model = read_nvm_model(
         nvm, database, image_ids, camera_ids, skip_points=skip_points)
 
-    logging.info('Writing the COLMAP model...')
+    logging.info("Writing the COLMAP model...")
     output.mkdir(exist_ok=True, parents=True)
-    write_model(*model, path=str(output), ext='.bin')
-    logging.info('Done.')
+    write_model(*model, path=str(output), ext=".bin")
+    logging.info("Done.")
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--nvm', required=True, type=Path)
-    parser.add_argument('--database', required=True, type=Path)
-    parser.add_argument('--output', required=True, type=Path)
-    parser.add_argument('--skip_points', action='store_true')
-    args = parser.parse_args()
-    main(**args.__dict__)
+# if __name__ == "__main__":
+parser = argparse.ArgumentParser()
+parser.add_argument("--nvm", required=True, type=Path)
+parser.add_argument("--database", required=True, type=Path)
+parser.add_argument("--output", required=True, type=Path)
+parser.add_argument("--skip_points", action="store_true")
+args = parser.parse_args()
+main(**args.__dict__)
 
