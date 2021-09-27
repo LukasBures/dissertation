@@ -8,10 +8,10 @@ import sys
 
 from hloc import extract_features, match_features, localize_sfm
 from hloc import pairs_from_poses, triangulation
-from .utils import get_timestamps, delete_unused_images
-from .utils import build_empty_colmap_model
-from .utils import generate_query_lists, generate_localization_pairs
-from .utils import prepare_submission, evaluate_submission
+from utils import get_timestamps, delete_unused_images
+from utils import build_empty_colmap_model
+from utils import generate_query_lists, generate_localization_pairs
+from utils import prepare_submission, evaluate_submission
 from configs import feature_configs, matcher_configs
 
 relocalization_files = {
