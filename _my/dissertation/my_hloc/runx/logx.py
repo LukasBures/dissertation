@@ -27,17 +27,15 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-from collections import defaultdict
-from contextlib import contextmanager
-from shutil import copyfile
-
 import csv
 import os
 import re
 import shlex
 import subprocess
 import time
-
+from collections import defaultdict
+from contextlib import contextmanager
+from shutil import copyfile
 
 try:
     from torch.utils.tensorboard import SummaryWriter
@@ -47,12 +45,10 @@ except ModuleNotFoundError:
 import torch
 
 try:
-    from .utils import (get_logroot, save_hparams, trn_names, val_names,
-                        ConditionalProxy)
+    from .utils import ConditionalProxy, get_logroot, save_hparams, trn_names, val_names
 except ImportError:
     # This is to allow the unit tests to run properly
-    from utils import (get_logroot, save_hparams, trn_names, val_names,
-                       ConditionalProxy)
+    from utils import ConditionalProxy, get_logroot, save_hparams, trn_names, val_names
 
 
 def is_list(x):
@@ -60,15 +56,15 @@ def is_list(x):
 
 
 def get_gpu_utilization_pct():
-    '''
+    """
     Use nvidia-smi to capture the GPU utilization, which is reported as an
     integer in range 0-100.
-    '''
+    """
     util = subprocess.check_output(
-        shlex.split('nvidia-smi --query-gpu="utilization.gpu" '
-                    '--format=csv,noheader,nounits -i 0'))
-    util = util.decode('utf-8')
-    util = util.replace('\n', '')
+        shlex.split('nvidia-smi --query-gpu="utilization.gpu" ' "--format=csv,noheader,nounits -i 0")
+    )
+    util = util.decode("utf-8")
+    util = util.replace("\n", "")
     return int(util)
 
 
@@ -76,10 +72,17 @@ class LogX(object):
     def __init__(self, rank=0):
         self.initialized = False
 
-    def initialize(self, logdir=None, coolname=False, hparams=None,
-                   tensorboard=False, no_timestamp=False, global_rank=0,
-                   eager_flush=True):
-        '''
+    def initialize(
+        self,
+        logdir=None,
+        coolname=False,
+        hparams=None,
+        tensorboard=False,
+        no_timestamp=False,
+        global_rank=0,
+        eager_flush=True,
+    ):
+        """
         Initialize logx
 
         inputs
@@ -92,8 +95,8 @@ class LogX(object):
         - hparams - only use if not launching jobs with runx, which also saves
           the hparams.
         - eager_flush - call `flush` after every tensorboard write
-        '''
-        self.rank0 = (global_rank == 0)
+        """
+        self.rank0 = global_rank == 0
         self.initialized = True
 
         if logdir is not None:
@@ -102,9 +105,10 @@ class LogX(object):
             logroot = get_logroot()
             if coolname:
                 from coolname import generate_slug
+
                 self.logdir = os.path.join(logroot, generate_slug(2))
             else:
-                self.logdir = os.path.join(logroot, 'default')
+                self.logdir = os.path.join(logroot, "default")
 
         # confirm target log directory exists
         if not os.path.isdir(self.logdir):
@@ -115,8 +119,7 @@ class LogX(object):
 
         # Tensorboard file
         if self.rank0 and tensorboard:
-            self.tb_writer = SummaryWriter(log_dir=self.logdir,
-                                           flush_secs=1)
+            self.tb_writer = SummaryWriter(log_dir=self.logdir, flush_secs=1)
         else:
             self.tb_writer = None
 
@@ -137,39 +140,39 @@ class LogX(object):
             return
 
         # Metrics file
-        metrics_fn = os.path.join(self.logdir, 'metrics.csv')
-        self.metrics_fp = open(metrics_fn, mode='a+')
-        self.metrics_writer = csv.writer(self.metrics_fp, delimiter=',')
+        metrics_fn = os.path.join(self.logdir, "metrics.csv")
+        self.metrics_fp = open(metrics_fn, mode="a+")
+        self.metrics_writer = csv.writer(self.metrics_fp, delimiter=",")
 
         # Log file
-        log_fn = os.path.join(self.logdir, 'logging.log')
-        self.log_file = open(log_fn, mode='a+')
+        log_fn = os.path.join(self.logdir, "logging.log")
+        self.log_file = open(log_fn, mode="a+")
 
         # save metric
         self.save_metric = None
         self.best_metric = None
-        self.save_ckpt_fn = ''
+        self.save_ckpt_fn = ""
         # Find the existing best checkpoint, and update `best_metric`,
         # if available
-        self.best_ckpt_fn = self.get_best_checkpoint() or ''
+        self.best_ckpt_fn = self.get_best_checkpoint() or ""
         if self.best_ckpt_fn:
-            best_chk = torch.load(self.best_ckpt_fn, map_location='cpu')
-            self.best_metric = best_chk.get('__metric', None)
+            best_chk = torch.load(self.best_ckpt_fn, map_location="cpu")
+            self.best_metric = best_chk.get("__metric", None)
         self.epoch = defaultdict(lambda: 0)
         self.no_timestamp = no_timestamp
 
         # Initial timestamp, so that epoch time calculation is correct
-        phase = 'start'
+        phase = "start"
         csv_line = [phase]
 
         # add epoch/iter
-        csv_line.append('{}/step'.format(phase))
+        csv_line.append("{}/step".format(phase))
         csv_line.append(0)
 
         # add timestamp
         if not self.no_timestamp:
             # this feature is useful for testing
-            csv_line.append('timestamp')
+            csv_line.append("timestamp")
             csv_line.append(time.time())
 
         self.metrics_writer.writerow(csv_line)
@@ -181,26 +184,26 @@ class LogX(object):
             self.log_file.close()
 
     def msg(self, msg):
-        '''
+        """
         Print out message to std and to a logfile
-        '''
+        """
         if not self.rank0:
             return
 
         print(msg)
-        self.log_file.write(msg + '\n')
+        self.log_file.write(msg + "\n")
         self.log_file.flush()
 
     def add_image(self, path, img, step=None):
-        '''
+        """
         Write an image to the tensorboard file
-        '''
+        """
         self.tensorboard.add_image(path, img, step)
 
     def add_scalar(self, name, val, idx):
-        '''
+        """
         Write a scalar to the tensorboard file
-        '''
+        """
         self.tensorboard.add_scalar(name, val, idx)
 
     def _flush_tensorboard(self):
@@ -231,12 +234,11 @@ class LogX(object):
 
         # define canonical phase
         if phase in trn_names:
-            canonical_phase = 'train'
+            canonical_phase = "train"
         elif phase in val_names:
-            canonical_phase = 'val'
+            canonical_phase = "val"
         else:
-            raise('expected phase to be one of {} {}'.format(str(val_names,
-                                                                 trn_names)))
+            raise ("expected phase to be one of {} {}".format(str(val_names, trn_names)))
 
         if epoch is not None:
             self.epoch[canonical_phase] = epoch
@@ -248,25 +250,24 @@ class LogX(object):
             csv_line.append(v)
 
         # add epoch/iter
-        csv_line.append('epoch')
+        csv_line.append("epoch")
         csv_line.append(self.epoch[canonical_phase])
 
         # add timestamp
         if not self.no_timestamp:
             # this feature is useful for testing
-            csv_line.append('timestamp')
+            csv_line.append("timestamp")
             csv_line.append(time.time())
 
         # To save a bit of disk space, only save validation metrics
-        if canonical_phase == 'val':
+        if canonical_phase == "val":
             self.metrics_writer.writerow(csv_line)
             self.metrics_fp.flush()
 
         # Write updates to tensorboard file
         with self.suspend_flush():
             for k, v in metrics.items():
-                self.add_scalar('{}/{}'.format(phase, k), v,
-                                self.epoch[canonical_phase])
+                self.add_scalar("{}/{}".format(phase, k), v, self.epoch[canonical_phase])
 
         # if no step, then keep track of it automatically
         if epoch is None:
@@ -274,12 +275,15 @@ class LogX(object):
 
     @staticmethod
     def is_better(save_metric, best_metric, higher_better):
-        return best_metric is None or \
-            higher_better and (save_metric > best_metric) or \
-            not higher_better and (save_metric < best_metric)
+        return (
+            best_metric is None
+            or higher_better
+            and (save_metric > best_metric)
+            or not higher_better
+            and (save_metric < best_metric)
+        )
 
-    def save_model(self, save_dict, metric, epoch, higher_better=True,
-                   delete_old=True):
+    def save_model(self, save_dict, metric, epoch, higher_better=True, delete_old=True):
         """Saves a model to disk. Keeps a separate copy of latest and best models.
 
         Arguments:
@@ -296,23 +300,20 @@ class LogX(object):
         if not self.rank0:
             return
 
-        save_dict['__metric'] = metric
+        save_dict["__metric"] = metric
 
         if os.path.exists(self.save_ckpt_fn) and delete_old:
             os.remove(self.save_ckpt_fn)
         # Save out current model
-        self.save_ckpt_fn = os.path.join(
-            self.logdir, 'last_checkpoint_ep{}.pth'.format(epoch))
+        self.save_ckpt_fn = os.path.join(self.logdir, "last_checkpoint_ep{}.pth".format(epoch))
         torch.save(save_dict, self.save_ckpt_fn)
         self.save_metric = metric
 
-        is_better = self.is_better(self.save_metric, self.best_metric,
-                                   higher_better)
+        is_better = self.is_better(self.save_metric, self.best_metric, higher_better)
         if is_better:
             if os.path.exists(self.best_ckpt_fn):
                 os.remove(self.best_ckpt_fn)
-            self.best_ckpt_fn = os.path.join(
-                self.logdir, 'best_checkpoint_ep{}.pth'.format(epoch))
+            self.best_ckpt_fn = os.path.join(self.logdir, "best_checkpoint_ep{}.pth".format(epoch))
             self.best_metric = self.save_metric
             copyfile(self.save_ckpt_fn, self.best_ckpt_fn)
         return is_better
@@ -328,7 +329,7 @@ class LogX(object):
             None - If there is no best checkpoint file
             path (str) - The full path to the best checkpoint otherwise.
         """
-        match_str = r'^best_checkpoint_ep([0-9]+).pth$'
+        match_str = r"^best_checkpoint_ep([0-9]+).pth$"
         best_epoch = -1
         best_checkpoint = None
         for filename in os.listdir(self.logdir):
@@ -349,8 +350,8 @@ class LogX(object):
         the snapshot
         """
         checkpoint = torch.load(path)
-        state_dict = checkpoint['state_dict']
-        meta = {k: v for k, v in checkpoint.items() if k != 'state_dict'}
+        state_dict = checkpoint["state_dict"]
+        meta = {k: v for k, v in checkpoint.items() if k != "state_dict"}
         return state_dict, meta
 
 

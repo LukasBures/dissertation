@@ -1,5 +1,5 @@
-import numpy as np
 import cv2
+import numpy as np
 
 cap0 = cv2.VideoCapture(0, cv2.CAP_V4L)  # Trust Webcam
 cap1 = cv2.VideoCapture(1, cv2.CAP_V4L)  # Microsoft Webcam

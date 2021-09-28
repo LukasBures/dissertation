@@ -1,0 +1,13 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 21.9b0 # Replace by any tag/version: https://github.com/psf/black/tags
+    hooks:
+      - id: black
+        language_version: python # Should be a command that runs python3.6+
+        args: [--line-length=120]
+  - repo: https://github.com/pycqa/isort
+    rev: 5.9.3 # Replace by any tag/version: https://github.com/PyCQA/isort/releases
+    hooks:
+      - id: isort
+        args: ["--profile", "black", --line-length=120]
+        language_version: python

@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
-import pickle
-import numpy as np
-import re
-import os
 import multiprocessing as mp
+import os
+import pickle
+import re
+
+import numpy as np
+
 # path = "/home/lukas/PycharmProjects/Dissertation/data/results/get_kp_desc/spring/surf_descs_10.pickle"
 path = "/_my/data/results/get_kp_desc/spring/akaze_kps_3578.pickle"
 

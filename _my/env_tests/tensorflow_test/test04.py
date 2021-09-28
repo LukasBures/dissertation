@@ -1,9 +1,9 @@
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Model, layers
-import numpy as np
 
 # MNIST dataset parameters.
-num_classes = 10 # total classes (0-9 digits).
+num_classes = 10  # total classes (0-9 digits).
 
 # Training parameters.
 learning_rate = 0.001
@@ -12,17 +12,18 @@ batch_size = 128
 display_step = 10
 
 # Network parameters.
-conv1_filters = 32 # number of filters for 1st conv layer.
-conv2_filters = 64 # number of filters for 2nd conv layer.
-fc1_units = 1024 # number of neurons for 1st fully-connected layer.
+conv1_filters = 32  # number of filters for 1st conv layer.
+conv2_filters = 64  # number of filters for 2nd conv layer.
+fc1_units = 1024  # number of neurons for 1st fully-connected layer.
 
 # Prepare MNIST data.
 from tensorflow.keras.datasets import mnist
+
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 # Convert to float32.
 x_train, x_test = np.array(x_train, np.float32), np.array(x_test, np.float32)
 # Normalize images value from [0, 255] to [0, 1].
-x_train, x_test = x_train / 255., x_test / 255.
+x_train, x_test = x_train / 255.0, x_test / 255.0
 
 # Use tf.data API to shuffle and batch data.
 train_data = tf.data.Dataset.from_tensor_slices((x_train, y_train))
@@ -71,6 +72,7 @@ class ConvNet(Model):
             x = tf.nn.softmax(x)
         return x
 
+
 # Build neural network model.
 conv_net = ConvNet()
 
@@ -84,11 +86,13 @@ def cross_entropy_loss(x, y):
     # Average loss across the batch.
     return tf.reduce_mean(loss)
 
+
 # Accuracy metric.
 def accuracy(y_pred, y_true):
     # Predicted class is the index of highest score in prediction vector (i.e. argmax).
     correct_prediction = tf.equal(tf.argmax(y_pred, 1), tf.cast(y_true, tf.int64))
     return tf.reduce_mean(tf.cast(correct_prediction, tf.float32), axis=-1)
+
 
 # Stochastic gradient descent optimizer.
 optimizer = tf.optimizers.Adam(learning_rate)
@@ -138,6 +142,6 @@ predictions = conv_net(test_images)
 
 # Display image and model prediction.
 for i in range(n_images):
-    plt.imshow(np.reshape(test_images[i], [28, 28]), cmap='gray')
+    plt.imshow(np.reshape(test_images[i], [28, 28]), cmap="gray")
     plt.show()
     print("Model prediction: %i" % np.argmax(predictions.numpy()[i]))

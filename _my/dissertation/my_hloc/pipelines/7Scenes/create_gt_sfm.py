@@ -1,11 +1,11 @@
 from pathlib import Path
-import numpy as np
-import torch
-import PIL.Image
-from tqdm import tqdm
-import pycolmap
 
-from hloc.utils.read_write_model import write_model, read_model
+import numpy as np
+import PIL.Image
+import pycolmap
+import torch
+from hloc.utils.read_write_model import read_model, write_model
+from tqdm import tqdm
 
 
 def scene_coordinates(p2D, R_w2c, t_w2c, depth, camera):
@@ -20,7 +20,7 @@ def scene_coordinates(p2D, R_w2c, t_w2c, depth, camera):
 
 def interpolate_depth(depth, kp):
     h, w = depth.shape
-    kp = kp/np.array([[w-1, h-1]]) * 2 - 1
+    kp = kp / np.array([[w - 1, h - 1]]) * 2 - 1
     assert np.all(kp > -1) and np.all(kp < 1)
     depth = torch.from_numpy(depth)[None, None]
     kp = torch.from_numpy(kp)[None, None]
@@ -49,7 +49,7 @@ def image_path_to_rendered_depth_path(image_name):
 def project_to_image(p3D, R, t, camera, eps: float = 1e-4, pad: int = 1):
     p3D = (p3D @ R.T) + t
     visible = p3D[:, -1] >= eps  # keep points in front of the camera
-    p2D_norm = p3D[:, :-1]/p3D[:, -1:].clip(min=eps)
+    p2D_norm = p3D[:, :-1] / p3D[:, -1:].clip(min=eps)
     ret = pycolmap.world_to_image(p2D_norm, camera._asdict())
     p2D = np.asarray(ret["image_points"])
     size = np.array([camera.width - pad - 1, camera.height - pad - 1])
@@ -64,9 +64,9 @@ def correct_sfm_with_gt_depth(sfm_path, depth_folder_path, output_path):
         image_name = img.name
         depth_name = image_path_to_rendered_depth_path(image_name)
 
-        depth = PIL.Image.open(Path(depth_folder_path)/depth_name)
+        depth = PIL.Image.open(Path(depth_folder_path) / depth_name)
         depth = np.array(depth).astype("float64")
-        depth = depth/1000.  # mm to meter
+        depth = depth / 1000.0  # mm to meter
         depth[(depth == 0.0) | (depth > 1000.0)] = np.nan
 
         R_w2c, t_w2c = img.qvec2rotmat(), img.tvec
@@ -85,8 +85,10 @@ def correct_sfm_with_gt_depth(sfm_path, depth_folder_path, output_path):
             else:
                 obs_imgids = points3D[p3did].image_ids
                 invalid_imgids = list(np.where(obs_imgids == img.id)[0])
-                points3D[p3did] = points3D[p3did]._replace(image_ids=np.delete(obs_imgids, invalid_imgids),
-                                                           point2D_idxs=np.delete(points3D[p3did].point2D_idxs,invalid_imgids))
+                points3D[p3did] = points3D[p3did]._replace(
+                    image_ids=np.delete(obs_imgids, invalid_imgids),
+                    point2D_idxs=np.delete(points3D[p3did].point2D_idxs, invalid_imgids),
+                )
 
         new_p3D_ids = p3D_ids.copy()
         sub_p3D_ids = new_p3D_ids[new_p3D_ids != -1]
@@ -97,8 +99,9 @@ def correct_sfm_with_gt_depth(sfm_path, depth_folder_path, output_path):
         new_p3D_ids[new_p3D_ids != -1] = sub_p3D_ids
         img = img._replace(point3D_ids=new_p3D_ids)
 
-        assert len(img.point3D_ids[img.point3D_ids != -1]) == len(scs), (
-                f"{len(scs)}, {len(img.point3D_ids[img.point3D_ids != -1])}")
+        assert len(img.point3D_ids[img.point3D_ids != -1]) == len(
+            scs
+        ), f"{len(scs)}, {len(img.point3D_ids[img.point3D_ids != -1])}"
         for i, p3did in enumerate(img.point3D_ids[img.point3D_ids != -1]):
             points3D[p3did] = points3D[p3did]._replace(xyz=scs[i])
         images[imgid] = img
@@ -113,7 +116,7 @@ if __name__ == "__main__":
 
     SCENES = ["chess", "fire", "heads", "office", "pumpkin", "redkitchen", "stairs"]
     for scene in SCENES:
-        sfm_path = outputs/scene/"sfm_superpoint+superglue"
-        depth_path = dataset/f"depth/7scenes_{scene}/train/depth"
-        output_path = outputs/scene/"sfm_superpoint+superglue+depth"
+        sfm_path = outputs / scene / "sfm_superpoint+superglue"
+        depth_path = dataset / f"depth/7scenes_{scene}/train/depth"
+        output_path = outputs / scene / "sfm_superpoint+superglue+depth"
         correct_sfm_with_gt_depth(sfm_path, depth_path, output_path)

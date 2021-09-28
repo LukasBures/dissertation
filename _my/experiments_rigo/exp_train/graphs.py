@@ -14,10 +14,12 @@ import numpy as np
 
 def getpaths(method):
     prefix = "/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/"
-    files = ["outputs/" + method + "_1_234.txt",
-             "outputs/" + method + "_2_134.txt",
-             "outputs/" + method + "_3_214.txt",
-             "outputs/" + method + "_4_231.txt"]
+    files = [
+        "outputs/" + method + "_1_234.txt",
+        "outputs/" + method + "_2_134.txt",
+        "outputs/" + method + "_3_214.txt",
+        "outputs/" + method + "_4_231.txt",
+    ]
     paths = [prefix + files[0], prefix + files[1], prefix + files[2], prefix + files[3]]
     return paths
 
@@ -70,9 +72,21 @@ def plot_absolute_counts(data, method, visualize=False):
             plt.xlim(0, len(d[0]))
             plt.ylim(0, max(d[idx[f]]))
             ax.plot(d[0], d[idx[f]], "k.")
-            ax.set(xlabel='Frame number', ylabel='Count of good matches', title=method + ": Matching " + season[0] + " to " + season[f + 1])
+            ax.set(
+                xlabel="Frame number",
+                ylabel="Count of good matches",
+                title=method + ": Matching " + season[0] + " to " + season[f + 1],
+            )
             ax.grid()
-            fig.savefig("/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/outputs_img/abosulute_counts/" + method + "_" + season[0] + "_to_" + season[f + 1] + ".png")
+            fig.savefig(
+                "/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/outputs_img/abosulute_counts/"
+                + method
+                + "_"
+                + season[0]
+                + "_to_"
+                + season[f + 1]
+                + ".png"
+            )
             if visualize:
                 plt.show()
         i += 1
@@ -103,10 +117,22 @@ def plot_relative_percent(data, method, visualize=False):
             plt.ylim(0, max(ddd))
 
             ax.plot(d[0], ddd, "k.")
-            ax.set(xlabel='Frame number', ylabel='Ratio of good matches [%]', title=method + ": Matching " + season[0] + " to " + season[f + 1])
+            ax.set(
+                xlabel="Frame number",
+                ylabel="Ratio of good matches [%]",
+                title=method + ": Matching " + season[0] + " to " + season[f + 1],
+            )
             ax.grid()
 
-            fig.savefig("/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/outputs_img/relative_percent/" + method + "_" + season[0] + "_to_" + season[f + 1] + ".png")
+            fig.savefig(
+                "/Users/lukas/PycharmProjects/Dissertation/experiments/exp_train/outputs_img/relative_percent/"
+                + method
+                + "_"
+                + season[0]
+                + "_to_"
+                + season[f + 1]
+                + ".png"
+            )
             if visualize:
                 plt.show()
         i += 1

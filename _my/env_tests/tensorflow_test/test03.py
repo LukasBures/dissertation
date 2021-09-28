@@ -1,9 +1,9 @@
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 
 # MNIST dataset parameters.
-num_classes = 10 # 0 to 9 digits
-num_features = 784 # 28*28
+num_classes = 10  # 0 to 9 digits
+num_features = 784  # 28*28
 
 # Training parameters.
 learning_rate = 0.01
@@ -13,13 +13,14 @@ display_step = 50
 
 # Prepare MNIST data.
 from tensorflow.keras.datasets import mnist
+
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 # Convert to float32.
 x_train, x_test = np.array(x_train, np.float32), np.array(x_test, np.float32)
 # Flatten images to 1-D vector of 784 features (28*28).
 x_train, x_test = x_train.reshape([-1, num_features]), x_test.reshape([-1, num_features])
 # Normalize images value from [0, 255] to [0, 1].
-x_train, x_test = x_train / 255., x_test / 255.
+x_train, x_test = x_train / 255.0, x_test / 255.0
 
 # Use tf.data API to shuffle and batch data.
 train_data = tf.data.Dataset.from_tensor_slices((x_train, y_train))
@@ -35,20 +36,23 @@ def logistic_regression(x):
     # Apply softmax to normalize the logits to a probability distribution.
     return tf.nn.softmax(tf.matmul(x, W) + b)
 
+
 # Cross-Entropy loss function.
 def cross_entropy(y_pred, y_true):
     # Encode label to a one hot vector.
     y_true = tf.one_hot(y_true, depth=num_classes)
     # Clip prediction values to avoid log(0) error.
-    y_pred = tf.clip_by_value(y_pred, 1e-9, 1.)
+    y_pred = tf.clip_by_value(y_pred, 1e-9, 1.0)
     # Compute cross-entropy.
     return tf.reduce_mean(-tf.reduce_sum(y_true * tf.math.log(y_pred)))
+
 
 # Accuracy metric.
 def accuracy(y_pred, y_true):
     # Predicted class is the index of highest score in prediction vector (i.e. argmax).
     correct_prediction = tf.equal(tf.argmax(y_pred, 1), tf.cast(y_true, tf.int64))
     return tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
 
 # Stochastic gradient descent optimizer.
 optimizer = tf.optimizers.SGD(learning_rate)
@@ -94,7 +98,6 @@ predictions = logistic_regression(test_images)
 
 # Display image and model prediction.
 for i in range(n_images):
-    plt.imshow(np.reshape(test_images[i], [28, 28]), cmap='gray')
+    plt.imshow(np.reshape(test_images[i], [28, 28]), cmap="gray")
     plt.show()
     print("Model prediction: %i" % np.argmax(predictions.numpy()[i]))
-

@@ -3,6 +3,7 @@
 import multiprocessing as mp
 import time
 from datetime import timedelta
+
 import cv2
 import save_data
 
@@ -37,7 +38,9 @@ def worker(data):
         detector = cv2.BRISK_create()
 
     if not detector:
-        print("{0} unknown method: method {1}, season {2}, exiting ...".format(mp.current_process().name, method, season))
+        print(
+            "{0} unknown method: method {1}, season {2}, exiting ...".format(mp.current_process().name, method, season)
+        )
     else:
         print("{0} starting: method {1}, season {2}".format(mp.current_process().name, method, season))
         cap = cv2.VideoCapture(file_path)
@@ -70,16 +73,37 @@ def worker(data):
 
                 end_time = time.monotonic()
 
-                print("{0} update: method {1}, season {2}, frame {3} - {4}/{5}, time {6}".format(mp.current_process().name, method, season, frame_idx, current_frame, total_frames, timedelta(seconds=end_time - start_time)))
+                print(
+                    "{0} update: method {1}, season {2}, frame {3} - {4}/{5}, time {6}".format(
+                        mp.current_process().name,
+                        method,
+                        season,
+                        frame_idx,
+                        current_frame,
+                        total_frames,
+                        timedelta(seconds=end_time - start_time),
+                    )
+                )
                 frame_idx += 1
 
         save_data.save_desc(all_descs, "{0}/{1}/{2}_descs_{3}.pickle".format(root_folder, season, method, frame_idx))
         save_data.save_kp(all_kps, "{0}/{1}/{2}_kps_{3}.pickle".format(root_folder, season, method, frame_idx))
-        save_data.save_frame_numbers(used_frames, "{0}/{1}/{2}_frames_{3}.pickle".format(root_folder, season, method, frame_idx))
-
+        save_data.save_frame_numbers(
+            used_frames, "{0}/{1}/{2}_frames_{3}.pickle".format(root_folder, season, method, frame_idx)
+        )
 
         end_time = time.monotonic()
-        print("{0} update: method {1}, season {2}, frame {3} - {4}/{5}, time {6}".format(mp.current_process().name, method, season, frame_idx, current_frame, total_frames, timedelta(seconds=end_time - start_time)))
+        print(
+            "{0} update: method {1}, season {2}, frame {3} - {4}/{5}, time {6}".format(
+                mp.current_process().name,
+                method,
+                season,
+                frame_idx,
+                current_frame,
+                total_frames,
+                timedelta(seconds=end_time - start_time),
+            )
+        )
 
 
 def generate_combinations(methods, seasons, video_paths):
@@ -90,9 +114,7 @@ def generate_combinations(methods, seasons, video_paths):
     return combinations
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     combinations = generate_combinations(methods, season_names, seasons_video_paths)
     pool = mp.Pool(processes=1)
     pool.map(worker, combinations)
-
-

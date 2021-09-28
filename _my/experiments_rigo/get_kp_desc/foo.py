@@ -1,4 +1,3 @@
-
 spring_cap = cv2.VideoCapture(spring_video_path)
 summer_cap = cv2.VideoCapture(summer_video_path)
 fall_cap = cv2.VideoCapture(fall_video_path)
@@ -23,11 +22,6 @@ summer_cap.release()
 fall_cap.release()
 winter_cap.release()
 cv2.destroyAllWindows()
-
-
-
-
-
 
 
 detector = cv2.AKAZE_create()

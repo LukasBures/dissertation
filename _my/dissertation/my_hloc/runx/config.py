@@ -1,6 +1,5 @@
 from .collections import AttrDict
 
-
 __C = AttrDict()
 cfg = __C
 

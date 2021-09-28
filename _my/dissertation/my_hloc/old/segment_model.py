@@ -1,19 +1,23 @@
-import torch
-import encoding
 import os
-import timm
 import sys
 
+import encoding
+import timm
+import torch
 
 gpu = 1
 model_name = "xception65"
 backbone_net = "deeplab_resnest50_ade"
 
-sources = ["/home/lukas/PycharmProjects/Dissertation/datasets/aachen/segmentation_images/day/",
-           "/home/lukas/PycharmProjects/Dissertation/datasets/aachen/segmentation_images/night/"]
+sources = [
+    "/home/lukas/PycharmProjects/Dissertation/datasets/aachen/segmentation_images/day/",
+    "/home/lukas/PycharmProjects/Dissertation/datasets/aachen/segmentation_images/night/",
+]
 
-destinations = [f"/home/lukas/PycharmProjects/Dissertation/_my/_dissertation/my_hloc/logs/aachen/segment_{model_name}/day/",
-                f"/home/lukas/PycharmProjects/Dissertation/_my/_dissertation/my_hloc/logs/aachen/segment_{model_name}/night/"]
+destinations = [
+    f"/home/lukas/PycharmProjects/Dissertation/_my/_dissertation/my_hloc/logs/aachen/segment_{model_name}/day/",
+    f"/home/lukas/PycharmProjects/Dissertation/_my/_dissertation/my_hloc/logs/aachen/segment_{model_name}/night/",
+]
 
 for dst in destinations:
     os.makedirs(dst, exist_ok=True)
@@ -36,7 +40,7 @@ for src, dst in zip(sources, destinations):
             print(output.shape)
             print(output2.shape)
             predict = torch.max(output, 1)[1].cpu().numpy() + 1
-            mask = encoding.utils.get_mask_pallete(predict, 'citys')
+            mask = encoding.utils.get_mask_pallete(predict, "citys")
             mask.save(os.path.join(dst, file.replace("jpg", "png")))
 print("DONE")
 

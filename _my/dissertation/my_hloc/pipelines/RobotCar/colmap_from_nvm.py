@@ -1,31 +1,28 @@
 import argparse
-import sqlite3
-from tqdm import tqdm
-from collections import defaultdict
-import numpy as np
-from pathlib import Path
 import logging
+import sqlite3
+from collections import defaultdict
+from pathlib import Path
 
-from hloc.colmap_from_nvm import (recover_database_images_and_ids, camera_center_to_translation)
-from hloc.utils.read_write_model import Camera, Image, Point3D, CAMERA_MODEL_IDS
-from hloc.utils.read_write_model import write_model
+import numpy as np
+from hloc.colmap_from_nvm import camera_center_to_translation, recover_database_images_and_ids
+from hloc.utils.read_write_model import CAMERA_MODEL_IDS, Camera, Image, Point3D, write_model
+from tqdm import tqdm
 
 
-def read_nvm_model(
-        nvm_path, database_path, image_ids, camera_ids, skip_points=False):
+def read_nvm_model(nvm_path, database_path, image_ids, camera_ids, skip_points=False):
 
     # Extract the intrinsics from the db file instead of the NVM model
     db = sqlite3.connect(str(database_path))
-    ret = db.execute(
-        "SELECT camera_id, model, width, height, params FROM cameras;")
+    ret = db.execute("SELECT camera_id, model, width, height, params FROM cameras;")
     cameras = {}
     for camera_id, camera_model, width, height, params in ret:
         params = np.fromstring(params, dtype=np.double).reshape(-1)
         camera_model = CAMERA_MODEL_IDS[camera_model]
         assert len(params) == camera_model.num_params, (len(params), camera_model.num_params)
         camera = Camera(
-            id=camera_id, model=camera_model.model_name,
-            width=int(width), height=int(height), params=params)
+            id=camera_id, model=camera_model.model_name, width=int(width), height=int(height), params=params
+        )
         cameras[camera_id] = camera
 
     nvm_f = open(nvm_path, "r")
@@ -71,10 +68,9 @@ def read_nvm_model(
         x, y, z, r, g, b, num_observations = data[:7]
         obs_image_ids, point2D_idxs = [], []
         for j in range(int(num_observations)):
-            s = 7 + 4*j
-            img_index, kp_index, kx, ky = data[s:s+4]
-            image_idx_to_keypoints[int(img_index)].append(
-                (int(kp_index), float(kx), float(ky), i))
+            s = 7 + 4 * j
+            img_index, kp_index, kx, ky = data[s : s + 4]
+            image_idx_to_keypoints[int(img_index)].append((int(kp_index), float(kx), float(ky), i))
             db_image_id = image_idx_to_db_image_id[int(img_index)]
             obs_image_ids.append(db_image_id)
             point2D_idxs.append(kp_index)
@@ -83,9 +79,10 @@ def read_nvm_model(
             id=i,
             xyz=np.array([x, y, z], float),
             rgb=np.array([r, g, b], int),
-            error=1.,  # fake
+            error=1.0,  # fake
             image_ids=np.array(obs_image_ids, int),
-            point2D_idxs=np.array(point2D_idxs, int))
+            point2D_idxs=np.array(point2D_idxs, int),
+        )
         points3D[i] = point
 
         i += 1
@@ -125,7 +122,8 @@ def read_nvm_model(
             camera_id=camera_ids[name],
             name=name.replace("png", "jpg"),  # some hack required for RobotCar
             xys=xys,
-            point3D_ids=point3D_ids)
+            point3D_ids=point3D_ids,
+        )
         images[image_id] = image
 
     return cameras, images, points3D
@@ -138,8 +136,7 @@ def main(nvm, database, output, skip_points=False):
     image_ids, camera_ids = recover_database_images_and_ids(database)
 
     logging.info("Reading the NVM model...")
-    model = read_nvm_model(
-        nvm, database, image_ids, camera_ids, skip_points=skip_points)
+    model = read_nvm_model(nvm, database, image_ids, camera_ids, skip_points=skip_points)
 
     logging.info("Writing the COLMAP model...")
     output.mkdir(exist_ok=True, parents=True)
@@ -155,4 +152,3 @@ parser.add_argument("--output", required=True, type=Path)
 parser.add_argument("--skip_points", action="store_true")
 args = parser.parse_args()
 main(**args.__dict__)
-

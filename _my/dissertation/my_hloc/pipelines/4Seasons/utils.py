@@ -1,11 +1,10 @@
-import os
-import numpy as np
 import logging
+import os
 from pathlib import Path
 
-from hloc.utils.read_write_model import qvec2rotmat, rotmat2qvec
-from hloc.utils.read_write_model import Image, write_model, Camera
+import numpy as np
 from hloc.utils.parsers import parse_retrieval
+from hloc.utils.read_write_model import Camera, Image, qvec2rotmat, rotmat2qvec, write_model
 
 
 def get_timestamps(files, idx):
@@ -45,9 +44,7 @@ def camera_from_calibration_file(id_, path):
     assert model == "Pinhole"
     model_name = "PINHOLE"
     params = [float(i) for i in [fx, fy, cx, cy]]
-    camera = Camera(
-        id=id_, model=model_name,
-        width=int(width), height=int(height), params=params)
+    camera = Camera(id=id_, model=model_name, width=int(width), height=int(height), params=params)
     return camera
 
 
@@ -94,12 +91,12 @@ def parse_relocalization(path, has_poses=False):
 def build_empty_colmap_model(root, sfm_dir):
     """Build a COLMAP model with images and cameras only."""
     calibration = "Calibration/undistorted_calib_{}.txt"
-    cam0 = camera_from_calibration_file(0, root/calibration.format(0))
-    cam1 = camera_from_calibration_file(1, root/calibration.format(1))
+    cam0 = camera_from_calibration_file(0, root / calibration.format(0))
+    cam1 = camera_from_calibration_file(1, root / calibration.format(1))
     cameras = {0: cam0, 1: cam1}
 
-    T_0to1 = np.loadtxt(root/"Calibration/undistorted_calib_stereo.txt")
-    poses = parse_poses(root/"poses.txt")
+    T_0to1 = np.loadtxt(root / "Calibration/undistorted_calib_stereo.txt")
+    poses = parse_poses(root / "poses.txt")
     images = {}
     id_ = 0
     for ts, R_cam0_to_w, t_cam0_to_w in poses:
@@ -109,8 +106,7 @@ def build_empty_colmap_model(root, sfm_dir):
         R_w_to_cam1 = T_0to1[:3, :3] @ R_w_to_cam0
         t_w_to_cam1 = T_0to1[:3, :3] @ t_w_to_cam0 + T_0to1[:3, 3]
 
-        for idx, (R_w_to_cam, t_w_to_cam) in enumerate(
-                zip([R_w_to_cam0, R_w_to_cam1], [t_w_to_cam0, t_w_to_cam1])):
+        for idx, (R_w_to_cam, t_w_to_cam) in enumerate(zip([R_w_to_cam0, R_w_to_cam1], [t_w_to_cam0, t_w_to_cam1])):
             image = Image(
                 id=id_,
                 qvec=rotmat2qvec(R_w_to_cam),
@@ -118,7 +114,8 @@ def build_empty_colmap_model(root, sfm_dir):
                 camera_id=idx,
                 name=f"cam{idx}/{ts}.png",
                 xys=np.zeros((0, 2), float),
-                point3D_ids=np.full(0, -1, int))
+                point3D_ids=np.full(0, -1, int),
+            )
             images[id_] = image
             id_ += 1
 
@@ -128,24 +125,22 @@ def build_empty_colmap_model(root, sfm_dir):
 
 def generate_query_lists(timestamps, seq_dir, out_path):
     """Create a list of query images with intrinsics from timestamps."""
-    cam0 = camera_from_calibration_file(
-            0, seq_dir/"Calibration/undistorted_calib_0.txt")
+    cam0 = camera_from_calibration_file(0, seq_dir / "Calibration/undistorted_calib_0.txt")
     intrinsics = [cam0.model, cam0.width, cam0.height] + cam0.params
     intrinsics = [str(p) for p in intrinsics]
-    data = map(lambda ts: " ".join([f"cam0/{ts}.png"]+intrinsics), timestamps)
+    data = map(lambda ts: " ".join([f"cam0/{ts}.png"] + intrinsics), timestamps)
     with open(out_path, "w") as f:
         f.write("\n".join(data))
 
 
 def generate_localization_pairs(sequence, reloc, num, ref_pairs, out_path):
     """Create the matching pairs for the localization.
-       We simply lookup the corresponding reference frame
-       and extract its `num` closest frames from the existing pair list.
+    We simply lookup the corresponding reference frame
+    and extract its `num` closest frames from the existing pair list.
     """
     if "test" in sequence:
         # hard pairs will be overwritten by easy ones if available
-        relocs = [
-            str(reloc).replace("*", d) for d in ["hard", "moderate", "easy"]]
+        relocs = [str(reloc).replace("*", d) for d in ["hard", "moderate", "easy"]]
     else:
         relocs = [reloc]
     query_to_ref_ts = {}
@@ -163,7 +158,7 @@ def generate_localization_pairs(sequence, reloc, num, ref_pairs, out_path):
     loc_pairs = []
     for q_ts, ref_ts in query_to_ref_ts.items():
         ref_name = ts_to_name(ref_ts)
-        selected = [ref_name] + ref_pairs[ref_name][:num-1]
+        selected = [ref_name] + ref_pairs[ref_name][: num - 1]
         loc_pairs.extend([" ".join((ts_to_name(q_ts), s)) for s in selected])
     with open(out_path, "w") as f:
         f.write("\n".join(loc_pairs))
@@ -193,22 +188,18 @@ def prepare_submission(results, relocs, poses_path, out_dir):
             out = [ref_ts, q_ts] + list(map(str, tvec)) + list(map(str, qvec))
             relative_poses.append(" ".join(out))
 
-        out_path = out_dir/reloc.name
+        out_path = out_dir / reloc.name
         with open(out_path, "w") as f:
             f.write("\n".join(relative_poses))
         logging.info(f"Submission file written to {out_path}.")
 
 
 def evaluate_submission(submission_dir, relocs, ths=[0.1, 0.2, 0.5]):
-    """Compute the relocalization recall from predicted and ground truth poses.
-    """
+    """Compute the relocalization recall from predicted and ground truth poses."""
     for reloc in relocs.parent.glob(relocs.name):
-        poses_gt = parse_relocalization(
-                reloc, has_poses=True)
-        poses_pred = parse_relocalization(
-                submission_dir/reloc.name, has_poses=True)
-        poses_pred = {
-                (ref_ts, q_ts): (R, t) for ref_ts, q_ts, R, t in poses_pred}
+        poses_gt = parse_relocalization(reloc, has_poses=True)
+        poses_pred = parse_relocalization(submission_dir / reloc.name, has_poses=True)
+        poses_pred = {(ref_ts, q_ts): (R, t) for ref_ts, q_ts, R, t in poses_pred}
 
         error = []
         for ref_ts, q_ts, R_gt, t_gt in poses_gt:

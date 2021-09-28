@@ -5,20 +5,20 @@ source /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
 selected_gpu=1  # 1080
 output_root_folder=/media/lukas/WD_2TB/dissertation
 project_folder=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc
-this_file_name=aachen_v1_1_run_1080.sh
+this_file_name=aachen_run_1080.sh
 cd "$project_folder" || exit 1
 
-# Aachen v1_1 dataset settings
-used_dataset="aachen_v1_1"
-dataset_folder=/data512/datasets/aachen_v1_1/
-pipeline=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen_v1_1/pipeline.py
-configs=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen_v1_1/configs.py
+# Aachen dataset settings
+used_dataset="aachen"
+dataset_folder=/data512/datasets/aachen/
+pipeline=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen/pipeline.py
+configs=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen/configs.py
 outputs_folder=results
 
 # EXPERIMENTS
 # -----------------------------------------------------------------------------
 retrieval_conf="netvlad"
-feature_conf="superpoint_max"
+feature_conf="superpoint_aachen"
 matcher_conf="superglue"
 num_covis=20
 num_loc=50

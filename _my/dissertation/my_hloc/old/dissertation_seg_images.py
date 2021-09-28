@@ -3,12 +3,14 @@ import cv2
 VISUALIZE = False
 SAVE = True
 
-img_names = ["2010-10-30_17-47-51_774_input.png",
-             "2011-10-01_14-35-34_597_input.png",
-             "2011-10-13_14-42-35_909_input.png",
-             "2011-10-15_14-27-34_559_input.png",
-             "2011-12-29_15-10-33_314_input.png",
-             "2012-01-15_14-14-25_544_input.png"]
+img_names = [
+    "2010-10-30_17-47-51_774_input.png",
+    "2011-10-01_14-35-34_597_input.png",
+    "2011-10-13_14-42-35_909_input.png",
+    "2011-10-15_14-27-34_559_input.png",
+    "2011-12-29_15-10-33_314_input.png",
+    "2012-01-15_14-14-25_544_input.png",
+]
 
 path = "/home/lukas/PycharmProjects/Dissertation/_my/_dissertation/my_hloc/logs/aachen/segment_nvidia/test/"
 

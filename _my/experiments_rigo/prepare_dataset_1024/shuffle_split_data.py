@@ -1,9 +1,9 @@
-import json
-from sklearn.model_selection import train_test_split
-import os
 import fnmatch
-from datetime import date
+import json
 import os
+from datetime import date
+
+from sklearn.model_selection import train_test_split
 
 data_path = "../../datasets/nordlandsbanen_imgs/"
 seasons = ["spring", "summer", "fall", "winter"]
@@ -21,7 +21,7 @@ if not os.path.exists(out_path):
 for s in seasons:
     data = list()
     for file in os.listdir(data_path + s):
-        if fnmatch.fnmatch(file, '*.jpg'):
+        if fnmatch.fnmatch(file, "*.jpg"):
             data.append("/home/lukas/PycharmProjects/Dissertation/_my/datasets/nordlandsbanen_imgs/" + s + "/" + file)
 
     data.sort()
@@ -32,16 +32,14 @@ for s in seasons:
     print(s, "train", len(data_train), ", test", len(data_test), ", val", len(data_val))
 
     json_data = {
-        'data_train': data_train,
-        'data_test': data_test,
-        'data_val': data_val,
-        'date': today.strftime("%d/%m/%Y"),
-        'ratio_train': ratio_train,
-        'ratio_test': ratio_test,
-        'ratio_val': ratio_val
+        "data_train": data_train,
+        "data_test": data_test,
+        "data_val": data_val,
+        "date": today.strftime("%d/%m/%Y"),
+        "ratio_train": ratio_train,
+        "ratio_test": ratio_test,
+        "ratio_val": ratio_val,
     }
 
-    with open(out_path + "/" + s + ".json", 'w') as outfile:
+    with open(out_path + "/" + s + ".json", "w") as outfile:
         json.dump(json_data, outfile)
-
-

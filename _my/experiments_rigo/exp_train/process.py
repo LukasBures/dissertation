@@ -1,10 +1,11 @@
 # !/usr/bin/env python
 
 from __future__ import print_function
-import cv2
-import numpy as np
+
 import time
 
+import cv2
+import numpy as np
 
 __author__ = "Lukas Bures"
 __copyright__ = "Copyright 2016-2018"
@@ -25,13 +26,13 @@ def draw_matches(img1, kp1, img2, kp2, match):
     rows2 = img2.shape[0]
     cols2 = img2.shape[1]
 
-    out = np.zeros((max([rows1, rows2]), cols1 + cols2, 3), dtype='uint8')
+    out = np.zeros((max([rows1, rows2]), cols1 + cols2, 3), dtype="uint8")
 
     # Place the first image to the left
     out[0:rows1, 0:cols1, :] = img1
 
     # Place the next image to the right of it
-    out[0:rows2, cols1:cols1 + cols2, :] = img2
+    out[0:rows2, cols1 : cols1 + cols2, :] = img2
 
     # For each pair of points we have between both images draw circles, then connect a line between them
     for mat in match:
@@ -68,7 +69,7 @@ def good_match(mode, matcher, template, video):
         match = matcher.match(template, video)
         match = sorted(match, key=lambda val: val.distance)
         # Consider the best 10% matches to be good matches
-        goodmatch = match[:np.int(len(match) / 10)]
+        goodmatch = match[: np.int(len(match) / 10)]
 
     return goodmatch, match
 
@@ -83,13 +84,13 @@ def side_by_side2(img1, img2):
     rows2 = img2.shape[0]
     cols2 = img2.shape[1]
 
-    out = np.zeros((max([rows1, rows2]), cols1 + cols2, 3), dtype='uint8')
+    out = np.zeros((max([rows1, rows2]), cols1 + cols2, 3), dtype="uint8")
 
     # Place the first image to the left
     out[0:rows1, 0:cols1, :] = img1
 
     # Place the next image to the right of it
-    out[0:rows2, cols1:cols1 + cols2, :] = img2
+    out[0:rows2, cols1 : cols1 + cols2, :] = img2
 
     return out
 
@@ -108,19 +109,19 @@ def side_by_side4(img0, img1, img2, img3):
     rows3 = img3.shape[0]
     cols3 = img3.shape[1]
 
-    out = np.zeros((max([rows0 + rows2, rows1 + rows3]), max([cols0 + cols1, cols2 + cols3]), 3), dtype='uint8')
+    out = np.zeros((max([rows0 + rows2, rows1 + rows3]), max([cols0 + cols1, cols2 + cols3]), 3), dtype="uint8")
 
     # Place the first image to the left top
     out[0:rows0, 0:cols0, :] = img0
 
     # Place the second image to the right top
-    out[0:rows1, cols0:cols0 + cols1, :] = img1
+    out[0:rows1, cols0 : cols0 + cols1, :] = img1
 
     # Place the third image to the left bottom
-    out[rows0:rows0 + rows2, 0:cols2, :] = img2
+    out[rows0 : rows0 + rows2, 0:cols2, :] = img2
 
     # Place the fourth image to the right bottom
-    out[rows1:rows1 + rows3, cols2:cols2 + cols3, :] = img3
+    out[rows1 : rows1 + rows3, cols2 : cols2 + cols3, :] = img3
 
     return out
 
@@ -184,7 +185,10 @@ def process(mode, output_file, paths, visual=False):
     else:
         print("mode: UNKNOWN", file=log)
 
-    print("video_frame,good_matches_1in0,all_matches_1in0,good_matches_2in0,all_matches_2in0,good_matches_3in0,all_matches_3in0", file=log)
+    print(
+        "video_frame,good_matches_1in0,all_matches_1in0,good_matches_2in0,all_matches_2in0,good_matches_3in0,all_matches_3in0",
+        file=log,
+    )
 
     # Main loop
     while True:
@@ -250,13 +254,28 @@ def process(mode, output_file, paths, visual=False):
                 good_matches_3in0 = list()
                 all_matches_3in0 = 0
 
-            print(str(frame) + "," + str(len(good_matches_1in0)) + "," + str(len(all_matches_1in0)) + "," + str(len(good_matches_2in0)) + "," + str(len(all_matches_2in0)) + "," + str(len(good_matches_3in0)) + "," + str(len(all_matches_3in0)), file=log)
+            print(
+                str(frame)
+                + ","
+                + str(len(good_matches_1in0))
+                + ","
+                + str(len(all_matches_1in0))
+                + ","
+                + str(len(good_matches_2in0))
+                + ","
+                + str(len(all_matches_2in0))
+                + ","
+                + str(len(good_matches_3in0))
+                + ","
+                + str(len(all_matches_3in0)),
+                file=log,
+            )
         else:
             print(str(frame) + ",0,0,0,0,0,0", file=log)
 
         if visual:
             matchesImg = draw_matches(frame_3, frame_3_kp, frame_0, frame_0_kp, good_matches_3in0)
-            out = cv2.resize(matchesImg, (1280, 720/2))
+            out = cv2.resize(matchesImg, (1280, 720 / 2))
             cv2.imshow("TEMPLATE | VIDEO", out)
             # ESC key
             if cv2.waitKey(1) == 27:
@@ -276,6 +295,7 @@ def process(mode, output_file, paths, visual=False):
     cap_3.release()
     # Destroy all windows
     cv2.destroyAllWindows()
+
 
 #
 # def ivan(paths):

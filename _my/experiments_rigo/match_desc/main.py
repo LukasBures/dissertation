@@ -2,9 +2,9 @@
 
 import multiprocessing as mp
 import time
+
 import cv2
 import load_data
-
 
 season_names = ["spring", "summer", "fall", "winter"]
 methods = ["orb", "brisk", "surf", "sift", "kaze", "akaze"]
@@ -32,10 +32,6 @@ def worker(data):
         matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
     load_data.load_all_descs(source_folder, method)
-
-
-
-
 
     # matches = matcher.knnMatch(descs1, descs2, k=2)
     #
@@ -88,6 +84,7 @@ def worker(data):
     #     print("{0} update: method {1}, season {2}, frame {3}, time {4}".format(mp.current_process().name, method, season, frame_idx, timedelta(seconds=end_time - start_time)))
     #
 
+
 def generate_combinations(methods, seasons):
     combinations = []
     for method in methods:
@@ -100,9 +97,7 @@ def generate_combinations(methods, seasons):
     return combinations
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     combinations = generate_combinations(methods, season_names)
     pool = mp.Pool(processes=1)
     pool.map(worker, combinations)
-
-

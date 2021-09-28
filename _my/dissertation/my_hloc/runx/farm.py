@@ -39,7 +39,7 @@ from .utils import exec_cmd
 def expand_resources(resources):
     """
     Construct the submit_job arguments from the resource dict.
-    
+
     In general, a k,v from the dict turns into an argument '--k v'.
     If the value is a boolean, then the argument turns into a flag.
     If the value is a list/tuple, then multiple '--k v' are presented,
@@ -47,16 +47,16 @@ def expand_resources(resources):
 
     :resources: a dict of arguments for the farm submission command.
     """
-    cmd = ''
+    cmd = ""
     for field, val in resources.items():
         if type(val) is bool:
             if val is True:
-                cmd += '--{} '.format(field)
+                cmd += "--{} ".format(field)
         elif type(val) is list or type(val) is tuple:
             for mp in val:
-                cmd += '--{} {} '.format(field, mp)
+                cmd += "--{} {} ".format(field, mp)
         else:
-            cmd += '--{} {} '.format(field, val)
+            cmd += "--{} {} ".format(field, val)
     return cmd
 
 
@@ -66,13 +66,12 @@ def build_draco(train_cmd, job_name, resources, logdir):
 
     See build_farm_cmd for arg description
     """
-    assert 'submit_job' in cfg.SUBMIT_CMD, \
-        'Expected \'submit_job\' as SUBMIT_CMD. Exiting ...'
-    submit_cmd = cfg.SUBMIT_CMD + ' '
+    assert "submit_job" in cfg.SUBMIT_CMD, "Expected 'submit_job' as SUBMIT_CMD. Exiting ..."
+    submit_cmd = cfg.SUBMIT_CMD + " "
     submit_cmd += expand_resources(resources)
-    submit_cmd += f' --name {job_name}'
-    submit_cmd += f' --command \' {train_cmd} \''
-    submit_cmd += f' --logdir {logdir}/gcf_log'
+    submit_cmd += f" --name {job_name}"
+    submit_cmd += f" --command ' {train_cmd} '"
+    submit_cmd += f" --logdir {logdir}/gcf_log"
     return submit_cmd
 
 
@@ -85,13 +84,12 @@ def build_ngc_generic(train_cmd, job_name, resources, logdir):
 
     See build_farm_cmd for arg description
     """
-    assert cfg.SUBMIT_CMD == 'ngc batch run', \
-        'Expected SUBMIT_CMD to be \'ngc batch run\'. Exiting ...'
-    submit_cmd = cfg.SUBMIT_CMD + ' '
+    assert cfg.SUBMIT_CMD == "ngc batch run", "Expected SUBMIT_CMD to be 'ngc batch run'. Exiting ..."
+    submit_cmd = cfg.SUBMIT_CMD + " "
     submit_cmd += expand_resources(resources)
-    submit_cmd += f' --name {job_name}'
-    submit_cmd += f' --commandline \' {train_cmd} \''
-    submit_cmd += f' --workspace {cfg.WORKSPACE}:{cfg.NGC_LOGROOT}:RW'
+    submit_cmd += f" --name {job_name}"
+    submit_cmd += f" --commandline ' {train_cmd} '"
+    submit_cmd += f" --workspace {cfg.WORKSPACE}:{cfg.NGC_LOGROOT}:RW"
     return submit_cmd
 
 
@@ -101,7 +99,7 @@ def build_ngc(train_cmd, job_name, resources, logdir):
 
     See build_farm_cmd for arg description
     """
-    if 'submit_job' in cfg.SUBMIT_CMD:
+    if "submit_job" in cfg.SUBMIT_CMD:
         ngc_logdir = logdir.replace(cfg.LOGROOT, cfg.NGC_LOGROOT)
         return build_draco(train_cmd, job_name, resources, ngc_logdir)
     else:
@@ -118,12 +116,12 @@ def build_farm_cmd(train_cmd, job_name, resources, logdir):
     :logdir: target log directory
     """
 
-    if 'ngc' in cfg.FARM:
+    if "ngc" in cfg.FARM:
         return build_ngc(train_cmd, job_name, resources, logdir)
-    elif 'draco' in cfg.FARM:
+    elif "draco" in cfg.FARM:
         return build_draco(train_cmd, job_name, resources, logdir)
     else:
-        raise f'Unsupported farm: {cfg.FARM}'
+        raise f"Unsupported farm: {cfg.FARM}"
 
 
 def upload_to_ngc(staging_logdir):
@@ -135,16 +133,14 @@ def upload_to_ngc(staging_logdir):
 
     :staging_logdir: path to the staging logdir, on the client machine
     """
-    fields = staging_logdir.split('/')
+    fields = staging_logdir.split("/")
     exp_name = fields[-2]
     run_name = fields[-1]
 
     ngc_workspace = cfg.WORKSPACE
     target_dir = os.path.join(exp_name, run_name)
-    msg = 'Uploading experiment to {} in workpace {} ...'
+    msg = "Uploading experiment to {} in workpace {} ..."
     print(msg.format(target_dir, ngc_workspace))
-    cmd = ('ngc workspace upload --source {staging_logdir} '
-           '--destination {target_dir} {workspace}')
-    cmd = cmd.format(staging_logdir=staging_logdir, target_dir=target_dir,
-                     workspace=ngc_workspace)
+    cmd = "ngc workspace upload --source {staging_logdir} " "--destination {target_dir} {workspace}"
+    cmd = cmd.format(staging_logdir=staging_logdir, target_dir=target_dir, workspace=ngc_workspace)
     exec_cmd(cmd)

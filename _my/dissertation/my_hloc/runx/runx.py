@@ -28,37 +28,31 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
 from __future__ import print_function
+
+import argparse
+import itertools
+import os
+import re
+import subprocess
+import sys
 from collections import OrderedDict
-from coolname import generate_slug
 from datetime import datetime
 from shutil import copytree, ignore_patterns
 
-import os
-import re
-import sys
-import subprocess
 import yaml
-import argparse
-import itertools
+from coolname import generate_slug
 
-from .utils import read_config, save_hparams, exec_cmd
 from .config import cfg
 from .farm import build_farm_cmd, upload_to_ngc
+from .utils import exec_cmd, read_config, save_hparams
 
-
-parser = argparse.ArgumentParser(description='Experiment runner')
-parser.add_argument('exp_yml', type=str,
-                    help='experiment yaml file')
-parser.add_argument('--tag', type=str, default=None,
-                    help='tag label for run')
-parser.add_argument('--no_run', '-n', action='store_true',
-                    help='don\'t run')
-parser.add_argument('--interactive', '-i', action='store_true',
-                    help='run interactively instead of submitting to farm')
-parser.add_argument('--no_cooldir', action='store_true',
-                    help='no coolname, no datestring')
-parser.add_argument('--farm', type=str, default=None,
-                    help='Select farm for workstation submission')
+parser = argparse.ArgumentParser(description="Experiment runner")
+parser.add_argument("exp_yml", type=str, help="experiment yaml file")
+parser.add_argument("--tag", type=str, default=None, help="tag label for run")
+parser.add_argument("--no_run", "-n", action="store_true", help="don't run")
+parser.add_argument("--interactive", "-i", action="store_true", help="run interactively instead of submitting to farm")
+parser.add_argument("--no_cooldir", action="store_true", help="no coolname, no datestring")
+parser.add_argument("--farm", type=str, default=None, help="Select farm for workstation submission")
 args = parser.parse_args()
 
 
@@ -66,20 +60,20 @@ def expand_hparams(hparams):
     """
     Construct the training script args from the hparams
     """
-    cmd = ''
+    cmd = ""
     for field, val in hparams.items():
         if type(val) is bool:
             if val is True:
-                cmd += '--{} '.format(field)
-        elif val != 'None':
-            cmd += '--{} {} '.format(field, val)
+                cmd += "--{} ".format(field)
+        elif val != "None":
+            cmd += "--{} {} ".format(field, val)
     return cmd
 
 
 def construct_cmd(cmd, hparams, logdir):
     """
     Build training command by starting with user-supplied 'CMD'
-    and then adding in hyperparameters, which came from expanding the 
+    and then adding in hyperparameters, which came from expanding the
     cross-product of all permutations from the experiment yaml file.
 
     We always copy the code to the target logdir and run from there.
@@ -88,22 +82,22 @@ def construct_cmd(cmd, hparams, logdir):
     :hparams: hyperparams for training command
     """
     # First, add hyperparameters
-    cmd += ' ' + expand_hparams(hparams)
+    cmd += " " + expand_hparams(hparams)
 
     # Expand PYTHONPATH, if necessary
     if cfg.PYTHONPATH is not None:
         pythonpath = cfg.PYTHONPATH
-        pythonpath = pythonpath.replace('LOGDIR', logdir)
+        pythonpath = pythonpath.replace("LOGDIR", logdir)
     else:
-        pythonpath = f'{logdir}/code'
+        pythonpath = f"{logdir}/code"
 
     # For signalling reasons, we have to insert the exec here when using submit_job.
     # Nvidia-internal thing.
-    exec_str = ''
-    if 'submit_job' in cfg.SUBMIT_CMD:
-        exec_str = 'exec'
-        
-    cmd = f'cd {logdir}/code; PYTHONPATH={pythonpath} {exec_str} {cmd}'
+    exec_str = ""
+    if "submit_job" in cfg.SUBMIT_CMD:
+        exec_str = "exec"
+
+    cmd = f"cd {logdir}/code; PYTHONPATH={pythonpath} {exec_str} {cmd}"
     return cmd
 
 
@@ -111,9 +105,9 @@ def save_cmd(cmd, logdir):
     """
     Record the submit command
     """
-    fp = open(os.path.join(logdir, 'submit_cmd.sh'), 'w')
+    fp = open(os.path.join(logdir, "submit_cmd.sh"), "w")
     fp.write(cmd)
-    fp.write('\n')
+    fp.write("\n")
     fp.close()
 
 
@@ -158,7 +152,7 @@ def cross_product_hparams(hparams):
 
 def get_field(adict, f, required=True):
     if required:
-        assert f in adict, 'expected {} to be defined in experiment'.format(f)
+        assert f in adict, "expected {} to be defined in experiment".format(f)
     return adict[f] if f in adict else None
 
 
@@ -181,7 +175,7 @@ def do_keyword_expansion(alist, pairs):
 
 
 def make_cool_names():
-    tagname = args.tag + '_' if args.tag else ''
+    tagname = args.tag + "_" if args.tag else ""
     datestr = datetime.now().strftime("_%Y.%m.%d_%H.%M")
     if args.no_cooldir:
         coolname = tagname
@@ -196,7 +190,7 @@ def make_cool_names():
     logdir = os.path.join(expdir, logdir_name)
 
     # Jobname is a unique name for the batch job
-    job_name = '{}_{}'.format(cfg.EXP_NAME, coolname)
+    job_name = "{}_{}".format(cfg.EXP_NAME, coolname)
     return job_name, logdir, logdir_name, expdir
 
 
@@ -204,8 +198,8 @@ def copy_code(logdir, runroot, code_ignore_patterns):
     """
     Copy sourcecode to logdir's code directory
     """
-    print('Copying codebase to {} ...'.format(logdir))
-    tgt_code_dir = os.path.join(logdir, 'code')
+    print("Copying codebase to {} ...".format(logdir))
+    tgt_code_dir = os.path.join(logdir, "code")
     if code_ignore_patterns is not None:
         code_ignore_patterns = ignore_patterns(*code_ignore_patterns)
     copytree(runroot, tgt_code_dir, ignore=code_ignore_patterns)
@@ -213,8 +207,8 @@ def copy_code(logdir, runroot, code_ignore_patterns):
 
 def hacky_substitutions(hparams, resource_copy, logdir, runroot):
     # Substitute the true logdir in for the magic variable LOGDIR
-    do_keyword_expansion(hparams, [('LOGDIR', logdir)])
-    do_keyword_expansion(resource_copy, [('LOGDIR', logdir)])
+    do_keyword_expansion(hparams, [("LOGDIR", logdir)])
+    do_keyword_expansion(resource_copy, [("LOGDIR", logdir)])
 
     # Build hparams to save out after LOGDIR but before deleting
     # the key 'SUBMIT_JOB.NODES', so that it is part of the hparams saved
@@ -224,15 +218,15 @@ def hacky_substitutions(hparams, resource_copy, logdir, runroot):
     # SUBMIT_JOB.NODES is a hyperparmeter that sets the node count
     # This is actually a resource, so when we find this arg, we delete
     # it from the list of hyperparams that the training script sees.
-    if 'SUBMIT_JOB.NODES' in hparams:
-        resource_copy['nodes'] = hparams['SUBMIT_JOB.NODES']
-        del hparams['SUBMIT_JOB.NODES']
-    if 'SUBMIT_JOB.PARTITION' in hparams:
-        resource_copy['partition'] = hparams['SUBMIT_JOB.PARTITION']
-        del hparams['SUBMIT_JOB.PARTITION']
+    if "SUBMIT_JOB.NODES" in hparams:
+        resource_copy["nodes"] = hparams["SUBMIT_JOB.NODES"]
+        del hparams["SUBMIT_JOB.NODES"]
+    if "SUBMIT_JOB.PARTITION" in hparams:
+        resource_copy["partition"] = hparams["SUBMIT_JOB.PARTITION"]
+        del hparams["SUBMIT_JOB.PARTITION"]
 
     # Record the directory from whence the experiments were launched
-    hparams_out['srcdir'] = runroot
+    hparams_out["srcdir"] = runroot
 
     return hparams_out
 
@@ -240,30 +234,30 @@ def hacky_substitutions(hparams, resource_copy, logdir, runroot):
 def get_tag(hparams):
     # Pull tag from hparams and then remove it
     # Also can do variable substitution into tag
-    if 'RUNX.TAG' in hparams:
-        tag_val = hparams['RUNX.TAG']
+    if "RUNX.TAG" in hparams:
+        tag_val = hparams["RUNX.TAG"]
 
         # do variable expansion:
         for sub_key, sub_val in hparams.items():
-            search_str = '{' + sub_key + '}'
+            search_str = "{" + sub_key + "}"
             tag_val = re.sub(search_str, str(sub_val), tag_val)
-        hparams['RUNX.TAG'] = tag_val
+        hparams["RUNX.TAG"] = tag_val
         args.tag = tag_val
-        del hparams['RUNX.TAG']
+        del hparams["RUNX.TAG"]
 
 
 def skip_run(hparams):
-    return 'RUNX.SKIP' in hparams and hparams['RUNX.SKIP']
+    return "RUNX.SKIP" in hparams and hparams["RUNX.SKIP"]
 
 
 def get_code_ignore_patterns(experiment):
-    if 'CODE_IGNORE_PATTERNS' in experiment:
-        code_ignore_patterns = experiment['CODE_IGNORE_PATTERNS']
+    if "CODE_IGNORE_PATTERNS" in experiment:
+        code_ignore_patterns = experiment["CODE_IGNORE_PATTERNS"]
     else:
-        code_ignore_patterns = '.git,*.pyc,docs*,test*'
+        code_ignore_patterns = ".git,*.pyc,docs*,test*"
 
-    code_ignore_patterns += ',*.pth' # don't copy checkpoints
-    code_ignore_patterns = code_ignore_patterns.split(',')
+    code_ignore_patterns += ",*.pth"  # don't copy checkpoints
+    code_ignore_patterns = code_ignore_patterns.split(",")
     return code_ignore_patterns
 
 
@@ -271,16 +265,16 @@ def run_yaml(experiment, runroot):
     """
     Run an experiment, expand hparams
     """
-    resources = get_field(experiment, 'RESOURCES')
+    resources = get_field(experiment, "RESOURCES")
     code_ignore_patterns = get_code_ignore_patterns(experiment)
-    ngc_batch = 'ngc' in cfg.FARM and not args.interactive
-    experiment_cmd = experiment['CMD']
+    ngc_batch = "ngc" in cfg.FARM and not args.interactive
+    experiment_cmd = experiment["CMD"]
 
     # Build the args that the submit_cmd will see
     yaml_hparams = OrderedDict()
 
     # Add yaml_hparams
-    for k, v in experiment['HPARAMS'].items():
+    for k, v in experiment["HPARAMS"].items():
         yaml_hparams[k] = v
 
     # Calculate cross-product of hyperparams
@@ -318,17 +312,15 @@ def run_yaml(experiment, runroot):
         """
         if ngc_batch:
             ngc_logdir = logdir.replace(cfg.LOGROOT, cfg.NGC_LOGROOT)
-            hparams_out = hacky_substitutions(
-                hparams, resource_copy, ngc_logdir, runroot)
+            hparams_out = hacky_substitutions(hparams, resource_copy, ngc_logdir, runroot)
             cmd = construct_cmd(experiment_cmd, hparams, ngc_logdir)
         else:
-            hparams_out = hacky_substitutions(
-                hparams, resource_copy, logdir, runroot)
+            hparams_out = hacky_substitutions(hparams, resource_copy, logdir, runroot)
             cmd = construct_cmd(experiment_cmd, hparams, logdir)
 
         if not args.interactive:
             cmd = build_farm_cmd(cmd, job_name, resource_copy, logdir)
-            
+
         if args.no_run:
             print(cmd)
             continue
@@ -343,15 +335,15 @@ def run_yaml(experiment, runroot):
         if ngc_batch:
             upload_to_ngc(logdir)
 
-        subprocess.call(['chmod', '-R', 'a+rw', expdir])
+        subprocess.call(["chmod", "-R", "a+rw", expdir])
         os.chdir(logdir)
 
         if args.interactive:
-            print('Running job {}'.format(job_name))
+            print("Running job {}".format(job_name))
         else:
-            print('Submitting job {}'.format(job_name))
+            print("Submitting job {}".format(job_name))
         exec_cmd(cmd)
-            
+
 
 def run_experiment(exp_fn):
     """
@@ -360,22 +352,22 @@ def run_experiment(exp_fn):
     """
     experiment = read_config(args.farm, args.exp_yml)
 
-    assert 'HPARAMS' in experiment, 'experiment file is missing hparams'
+    assert "HPARAMS" in experiment, "experiment file is missing hparams"
 
     # Iterate over hparams if it's a list
     runroot = os.getcwd()
-    if isinstance(experiment['HPARAMS'], (list, tuple)):
+    if isinstance(experiment["HPARAMS"], (list, tuple)):
         # Support inheritance from the first hparams item in list
-        first_hparams = experiment['HPARAMS'][0].copy()
+        first_hparams = experiment["HPARAMS"][0].copy()
 
-        for hparams_set in experiment['HPARAMS']:
+        for hparams_set in experiment["HPARAMS"]:
             hparams = first_hparams.copy()
             # Inheritance = first hparam set, updated with current hparam set
             hparams.update(hparams_set)
 
             # create a clean copy of the experiment and fill in hparams
             experiment_copy = experiment.copy()
-            experiment_copy['HPARAMS'] = hparams
+            experiment_copy["HPARAMS"] = hparams
 
             run_yaml(experiment_copy, runroot)
     else:
@@ -386,9 +378,9 @@ def main():
     if os.path.exists(args.exp_yml):
         run_experiment(args.exp_yml)
     else:
-        print('couldn\'t find experiment file {}'.format(args.exp_yml))
+        print("couldn't find experiment file {}".format(args.exp_yml))
         sys.exit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -27,14 +27,15 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-import os
-import yaml
-import shlex
 import json
+import os
+import shlex
 import socket
-
 import subprocess
-from subprocess import call, getoutput, DEVNULL
+from subprocess import DEVNULL, call, getoutput
+
+import yaml
+
 from .config import cfg
 
 
@@ -49,8 +50,8 @@ def exec_cmd(cmd):
         print(message)
 
 
-trn_names = ('trn', 'train', 'training')
-val_names = ('val', 'validate', 'validation', 'test')
+trn_names = ("trn", "train", "training")
+val_names = ("val", "validate", "validation", "test")
 
 
 def set_config(out_config, in_config, key, optional=False):
@@ -60,7 +61,7 @@ def set_config(out_config, in_config, key, optional=False):
     elif optional:
         return
     else:
-        raise 'couldn\'t find {} in config'.format(key)
+        raise "couldn't find {} in config".format(key)
 
 
 def read_config_item(config, key, optional=False):
@@ -69,20 +70,20 @@ def read_config_item(config, key, optional=False):
     elif optional:
         return None
     else:
-        raise f'can\'t find {key} in config'
+        raise f"can't find {key} in config"
 
 
 def read_config_file():
-    local_config_fn = './.runx'
-    home = os.path.expanduser('~')
-    global_config_fn = '{}/.config/runx.yml'.format(home)
+    local_config_fn = "./.runx"
+    home = os.path.expanduser("~")
+    global_config_fn = "{}/.config/runx.yml".format(home)
     if os.path.isfile(local_config_fn):
         config_fn = local_config_fn
     elif os.path.exists(global_config_fn):
         config_fn = global_config_fn
     else:
-        raise('can\'t find file ./.runx or ~/.config/runx.yml config files')
-    if 'FullLoader' in dir(yaml):
+        raise ("can't find file ./.runx or ~/.config/runx.yml config files")
+    if "FullLoader" in dir(yaml):
         global_config = yaml.load(open(config_fn), Loader=yaml.FullLoader)
     else:
         global_config = yaml.load(open(config_fn))
@@ -90,16 +91,16 @@ def read_config_file():
 
 
 def read_config(args_farm, args_exp_yml):
-    '''
+    """
     Merge the global and experiment config files into a single config
-    '''
+    """
     global_config = read_config_file()
 
     if args_farm is not None:
-        global_config['FARM'] = args_farm
+        global_config["FARM"] = args_farm
 
-    farm_name = read_config_item(global_config, 'FARM')
-    assert farm_name in global_config, f'Can\'t find farm {farm_name} defined in .runx'
+    farm_name = read_config_item(global_config, "FARM")
+    assert farm_name in global_config, f"Can't find farm {farm_name} defined in .runx"
 
     # Dereference the farm config items
     for k, v in global_config[farm_name].items():
@@ -112,45 +113,44 @@ def read_config(args_farm, args_exp_yml):
         for k, v in exp_config.items():
             experiment[k] = v
 
-    cfg.FARM = read_config_item(experiment, 'FARM')
-    cfg.LOGROOT = read_config_item(experiment, 'LOGROOT')
-    cfg.SUBMIT_CMD = read_config_item(experiment, 'SUBMIT_CMD')
-    cfg.PYTHONPATH = read_config_item(experiment, 'PYTHONPATH', optional=True)
+    cfg.FARM = read_config_item(experiment, "FARM")
+    cfg.LOGROOT = read_config_item(experiment, "LOGROOT")
+    cfg.SUBMIT_CMD = read_config_item(experiment, "SUBMIT_CMD")
+    cfg.PYTHONPATH = read_config_item(experiment, "PYTHONPATH", optional=True)
     if args_exp_yml is not None:
         cfg.EXP_NAME = os.path.splitext(os.path.basename(args_exp_yml))[0]
-    if 'ngc' in cfg.FARM:
-        cfg.NGC_LOGROOT = read_config_item(experiment, 'NGC_LOGROOT')
-        cfg.WORKSPACE = read_config_item(experiment, 'WORKSPACE')
+    if "ngc" in cfg.FARM:
+        cfg.NGC_LOGROOT = read_config_item(experiment, "NGC_LOGROOT")
+        cfg.WORKSPACE = read_config_item(experiment, "WORKSPACE")
 
     return experiment
 
 
 def get_logroot():
     global_config = read_config_file()
-    return read_config_item(global_config, 'LOGROOT')
+    return read_config_item(global_config, "LOGROOT")
 
 
 def get_bigfiles(root):
-    output = getoutput('find {} -size +100k'.format(root))
+    output = getoutput("find {} -size +100k".format(root))
     if len(output):
-        bigfiles = output.split('\n')
+        bigfiles = output.split("\n")
         return bigfiles
     else:
         return []
 
 
 def save_code(logdir, coderoot):
-    zip_outfile = os.path.join(logdir, 'code.tgz')
+    zip_outfile = os.path.join(logdir, "code.tgz")
 
     # skip over non-sourcecode items
-    exclude_list = ['*.pth', '*.jpg', '*.jpeg', '*.pyc', '*.so', '*.o',
-                    '*.git', '__pycache__', '*~']
+    exclude_list = ["*.pth", "*.jpg", "*.jpeg", "*.pyc", "*.so", "*.o", "*.git", "__pycache__", "*~"]
     bigfiles = get_bigfiles(coderoot)
-    exclude_str = ''
+    exclude_str = ""
     for ex in exclude_list + bigfiles:
-        exclude_str += ' --exclude=\'{}\''.format(ex)
+        exclude_str += " --exclude='{}'".format(ex)
 
-    cmd = 'tar -czvf {} {} {}'.format(zip_outfile, exclude_str, coderoot)
+    cmd = "tar -czvf {} {} {}".format(zip_outfile, exclude_str, coderoot)
     call(shlex.split(cmd), stdout=DEVNULL, stderr=DEVNULL)
 
 
@@ -158,12 +158,12 @@ def save_hparams(hparams, logdir):
     """
     Save hyperparameters into a json file
     """
-    json_fn = os.path.join(logdir, 'hparams.json')
+    json_fn = os.path.join(logdir, "hparams.json")
 
     if os.path.isfile(json_fn):
         return
 
-    with open(json_fn, 'w') as outfile:
+    with open(json_fn, "w") as outfile:
         json.dump(hparams, outfile, indent=4)
 
 
