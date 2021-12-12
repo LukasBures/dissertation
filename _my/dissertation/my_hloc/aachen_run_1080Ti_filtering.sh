@@ -19,8 +19,8 @@ outputs_folder=results
 # EXPERIMENTS:
 # -----------------------------------------------------------------------------
 retrieval_conf="netvlad"
-feature_conf="superpoint_aachen"
-matcher_conf="superglue"
+feature_conf="superpoint_fast"
+matcher_conf="superglue_fast"
 num_covis=20
 num_loc=50
 static_from=50
