@@ -127,7 +127,7 @@ for static_percentage in static_percentages:
         pairs_from_retrieval.main(global_descriptors, loc_pairs, args.num_loc, query_prefix="query", db_model=reference_sfm)
         loc_matches = match_features.main(matcher_conf, loc_pairs, f"static{static_percentage}_dynamic{dynamic_percentage}_{feature_conf['output']}", outputs)
 
-        if "superpoint" in args.feature_conf.lower() and "superglue" in args.matcher_conf.lower():
+        if not("superpoint" in args.feature_conf.lower() and "superglue" in args.matcher_conf.lower()):
             # Not required with SuperPoint + SuperGlue.
             localize_sfm.main(
                 reference_sfm,
