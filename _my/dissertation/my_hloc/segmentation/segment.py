@@ -34,8 +34,8 @@ TEST: bool = False
 # ------------------------------------------------------------------------
 path_root: str = "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1/best_images"
 print(f"Dataset: {dataset}, segmentation method: {method}")
-output_dst_root: str = f"/media/lukas/WD_2TB/dissertation/aachen_all_v1/{store_name}"
-pickle_output_dst_root: str = f"/media/lukas/WD_2TB/dissertation/aachen_all_v1"
+output_dst_root: str = f"/data512/dissertation_results/aachen_all_v1/{store_name}"
+pickle_output_dst_root: str = f"/data512/dissertation_results/aachen_all_v1"
 if to_pickle:
     os.makedirs(pickle_output_dst_root, exist_ok=True)
 else:

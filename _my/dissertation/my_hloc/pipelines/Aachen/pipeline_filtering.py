@@ -48,7 +48,6 @@ sift_sfm = outputs / "sfm_sift"  # from which we extract the reference poses
 reference_sfm = outputs / "sfm_superpoint+superglue"  # the SfM model we will build
 sfm_pairs = outputs / f"pairs-db-covis{args.num_covis}.txt"  # top-k most covisible in SIFT model
 loc_pairs = outputs / f"pairs-query-netvlad{args.num_loc}.txt"  # top-k retrieved by NetVLAD
-results = outputs / f"Aachen_hloc_superpoint+superglue_netvlad{args.num_loc}.txt"
 static_from: int = args.static_from
 static_to: int = args.static_to
 static_step: int = args.static_step
@@ -125,16 +124,21 @@ for static_percentage in static_percentages:
         # Global descriptors, pairs, and local matches.
         global_descriptors = extract_features.main(retrieval_conf, images, outputs)
         pairs_from_retrieval.main(global_descriptors, loc_pairs, args.num_loc, query_prefix="query", db_model=reference_sfm)
-        loc_matches = match_features.main(matcher_conf, loc_pairs, f"static{static_percentage}_dynamic{dynamic_percentage}_{feature_conf['output']}", outputs)
+        loc_matches = match_features.main(matcher_conf, loc_pairs, feature_conf['output'], outputs)
 
-        if not("superpoint" in args.feature_conf.lower() and "superglue" in args.matcher_conf.lower()):
+        if "superpoint" in args.feature_conf.lower() and "superglue" in args.matcher_conf.lower():
             # Not required with SuperPoint + SuperGlue.
-            localize_sfm.main(
-                reference_sfm,
-                dataset / "queries/*_time_queries_with_intrinsics.txt",
-                loc_pairs,
-                new_features_pth,
-                loc_matches,
-                results,
-                covisibility_clustering=False,
-            )
+            covisibility_clustering: bool = False
+        else:
+            covisibility_clustering: bool = True
+
+        results = outputs / f"Aachen_hloc-{args.feature_conf.lower()}+{args.matcher_conf.lower()}_netvlad{args.num_loc}+static{static_percentage}_dynamic{dynamic_percentage}.txt"
+        localize_sfm.main(
+            reference_sfm,
+            dataset / "queries/*_time_queries_with_intrinsics.txt",
+            loc_pairs,
+            new_features_pth,
+            loc_matches,
+            results,
+            covisibility_clustering=covisibility_clustering,
+        )
