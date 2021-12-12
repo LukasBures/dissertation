@@ -5,7 +5,7 @@ source /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
 selected_gpu=0  # 1080Ti
 output_root_folder=/media/lukas/WD_2TB/dissertation
 project_folder=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc
-this_file_name=aachen_v1_1_run_1080Ti.sh
+this_file_name=`basename "$0"`
 cd "$project_folder" || exit 1
 
 # Aachen v1_1 dataset settings
