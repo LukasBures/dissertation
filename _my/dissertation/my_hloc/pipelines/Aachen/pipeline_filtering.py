@@ -36,6 +36,7 @@ parser.add_argument("--static_step", type=int, default=10, help="Static percenta
 parser.add_argument("--dynamic_from", type=int, default=100, help="Dynamic from percentage.")
 parser.add_argument("--dynamic_to", type=int, default=100, help="Dynamic to percentage (included).")
 parser.add_argument("--dynamic_step", type=int, default=10, help="Dynamic percentage step.")
+parser.add_argument("--segmentations_file", type=Path, help="Path to the file with semantic segmentations.")
 args = parser.parse_args()
 
 # Paths.
@@ -54,6 +55,7 @@ static_step: int = args.static_step
 dynamic_from: int = args.dynamic_from
 dynamic_to: int = args.dynamic_to
 dynamic_step: int = args.dynamic_step
+segmentations_file = args.segmentations_file
 
 # Test package versions.
 print(f"__Python VERSION: {sys.version}")  # 3.6.12 (default, Aug 18 2020, 02:08:22)
@@ -114,7 +116,7 @@ for static_percentage in static_percentages:
         # Filter dynamic / static features.
         pth, nm = os.path.split(os.path.abspath(all_features_pth))
         new_features_pth = os.path.join(pth, "new_" + nm)
-        ff = FeatureFilter(h5_file_path=all_features_pth, new_h5_file_path=new_features_pth)
+        ff = FeatureFilter(h5_file_path=all_features_pth, new_h5_file_path=new_features_pth, segmentations_file=segmentations_file)
         filter_summary_info = ff.filter_and_update(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
         print(f"Filter summary info: {filter_summary_info}.")
 

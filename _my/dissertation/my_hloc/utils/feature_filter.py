@@ -8,10 +8,7 @@ from typing import List
 
 class FeatureFilter:
     def __init__(self, h5_file_path: str, new_h5_file_path: str, segmentations_file: str = None) -> None:
-        if segmentations_file:
-            self._segmentations_file: str = segmentations_file
-        else:
-            self._segmentations_file: str = "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1/segment_nvidia_v01.pkl"
+        self._segmentations_file: str = segmentations_file
         with open(self._segmentations_file, "rb") as fl:
             self._segmentation_data = pickle.load(fl)
 
