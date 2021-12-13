@@ -109,7 +109,7 @@ matcher_configs = {
         "model": {
             "name": "superglue",
             "weights": "outdoor",
-            "sinkhorn_iterations": 5,
+            "sinkhorn_iterations": 1,
         },
     },
     "superglue": {
