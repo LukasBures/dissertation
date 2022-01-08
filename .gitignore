@@ -2,7 +2,11 @@
 
 poetry.lock
 /_my/dissertation/my_hloc/logs
-
+/_my/experiments_rigo
+/old_HierarchicalLocalization
+/specom2020
+/Hierarchical-Localization 
+/SuperGluePretrainedNetwork
 /visuallocalizationbenchmark
 /r2d2
 /PyTorch-Encoding

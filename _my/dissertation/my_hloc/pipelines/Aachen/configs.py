@@ -17,6 +17,18 @@ retrieval_configs = {
 }
 
 feature_configs = {
+    "superpoint_fast": {
+        "output": "feats-superpoint-n4096-r1024",
+        "model": {
+            "name": "superpoint",
+            "nms_radius": 3,
+            "max_keypoints": 1024,
+        },
+        "preprocessing": {
+            "grayscale": True,
+            "resize_max": 1024,
+        },
+    },
     "superpoint_aachen": {
         "output": "feats-superpoint-n4096-r1024",
         "model": {
@@ -92,6 +104,14 @@ feature_configs = {
 #     - output: the name of the match file that will be generated.
 #     - model: the model configuration, as passed to a feature matcher.
 matcher_configs = {
+    "superglue_fast": {
+        "output": "matches-superglue",
+        "model": {
+            "name": "superglue",
+            "weights": "outdoor",
+            "sinkhorn_iterations": 5,
+        },
+    },
     "superglue": {
         "output": "matches-superglue",
         "model": {

@@ -5,7 +5,7 @@ source /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
 selected_gpu=1  # 1080
 output_root_folder=/media/lukas/WD_2TB/dissertation
 project_folder=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc
-this_file_name=7Scenesěš  _run_1080.sh
+this_file_name=`basename "$0"`
 cd "$project_folder" || exit 1
 
 # 4Seasons dataset settings
