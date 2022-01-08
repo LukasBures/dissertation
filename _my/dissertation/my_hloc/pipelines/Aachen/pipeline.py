@@ -15,6 +15,8 @@ from hloc import (
     pairs_from_retrieval,
     triangulation,
 )
+from feature_filter import FeatureFilter
+
 
 # parameters
 parser = argparse.ArgumentParser()
