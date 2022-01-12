@@ -9,6 +9,7 @@ import pycolmap
 import torch
 from configs import feature_configs, matcher_configs, retrieval_configs
 
+sys.path.append("/home/lukas/PycharmProjects/dissertation/Hierarchical-Localization")
 from hloc import (
     colmap_from_nvm,
     extract_features,
@@ -18,6 +19,7 @@ from hloc import (
     pairs_from_retrieval,
     triangulation,
 )
+
 from feature_filter import FeatureFilter
 
 
