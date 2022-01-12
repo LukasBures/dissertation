@@ -5,7 +5,7 @@ from pathlib import Path
 from pprint import pformat
 import os
 import itertools
-
+import pycolmap
 import torch
 from configs import feature_configs, matcher_configs, retrieval_configs
 
@@ -75,6 +75,7 @@ print(f"__Available Devices: {torch.cuda.device_count()}")
 print(f"__Current CUDA Device: {torch.cuda.get_device_name(torch.cuda.current_device())}")
 torch.cuda.set_device(args.gpu_number)
 print(f"__CUDA Device Changed To: {torch.cuda.get_device_name(torch.cuda.current_device())}")
+print(f"__PYCOLMAP version: {pycolmap.__version__}")
 
 # pick one of the configurations for extraction and matching
 retrieval_conf = retrieval_configs[args.retrieval_conf]
