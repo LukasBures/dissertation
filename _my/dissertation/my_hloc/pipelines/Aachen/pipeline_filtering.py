@@ -68,6 +68,7 @@ segmentations_file = args.segmentations_file
 # Test package versions.
 print(f"__Python VERSION: {sys.version}")  # 3.6.12 (default, Aug 18 2020, 02:08:22)
 print(f"__pycolmap VERSION: {pycolmap.__version__}")  # 0.1.0
+print(f"__triangulation.main parameters: {triangulation.main.__code__.co_varnames}")
 print(f"__pyTorch VERSION: {torch.__version__}")  # 1.7.0+cu101
 tmp_output = subprocess.check_output(["nvcc", "--version"])
 tmp_output = tmp_output.decode("utf-8")
