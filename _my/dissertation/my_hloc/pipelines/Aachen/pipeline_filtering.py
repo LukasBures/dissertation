@@ -13,7 +13,9 @@ sys.path.append("/home/lukas/PycharmProjects/dissertation/Hierarchical-Localizat
 try:
     user_paths = os.environ['PYTHONPATH'].split(os.pathsep)
 except KeyError:
-    user_paths = []
+    pass
+else:
+    print(f"__PYTHONPATH: {user_paths}")
 
 from hloc import (
     colmap_from_nvm,
