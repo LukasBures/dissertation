@@ -16,8 +16,5 @@ exclude =
     # ignore venv
     .venv
     # ignore other folders
-    regime_change
-    research
-    config
 max-complexity = 10
 max-line-length = 120
