@@ -114,7 +114,7 @@ py==1.9.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycodestyle==2.6.0
-pycolmap==0.0.1
+pycolmap>=0.1.0
 pycparser==2.20
 pydensecrf==1.0rc3
 pyflakes==2.2.0

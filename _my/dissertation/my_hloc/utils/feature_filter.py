@@ -1,4 +1,3 @@
-from tqdm import tqdm
 import h5py
 import numpy as np
 import random
@@ -74,9 +73,91 @@ class FeatureFilter:
         kept_static_kp_count: int = 0
         kept_dynamic_kp_count: int = 0
 
+        with h5py.File(str(self._h5_file_path), "r") as source_file:
+            with h5py.File(str(self._new_h5_file_path), "w") as destination_file:
+                for idx, image_name in enumerate(self._names):
+                    keypoints = source_file[image_name]["keypoints"].__array__()
+                    descriptors = source_file[image_name]["descriptors"].__array__()
+                    scores = source_file[image_name]["scores"].__array__()
+                    image_size = source_file[image_name]["image_size"].__array__()
+
+                    # If it is db file - ignore it
+                    if "db" == image_name.split("/")[0]:
+                        grp = destination_file.create_group(image_name)
+                        grp.create_dataset("keypoints", data=keypoints)
+                        grp.create_dataset("descriptors", data=descriptors)
+                        grp.create_dataset("scores", data=scores)
+                        grp.create_dataset("image_size", data=image_size)
+                        continue
+
+                    dynamic, static = self._split_keypoints(
+                        keypoints, image_name.split("/")[-1], image_width=image_size[0], image_height=image_size[1]
+                    )
+
+                    if static_percentage_keep == 100:
+                        keep_static = static
+                    else:
+                        n = int(static_percentage_keep / 100.0 * len(static))
+                        keep_static = random.sample(static, n)
+
+                    if dynamic_percentage_keep == 100:
+                        keep_dynamic = dynamic
+                    else:
+                        m = int(dynamic_percentage_keep / 100.0 * len(dynamic))
+                        keep_dynamic = random.sample(dynamic, m)
+
+                    print(f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}")
+
+                    kept_static_kp_count += len(keep_static)
+                    kept_dynamic_kp_count += len(keep_dynamic)
+                    total_static_kp_count += len(static)
+                    total_dynamic_kp_count += len(dynamic)
+
+                    kp_info_unsorted: list = keep_static + keep_dynamic
+                    kp_info: list = sorted(kp_info_unsorted, key=lambda dt: dt["idx"])
+                    new_descriptors: list = list()
+                    new_scores: list = list()
+                    new_keypoints: list = list()
+
+                    for idx, k in enumerate(kp_info):
+                        if idx == 0:
+                            new_descriptors = descriptors[:, k["idx"]]
+                        else:
+                            new_descriptors = np.vstack([new_descriptors, descriptors[:, k["idx"]]])
+                        # new_descriptors.append(descriptors[:, k["idx"]])
+                        new_scores.append(scores[k["idx"]])
+                        new_keypoints.append(keypoints[k["idx"]])
+
+                    # Write to new file.
+                    grp = destination_file.create_group(image_name)
+                    grp.create_dataset("keypoints", data=new_keypoints)
+                    grp.create_dataset("descriptors", data=np.swapaxes(new_descriptors, 0, 1))
+                    grp.create_dataset("scores", data=np.asarray(new_scores))
+                    grp.create_dataset("image_size", data=image_size)
+
+        summary_info: dict = {
+            "static_percentage_to_keep": static_percentage_keep,
+            "dynamic_percentage_to_keep": dynamic_percentage_keep,
+            "total_static_kp_count": total_static_kp_count,
+            "total_dynamic_kp_count": total_dynamic_kp_count,
+            "kept_static_kp_count": kept_static_kp_count,
+            "kept_dynamic_kp_count": kept_dynamic_kp_count,
+        }
+        return summary_info
+
+    def filter_and_update_v2(self, total_kp_keep, dynamic_percentage_keep) -> dict:
+        # Percentage check
+        if dynamic_percentage_keep > 100:
+            raise Exception("Dynamic percentage to keep has to be lower or equal to 100%.")
+
+        total_static_kp_count: int = 0
+        total_dynamic_kp_count: int = 0
+        kept_static_kp_count: int = 0
+        kept_dynamic_kp_count: int = 0
+
         source_file = h5py.File(str(self._h5_file_path), "r")
         destination_file = h5py.File(str(self._new_h5_file_path), "w")
-        for image_name in tqdm(self._names):
+        for idx, image_name in enumerate(self._names):
             keypoints = source_file[image_name]["keypoints"].__array__()
             descriptors = source_file[image_name]["descriptors"].__array__()
             scores = source_file[image_name]["scores"].__array__()
@@ -86,17 +167,28 @@ class FeatureFilter:
                 keypoints, image_name.split("/")[-1], image_width=image_size[0], image_height=image_size[1]
             )
 
-            if static_percentage_keep == 100:
+            if len(keypoints) < total_kp_keep:
+                # If low amount of KPs - keep them all.
                 keep_static = static
-            else:
-                n = int(static_percentage_keep / 100.0 * len(static))
-                keep_static = random.sample(static, n)
-
-            if dynamic_percentage_keep == 100:
                 keep_dynamic = dynamic
             else:
-                m = int(dynamic_percentage_keep / 100.0 * len(dynamic))
-                keep_dynamic = random.sample(dynamic, m)
+                # Calculate percentages.
+                if dynamic_percentage_keep == 100:
+                    keep_dynamic = dynamic
+                else:
+                    m = int(dynamic_percentage_keep / 100.0 * len(dynamic))
+                    keep_dynamic = random.sample(dynamic, m)
+
+                # print(f"keep_dynamic len={len(keep_dynamic)}")
+                if len(keep_dynamic) > total_kp_keep:
+                    keep_dynamic = random.sample(dynamic, total_kp_keep)
+                    keep_static = list()
+                else:
+                    # print(f"static len={len(static)}")
+                    keep_static = random.sample(static, total_kp_keep - len(keep_dynamic))
+
+                if (len(keep_static) + len(keep_dynamic)) > total_kp_keep:
+                    print(f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}")
 
             kept_static_kp_count += len(keep_static)
             kept_dynamic_kp_count += len(keep_dynamic)
@@ -125,7 +217,7 @@ class FeatureFilter:
         destination_file.close()
 
         summary_info: dict = {
-            "static_percentage_to_keep": static_percentage_keep,
+            "total_kp_keep": total_kp_keep,
             "dynamic_percentage_to_keep": dynamic_percentage_keep,
             "total_static_kp_count": total_static_kp_count,
             "total_dynamic_kp_count": total_dynamic_kp_count,
@@ -136,10 +228,11 @@ class FeatureFilter:
 
 
 if __name__ == "__main__":
-    file_name = "/data512/dissertation_results/test-aachen-2021.12.13_13.47.06/results/feats-superpoint-n4096-r1024.h5"
-    new_h5_file_path = "/data512/dissertation_results/test-aachen-2021.12.13_13.47.06/results/test_feats-superpoint-n4096-r1024.h5"
+    file_name = "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/feats-superpoint-n4096-r1024.h5"
+    new_h5_file_path = "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/test2_feats-superpoint-n4096-r1024.h5"
     segmentations_file = "/data512/dissertation_results/aachen_all_v1/segment_nvidia_v01.pkl"
     ff = FeatureFilter(h5_file_path=file_name, new_h5_file_path=new_h5_file_path, segmentations_file=segmentations_file)
-    new_kps = ff.filter_and_update(static_percentage_keep=50, dynamic_percentage_keep=100)
-
+    filter_info = ff.filter_and_update(static_percentage_keep=50, dynamic_percentage_keep=100)
+    # filter_info = ff.filter_and_update_v2(total_kp_keep=512, dynamic_percentage_keep=100)
+    print(f"summary_info={filter_info}")
     print("DONE filter_features.py")

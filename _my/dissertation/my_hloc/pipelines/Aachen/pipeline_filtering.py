@@ -8,6 +8,7 @@ import itertools
 
 import torch
 from configs import feature_configs, matcher_configs, retrieval_configs
+
 from hloc import (
     colmap_from_nvm,
     extract_features,
@@ -121,7 +122,16 @@ for static_percentage in static_percentages:
         print(f"Filter summary info: {filter_summary_info}.")
 
         # Triangulation.
-        triangulation.main(reference_sfm, sift_sfm, images, sfm_pairs, new_features_pth, sfm_matches, colmap_path="colmap", skip_geometric_verification=True)
+        triangulation.main(
+            sfm_dir=reference_sfm,
+            reference_model=sift_sfm,
+            image_dir=images,
+            pairs=sfm_pairs,
+            features=new_features_pth,
+            matches=sfm_matches,
+            skip_geometric_verification=False,
+            verbose=True
+        )
 
         # Global descriptors, pairs, and local matches.
         global_descriptors = extract_features.main(retrieval_conf, images, outputs)
