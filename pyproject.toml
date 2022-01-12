@@ -20,6 +20,7 @@ tensorboardX = "^2.4.1"
 runx = "0.0.6"
 scikit-image = "^0.19.0"
 # pycolmap = { git = "https://github.com/colmap/pycolmap.git", branch = "master" }
+plotly = "^5.5.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.4"
