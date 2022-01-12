@@ -60,6 +60,7 @@ segmentations_file = args.segmentations_file
 
 # Test package versions.
 print(f"__Python VERSION: {sys.version}")  # 3.6.12 (default, Aug 18 2020, 02:08:22)
+print(f"__pycolmap VERSION: {pycolmap.__version__}")  # 0.1.0
 print(f"__pyTorch VERSION: {torch.__version__}")  # 1.7.0+cu101
 tmp_output = subprocess.check_output(["nvcc", "--version"])
 tmp_output = tmp_output.decode("utf-8")
@@ -75,7 +76,6 @@ print(f"__Available Devices: {torch.cuda.device_count()}")
 print(f"__Current CUDA Device: {torch.cuda.get_device_name(torch.cuda.current_device())}")
 torch.cuda.set_device(args.gpu_number)
 print(f"__CUDA Device Changed To: {torch.cuda.get_device_name(torch.cuda.current_device())}")
-print(f"__PYCOLMAP version: {pycolmap.__version__}")
 
 # pick one of the configurations for extraction and matching
 retrieval_conf = retrieval_configs[args.retrieval_conf]
