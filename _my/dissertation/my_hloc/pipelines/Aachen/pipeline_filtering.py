@@ -10,6 +10,11 @@ import torch
 from configs import feature_configs, matcher_configs, retrieval_configs
 
 sys.path.append("/home/lukas/PycharmProjects/dissertation/Hierarchical-Localization")
+try:
+    user_paths = os.environ['PYTHONPATH'].split(os.pathsep)
+except KeyError:
+    user_paths = []
+
 from hloc import (
     colmap_from_nvm,
     extract_features,
