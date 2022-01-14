@@ -19,7 +19,7 @@ from hloc import (
     triangulation,
 )
 
-outputs = Path("/data512/dissertation_results/aachen-2022.01.12_14.27.51/results")
+outputs = Path("/data512/dissertation_results/aachen-2022.01.13_09.23.30/results")
 sift_sfm = outputs / "sfm_sift"  # from which we extract the reference poses
 reference_sfm = outputs / "sfm_superpoint+superglue"  # the SfM model we will build
 dataset = Path("/data512/datasets/aachen/")
@@ -31,12 +31,20 @@ pth, nm = os.path.split(os.path.abspath(all_features_pth))
 new_features_pth = Path(os.path.join(pth, "new_" + nm))
 
 sfm_matches = outputs / "feats-superpoint-n4096-r1024_matches-superglue_pairs-db-covis20.h5"
-
+netvlad_matcehs = outputs / "feats-superpoint-n4096-r1024_matches-superglue_pairs-query-netvlad50.h5"
 
 # colmap matches_importer --database_path /data512/dissertation_results/aachen-2021.12.14_18.04.18/results/sfm_superpoint+superglue/database.db --match_list_path /data512/dissertation_results/aachen-2021.12.14_18.04.18/results/pairs-db-covis20.txt --match_type pairs --SiftMatching.use_gpu 0 --SiftMatching.max_num_trials 20000 --SiftMatching.min_inlier_ratio 0.1
 
-#with h5py.File(str(sfm_matches), 'r') as rrr:
-#    print(rrr.keys())
+with h5py.File(str(netvlad_matcehs), 'r') as rrr:
+    for idx, rr in enumerate(rrr):
+        n_matches = rrr[rr]['matches0'].shape[0]
+
+        # if n_matches < 1024:
+        #     print(f"{idx}) {rr} {n_matches}")
+        if "db" not in rr:
+            print(f"{idx}) {rr}")
+
+print("done")
 
 # with h5py.File(str(all_features_pth), 'r') as all:
 #    with h5py.File(str(new_features_pth), 'r') as new:

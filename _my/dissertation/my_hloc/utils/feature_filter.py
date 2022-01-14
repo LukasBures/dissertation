@@ -2,7 +2,7 @@ import h5py
 import numpy as np
 import random
 import pickle
-from typing import List
+from typing import List, Optional
 
 
 class FeatureFilter:
@@ -61,7 +61,7 @@ class FeatureFilter:
 
         return dynamic_keypoints, static_keypoints
 
-    def filter_and_update(self, static_percentage_keep, dynamic_percentage_keep) -> dict:
+    def filter_and_update_kp(self, static_percentage_keep, dynamic_percentage_keep) -> Optional[dict]:
         # Percentage check
         if static_percentage_keep > 100:
             raise Exception("Static percentage to keep has to be lower or equal to 100%.")
@@ -143,9 +143,10 @@ class FeatureFilter:
             "kept_static_kp_count": kept_static_kp_count,
             "kept_dynamic_kp_count": kept_dynamic_kp_count,
         }
+        print(f"Filter summary info: {summary_info}.")
         return summary_info
 
-    def filter_and_update_v2(self, total_kp_keep, dynamic_percentage_keep) -> dict:
+    def filter_and_update_v2(self, total_kp_keep, dynamic_percentage_keep) -> Optional[dict]:
         # Percentage check
         if dynamic_percentage_keep > 100:
             raise Exception("Dynamic percentage to keep has to be lower or equal to 100%.")
@@ -224,7 +225,11 @@ class FeatureFilter:
             "kept_static_kp_count": kept_static_kp_count,
             "kept_dynamic_kp_count": kept_dynamic_kp_count,
         }
+        print(f"Filter summary info: {summary_info}.")
         return summary_info
+
+    def filter_and_update_matches(self) -> None:
+        pass
 
 
 if __name__ == "__main__":
@@ -232,7 +237,7 @@ if __name__ == "__main__":
     new_h5_file_path = "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/test2_feats-superpoint-n4096-r1024.h5"
     segmentations_file = "/data512/dissertation_results/aachen_all_v1/segment_nvidia_v01.pkl"
     ff = FeatureFilter(h5_file_path=file_name, new_h5_file_path=new_h5_file_path, segmentations_file=segmentations_file)
-    filter_info = ff.filter_and_update(static_percentage_keep=50, dynamic_percentage_keep=100)
+    ff.filter_and_update_kp(static_percentage_keep=50, dynamic_percentage_keep=100)
     # filter_info = ff.filter_and_update_v2(total_kp_keep=512, dynamic_percentage_keep=100)
-    print(f"summary_info={filter_info}")
+    ff.filter_and_update_matches()
     print("DONE filter_features.py")
