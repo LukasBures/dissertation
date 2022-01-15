@@ -31,12 +31,15 @@ pth, nm = os.path.split(os.path.abspath(all_features_pth))
 new_features_pth = Path(os.path.join(pth, "new_" + nm))
 
 sfm_matches = outputs / "feats-superpoint-n4096-r1024_matches-superglue_pairs-db-covis20.h5"
-netvlad_matcehs = outputs / "feats-superpoint-n4096-r1024_matches-superglue_pairs-query-netvlad50.h5"
+netvlad_matches = outputs / "feats-superpoint-n4096-r1024_matches-superglue_pairs-query-netvlad50.h5"
+new_features_pth = outputs / "new_feats-superpoint-n4096-r1024.h5"
+
 
 # colmap matches_importer --database_path /data512/dissertation_results/aachen-2021.12.14_18.04.18/results/sfm_superpoint+superglue/database.db --match_list_path /data512/dissertation_results/aachen-2021.12.14_18.04.18/results/pairs-db-covis20.txt --match_type pairs --SiftMatching.use_gpu 0 --SiftMatching.max_num_trials 20000 --SiftMatching.min_inlier_ratio 0.1
 
-with h5py.File(str(netvlad_matcehs), 'r') as rrr:
+with h5py.File(str(new_features_pth), 'r') as rrr:
     for idx, rr in enumerate(rrr):
+        # rrr["query"]["day"]["nexus4"]["IMG_20140521_135826.jpg"].keys()
         n_matches = rrr[rr]['matches0'].shape[0]
 
         # if n_matches < 1024:
