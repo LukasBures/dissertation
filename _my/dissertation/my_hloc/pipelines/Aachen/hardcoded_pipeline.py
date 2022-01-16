@@ -1,25 +1,11 @@
-import argparse
-import subprocess
-import sys
 from pathlib import Path
-from pprint import pformat
 import os
-import itertools
 import h5py
-
-import torch
 from configs import feature_configs, matcher_configs, retrieval_configs
-from hloc import (
-    colmap_from_nvm,
-    extract_features,
-    localize_sfm,
-    match_features,
-    pairs_from_covisibility,
-    pairs_from_retrieval,
-    triangulation,
-)
 
-outputs = Path("/data512/dissertation_results/aachen-2022.01.13_09.23.30/results")
+
+# outputs = Path("/data512/dissertation_results/aachen-2022.01.13_09.23.30/results")
+outputs = Path("/Users/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen")
 sift_sfm = outputs / "sfm_sift"  # from which we extract the reference poses
 reference_sfm = outputs / "sfm_superpoint+superglue"  # the SfM model we will build
 dataset = Path("/data512/datasets/aachen/")
@@ -27,12 +13,10 @@ images = dataset / "images/images_upright/"
 sfm_pairs = outputs / f"pairs-db-covis20.txt"  # top-k most covisible in SIFT model
 
 all_features_pth = outputs / "feats-superpoint-n4096-r1024.h5"
-pth, nm = os.path.split(os.path.abspath(all_features_pth))
-new_features_pth = Path(os.path.join(pth, "new_" + nm))
+new_features_pth = outputs / "new_feats-superpoint-n4096-r1024.h5"
 
 sfm_matches = outputs / "feats-superpoint-n4096-r1024_matches-superglue_pairs-db-covis20.h5"
 netvlad_matches = outputs / "feats-superpoint-n4096-r1024_matches-superglue_pairs-query-netvlad50.h5"
-new_features_pth = outputs / "new_feats-superpoint-n4096-r1024.h5"
 
 
 # colmap matches_importer --database_path /data512/dissertation_results/aachen-2021.12.14_18.04.18/results/sfm_superpoint+superglue/database.db --match_list_path /data512/dissertation_results/aachen-2021.12.14_18.04.18/results/pairs-db-covis20.txt --match_type pairs --SiftMatching.use_gpu 0 --SiftMatching.max_num_trials 20000 --SiftMatching.min_inlier_ratio 0.1
@@ -63,7 +47,15 @@ print("done")
 
 
 
-
+from hloc import (
+    colmap_from_nvm,
+    extract_features,
+    localize_sfm,
+    match_features,
+    pairs_from_covisibility,
+    pairs_from_retrieval,
+    triangulation,
+)
 
 # sfm_dir, reference_sfm_model, image_dir, pairs, features, matches,
 triangulation.main(

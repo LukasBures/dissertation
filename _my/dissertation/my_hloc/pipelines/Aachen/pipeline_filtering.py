@@ -50,22 +50,22 @@ parser.add_argument("--segmentations_file", type=Path, help="Path to the file wi
 args = parser.parse_args()
 
 # Paths.
-dataset = args.dataset
-images = dataset / "images/images_upright/"
+dataset_name = args.dataset
+images_path = dataset_name / "images/images_upright/"
 
 # Configurations.
-outputs = args.outputs  # where everything will be saved
-sift_sfm = outputs / "sfm_sift"  # from which we extract the reference poses
-reference_sfm = outputs / "sfm_superpoint+superglue"  # the SfM model we will build
-sfm_pairs = outputs / f"pairs-db-covis{args.num_covis}.txt"  # top-k most covisible in SIFT model
-loc_pairs = outputs / f"pairs-query-netvlad{args.num_loc}.txt"  # top-k retrieved by NetVLAD
+outputs_path = args.outputs  # where everything will be saved
+sift_sfm_path = outputs_path / "sfm_sift"  # from which we extract the reference poses
+reference_sfm_path = outputs_path / "sfm_superpoint+superglue"  # the SfM model we will build
+sfm_pairs_path = outputs_path / f"pairs-db-covis{args.num_covis}.txt"  # top-k most covisible in SIFT model
+loc_pairs_path = outputs_path / f"pairs-query-netvlad{args.num_loc}.txt"  # top-k retrieved by NetVLAD
 static_from: int = args.static_from
 static_to: int = args.static_to
 static_step: int = args.static_step
 dynamic_from: int = args.dynamic_from
 dynamic_to: int = args.dynamic_to
 dynamic_step: int = args.dynamic_step
-segmentations_file = args.segmentations_file
+segmentations_file_path = args.segmentations_file
 
 # Test package versions.
 print(f"__Python VERSION: {sys.version}")  # 3.6.12 (default, Aug 18 2020, 02:08:22)
@@ -108,36 +108,51 @@ print("\n")
 print("-" * 50)
 print("STARTING\n\n")
 
-all_features_pth = extract_features.main(feature_conf, images, outputs)
+all_features_pth = extract_features.main(feature_conf, images_path, outputs_path)
 colmap_from_nvm.main(
-    dataset / "3D-models/aachen_cvpr2018_db.nvm",
-    dataset / "3D-models/database_intrinsics.txt",
-    dataset / "aachen.db",
-    sift_sfm,
+    dataset_name / "3D-models/aachen_cvpr2018_db.nvm",
+    dataset_name / "3D-models/database_intrinsics.txt",
+    dataset_name / "aachen.db",
+    sift_sfm_path,
 )
 
-pairs_from_covisibility.main(sift_sfm, sfm_pairs, num_matched=args.num_covis)
-sfm_matches = match_features.main(matcher_conf, sfm_pairs, feature_conf["output"], outputs)
+pairs_from_covisibility.main(sift_sfm_path, sfm_pairs_path, num_matched=args.num_covis)
 
 for static_percentage in static_percentages:
     for dynamic_percentage in dynamic_percentages:
+        filtered_kp_file_prefix: str = "new_"
+
         # Print static and dynamic percentages.
         print("-" * 50)
         print(f"Starting: static: {static_percentage}%, dynamic: {dynamic_percentage}")
 
         # Filter dynamic / static features.
         pth, nm = os.path.split(os.path.abspath(all_features_pth))
-        new_features_pth = Path(os.path.join(pth, "new_" + nm))
-        ff = FeatureFilter(h5_file_path=all_features_pth, new_h5_file_path=str(new_features_pth), segmentations_file=segmentations_file)
-        ff.filter_and_update_kp(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
+        new_features_pth = Path(os.path.join(pth, filtered_kp_file_prefix + nm))
+        ff = FeatureFilter(
+            h5_file_path=all_features_pth,
+            new_h5_file_path=str(new_features_pth),
+            segmentations_file=segmentations_file_path
+        )
+        ff.filter_and_update_kp(
+            static_percentage_keep=static_percentage,
+            dynamic_percentage_keep=dynamic_percentage
+        )
         ff.filter_and_update_matches()
+
+        sfm_matches = match_features.main(
+            conf=matcher_conf,
+            pairs=sfm_pairs_path,
+            features=filtered_kp_file_prefix + feature_conf["output"],
+            export_dir=outputs_path
+        )
 
         # Triangulation.
         triangulation.main(
-            sfm_dir=reference_sfm,
-            reference_model=sift_sfm,
-            image_dir=images,
-            pairs=sfm_pairs,
+            sfm_dir=reference_sfm_path,
+            reference_model=sift_sfm_path,
+            image_dir=images_path,
+            pairs=sfm_pairs_path,
             features=new_features_pth,
             matches=sfm_matches,
             skip_geometric_verification=False,
@@ -145,9 +160,9 @@ for static_percentage in static_percentages:
         )
 
         # Global descriptors, pairs, and local matches.
-        global_descriptors = extract_features.main(retrieval_conf, images, outputs)
-        pairs_from_retrieval.main(global_descriptors, loc_pairs, args.num_loc, query_prefix="query", db_model=reference_sfm)
-        loc_matches = match_features.main(matcher_conf, loc_pairs, feature_conf['output'], outputs)
+        global_descriptors = extract_features.main(retrieval_conf, images_path, outputs_path)
+        pairs_from_retrieval.main(global_descriptors, loc_pairs_path, args.num_loc, query_prefix="query", db_model=reference_sfm_path)
+        loc_matches = match_features.main(matcher_conf, loc_pairs_path, feature_conf['output'], outputs_path)
 
         if "superpoint" in args.feature_conf.lower() and "superglue" in args.matcher_conf.lower():
             # Not required with SuperPoint + SuperGlue.
@@ -155,11 +170,11 @@ for static_percentage in static_percentages:
         else:
             covisibility_clustering: bool = True
 
-        results = outputs / f"Aachen_hloc-{args.feature_conf.lower()}+{args.matcher_conf.lower()}_netvlad{args.num_loc}+static{static_percentage}_dynamic{dynamic_percentage}.txt"
+        results = outputs_path / f"Aachen_hloc-{args.feature_conf.lower()}+{args.matcher_conf.lower()}_netvlad{args.num_loc}+static{static_percentage}_dynamic{dynamic_percentage}.txt"
         localize_sfm.main(
-            reference_sfm,
-            dataset / "queries/*_time_queries_with_intrinsics.txt",
-            loc_pairs,
+            reference_sfm_path,
+            dataset_name / "queries/*_time_queries_with_intrinsics.txt",
+            loc_pairs_path,
             new_features_pth,
             loc_matches,
             results,
