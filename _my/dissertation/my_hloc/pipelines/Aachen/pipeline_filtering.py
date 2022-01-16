@@ -108,12 +108,16 @@ print("\n")
 print("-" * 50)
 print("STARTING\n\n")
 
-all_features_pth = extract_features.main(feature_conf, images_path, outputs_path)
+all_features_pth = extract_features.main(
+    conf=feature_conf,
+    image_dir=images_path,
+    export_dir=outputs_path
+)
 colmap_from_nvm.main(
-    dataset_name / "3D-models/aachen_cvpr2018_db.nvm",
-    dataset_name / "3D-models/database_intrinsics.txt",
-    dataset_name / "aachen.db",
-    sift_sfm_path,
+    nvm=dataset_name / "3D-models/aachen_cvpr2018_db.nvm",
+    intrinsics=dataset_name / "3D-models/database_intrinsics.txt",
+    database=dataset_name / "aachen.db",
+    output=sift_sfm_path
 )
 
 pairs_from_covisibility.main(sift_sfm_path, sfm_pairs_path, num_matched=args.num_covis)
@@ -160,9 +164,24 @@ for static_percentage in static_percentages:
         )
 
         # Global descriptors, pairs, and local matches.
-        global_descriptors = extract_features.main(retrieval_conf, images_path, outputs_path)
-        pairs_from_retrieval.main(global_descriptors, loc_pairs_path, args.num_loc, query_prefix="query", db_model=reference_sfm_path)
-        loc_matches = match_features.main(matcher_conf, loc_pairs_path, feature_conf['output'], outputs_path)
+        global_descriptors = extract_features.main(
+            conf=retrieval_conf,
+            image_dir=images_path,
+            export_dir=outputs_path
+        )
+        pairs_from_retrieval.main(
+            descriptors=global_descriptors,
+            output=loc_pairs_path,
+            num_matched=args.num_loc,
+            query_prefix="query",
+            db_model=reference_sfm_path
+        )
+        loc_matches = match_features.main(
+            conf=matcher_conf,
+            pairs=loc_pairs_path,
+            features=filtered_kp_file_prefix + feature_conf['output'],
+            export_dir=outputs_path
+        )
 
         if "superpoint" in args.feature_conf.lower() and "superglue" in args.matcher_conf.lower():
             # Not required with SuperPoint + SuperGlue.
@@ -172,11 +191,11 @@ for static_percentage in static_percentages:
 
         results = outputs_path / f"Aachen_hloc-{args.feature_conf.lower()}+{args.matcher_conf.lower()}_netvlad{args.num_loc}+static{static_percentage}_dynamic{dynamic_percentage}.txt"
         localize_sfm.main(
-            reference_sfm_path,
-            dataset_name / "queries/*_time_queries_with_intrinsics.txt",
-            loc_pairs_path,
-            new_features_pth,
-            loc_matches,
-            results,
+            reference_sfm=reference_sfm_path,
+            queries=dataset_name / "queries/*_time_queries_with_intrinsics.txt",
+            retrieval=loc_pairs_path,
+            features=new_features_pth,
+            matches=loc_matches,
+            results=results,
             covisibility_clustering=covisibility_clustering,
         )
