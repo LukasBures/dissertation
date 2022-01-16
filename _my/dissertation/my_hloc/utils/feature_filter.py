@@ -95,16 +95,22 @@ class FeatureFilter:
                     )
 
                     if static_percentage_keep == 100:
-                        keep_static = static
+                        keep_static: list = static
                     else:
-                        n = int(static_percentage_keep / 100.0 * len(static))
-                        keep_static = random.sample(static, n)
+                        if len(static) > 0:
+                            n: int = int(static_percentage_keep / 100.0 * len(static))
+                            keep_static: list = random.sample(static, n)
+                        else:
+                            keep_static: list = list()
 
                     if dynamic_percentage_keep == 100:
-                        keep_dynamic = dynamic
+                        keep_dynamic: list = dynamic
                     else:
-                        m = int(dynamic_percentage_keep / 100.0 * len(dynamic))
-                        keep_dynamic = random.sample(dynamic, m)
+                        if len(dynamic) > 0:
+                            m: int = int(dynamic_percentage_keep / 100.0 * len(dynamic))
+                            keep_dynamic: list = random.sample(dynamic, m)
+                        else:
+                            keep_dynamic: list = list()
 
                     print(f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}")
 
