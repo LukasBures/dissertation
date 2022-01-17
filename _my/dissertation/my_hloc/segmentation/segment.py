@@ -159,6 +159,15 @@ def mask_it(segmented_img, labels, filtered_names) -> dict:
 
 
 def load_segmentations(pth: str, method: str, labels, filtered_names) -> dict:
+    """
+
+
+    :param pth:
+    :param method:
+    :param labels:
+    :param filtered_names:
+    :return:
+    """
     output_data: dict = dict()
     if method is "segment_nvidia":
         for file in tqdm(os.listdir(pth)):
@@ -206,12 +215,26 @@ def load_segmentations(pth: str, method: str, labels, filtered_names) -> dict:
     return output_data
 
 
-def save_segmentations(segmentations, pth):
+def save_segmentations(segmentations, pth) -> None:
+    """
+
+
+    :param segmentations:
+    :param pth:
+    :return:
+    """
     for key in segmentations:
         cv2.imwrite(f"{pth}/{key}", segmentations[key]["total_mask"])
 
 
-def save_segmentations_to_pickle(data: dict, pth: str):
+def save_segmentations_to_pickle(data: dict, pth: str) -> None:
+    """
+
+
+    :param data:
+    :param pth:
+    :return:
+    """
     with open(pth, "wb") as flw:
         pickle.dump(data, flw)
 
