@@ -1,8 +1,8 @@
 # Activate virtual environment.
 . /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
 
-# Global settings.
-selected_gpu=0  # 1080Ti
+# Global settings
+selected_gpu=1  # 1080
 output_root_folder=/media/lukas/WD_2TB/dissertation
 project_folder=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc
 this_file_name=`basename "$0"`

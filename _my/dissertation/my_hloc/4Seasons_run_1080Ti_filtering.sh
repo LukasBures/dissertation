@@ -1,5 +1,5 @@
 # Activate virtual environment.
-. /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
+source /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
 
 # Global settings.
 selected_gpu=0  # 1080Ti
