@@ -124,7 +124,7 @@ pairs_from_covisibility.main(sift_sfm_path, sfm_pairs_path, num_matched=args.num
 
 for static_percentage in static_percentages:
     for dynamic_percentage in dynamic_percentages:
-        filtered_kp_file_prefix: str = "new_"
+        filtered_kp_file_prefix: str = f"s{static_percentage}_d{dynamic_percentages}_"
 
         # Print static and dynamic percentages.
         print("-" * 50)
@@ -183,13 +183,7 @@ for static_percentage in static_percentages:
             export_dir=outputs_path
         )
 
-        if "superpoint" in args.feature_conf.lower() and "superglue" in args.matcher_conf.lower():
-            # Not required with SuperPoint + SuperGlue.
-            covisibility_clustering: bool = False
-        else:
-            covisibility_clustering: bool = True
-
-        results = outputs_path / f"Aachen_hloc-{args.feature_conf.lower()}+{args.matcher_conf.lower()}_netvlad{args.num_loc}+static{static_percentage}_dynamic{dynamic_percentage}.txt"
+        results = outputs_path / f"Aachen_hloc-{args.feature_conf.lower()}+{args.matcher_conf.lower()}_netvlad{args.num_loc}+s{static_percentage}_d{dynamic_percentage}.txt"
         localize_sfm.main(
             reference_sfm=reference_sfm_path,
             queries=dataset_name / "queries/*_time_queries_with_intrinsics.txt",
@@ -197,5 +191,5 @@ for static_percentage in static_percentages:
             features=new_features_pth,
             matches=loc_matches,
             results=results,
-            covisibility_clustering=covisibility_clustering,
+            covisibility_clustering=False,
         )
