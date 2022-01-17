@@ -1,8 +1,8 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 import h5py
 from configs import feature_configs, matcher_configs, retrieval_configs
-
 
 # outputs = Path("/data512/dissertation_results/aachen-2022.01.13_09.23.30/results")
 outputs = Path("/Users/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen")
@@ -21,10 +21,10 @@ netvlad_matches = outputs / "feats-superpoint-n4096-r1024_matches-superglue_pair
 
 # colmap matches_importer --database_path /data512/dissertation_results/aachen-2021.12.14_18.04.18/results/sfm_superpoint+superglue/database.db --match_list_path /data512/dissertation_results/aachen-2021.12.14_18.04.18/results/pairs-db-covis20.txt --match_type pairs --SiftMatching.use_gpu 0 --SiftMatching.max_num_trials 20000 --SiftMatching.min_inlier_ratio 0.1
 
-with h5py.File(str(new_features_pth), 'r') as rrr:
+with h5py.File(str(new_features_pth), "r") as rrr:
     for idx, rr in enumerate(rrr):
         # rrr["query"]["day"]["nexus4"]["IMG_20140521_135826.jpg"].keys()
-        n_matches = rrr[rr]['matches0'].shape[0]
+        n_matches = rrr[rr]["matches0"].shape[0]
 
         # if n_matches < 1024:
         #     print(f"{idx}) {rr} {n_matches}")
@@ -39,12 +39,9 @@ print("done")
 #        print(new.keys())
 
 
-
 # retrieval_conf="netvlad"
 # feature_conf="superpoint_fast"
 # matcher_conf="superglue_fast"
-
-
 
 
 from hloc import (
@@ -66,9 +63,5 @@ triangulation.main(
     features=new_features_pth,
     matches=sfm_matches,
     skip_geometric_verification=False,
-    verbose=True
+    verbose=True,
 )
-
-
-
-

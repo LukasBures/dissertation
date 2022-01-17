@@ -1,3 +1,6 @@
+
+**/tst*.py
+
 .idea
 
 poetry.lock

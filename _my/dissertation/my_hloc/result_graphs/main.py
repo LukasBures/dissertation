@@ -1,6 +1,6 @@
-import matplotlib.pyplot as plt
 from typing import List
 
+import matplotlib.pyplot as plt
 
 aachen_results_without_dynamic_kp: List[dict] = [
     {
@@ -88,7 +88,7 @@ aachen_datasets: List[dict] = [
     {
         "dataset_name": "Aachen + 0% dynamic KP",
         "results": aachen_results_without_dynamic_kp,
-    }
+    },
 ]
 
 for dataset in aachen_datasets:
@@ -107,7 +107,7 @@ for dataset in aachen_datasets:
     plt.xlabel("% of kept static keypoints")
     plt.ylabel("% of images from dataset")
     plt.legend(["0.25m, 2°", "0.50m, 5°", "5.00m, 10°"], title="Conditions")
-    plt.grid(axis="both", color='0.95')
+    plt.grid(axis="both", color="0.95")
     name = f"{dataset['dataset_name']}_day.png"
     plt.savefig(name)
     plt.show()
@@ -117,7 +117,7 @@ for dataset in aachen_datasets:
     plt.xlabel("% of kept static keypoints")
     plt.ylabel("% of images from dataset")
     plt.legend(["0.25m, 2°", "0.50m, 5°", "5.00m, 10°"], title="Conditions")
-    plt.grid(axis="both", color='0.95')
+    plt.grid(axis="both", color="0.95")
     name = f"{dataset['dataset_name']}_night.png"
     plt.savefig(name)
     plt.show()

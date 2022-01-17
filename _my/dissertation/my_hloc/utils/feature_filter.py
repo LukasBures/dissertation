@@ -1,8 +1,9 @@
+import pickle
+import random
+from typing import List, Optional
+
 import h5py
 import numpy as np
-import random
-import pickle
-from typing import List, Optional
 
 
 class FeatureFilter:
@@ -17,16 +18,17 @@ class FeatureFilter:
 
     def _list_h5_names(self) -> list:
         names: list = list()
-        with h5py.File(str(self._h5_file_path), 'r') as fd:
+        with h5py.File(str(self._h5_file_path), "r") as fd:
+
             def visit_fn(_, obj):
                 if isinstance(obj, h5py.Dataset):
-                    names.append(obj.parent.name.strip('/'))
+                    names.append(obj.parent.name.strip("/"))
 
             fd.visititems(visit_fn)
         return list(set(names))
 
     def _split_keypoints(
-            self, keypoints, image_name: str, image_width: int, image_height: int, dynamic_group_classes=None
+        self, keypoints, image_name: str, image_width: int, image_height: int, dynamic_group_classes=None
     ) -> (List[dict], List[dict]):
         if dynamic_group_classes is None:
             dynamic_group_classes: list = ["vehicle", "human"]
@@ -45,19 +47,23 @@ class FeatureFilter:
                 y: int = y if y < image_height else image_height - 1
                 if all_segmentations[d][y, x] > 0:
                     is_k_dynamic: bool = True
-                    dynamic_keypoints.append({
-                        "kp": k,
-                        "is_dynamic": is_k_dynamic,
-                        "idx": idx,
-                    })
+                    dynamic_keypoints.append(
+                        {
+                            "kp": k,
+                            "is_dynamic": is_k_dynamic,
+                            "idx": idx,
+                        }
+                    )
                     break
 
             if not is_k_dynamic:
-                static_keypoints.append({
-                    "kp": k,
-                    "is_dynamic": is_k_dynamic,
-                    "idx": idx,
-                })
+                static_keypoints.append(
+                    {
+                        "kp": k,
+                        "is_dynamic": is_k_dynamic,
+                        "idx": idx,
+                    }
+                )
 
         return dynamic_keypoints, static_keypoints
 
@@ -112,7 +118,9 @@ class FeatureFilter:
                         else:
                             keep_dynamic: list = list()
 
-                    print(f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}")
+                    print(
+                        f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}"
+                    )
 
                     kept_static_kp_count += len(keep_static)
                     kept_dynamic_kp_count += len(keep_dynamic)
@@ -195,7 +203,9 @@ class FeatureFilter:
                     keep_static = random.sample(static, total_kp_keep - len(keep_dynamic))
 
                 if (len(keep_static) + len(keep_dynamic)) > total_kp_keep:
-                    print(f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}")
+                    print(
+                        f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}"
+                    )
 
             kept_static_kp_count += len(keep_static)
             kept_dynamic_kp_count += len(keep_dynamic)
@@ -240,7 +250,9 @@ class FeatureFilter:
 
 if __name__ == "__main__":
     file_name = "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/feats-superpoint-n4096-r1024.h5"
-    new_h5_file_path = "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/test2_feats-superpoint-n4096-r1024.h5"
+    new_h5_file_path = (
+        "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/test2_feats-superpoint-n4096-r1024.h5"
+    )
     segmentations_file = "/data512/dissertation_results/aachen_all_v1/segment_nvidia_v01.pkl"
     ff = FeatureFilter(h5_file_path=file_name, new_h5_file_path=new_h5_file_path, segmentations_file=segmentations_file)
     ff.filter_and_update_kp(static_percentage_keep=50, dynamic_percentage_keep=100)

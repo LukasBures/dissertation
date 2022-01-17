@@ -32,17 +32,20 @@ DEBUG: bool = False
 TEST: bool = False
 
 # ------------------------------------------------------------------------
-path_root: str = "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1/best_images"
+# TODO: Implement arg parser.
+path_root: str = (
+    "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1/best_images"
+)
+pickle_output_dst_root: str = f"/data512/dissertation_results/aachen_all_v1"
 print(f"Dataset: {dataset}, segmentation method: {method}")
 output_dst_root: str = f"/data512/dissertation_results/aachen_all_v1/{store_name}"
-pickle_output_dst_root: str = f"/data512/dissertation_results/aachen_all_v1"
 if to_pickle:
     os.makedirs(pickle_output_dst_root, exist_ok=True)
 else:
     os.makedirs(output_dst_root, exist_ok=True)
 
 # --------------------------------------------------------------------------------
-# Definitions
+# Definitions:
 # --------------------------------------------------------------------------------
 # a label and all meta information
 Label = namedtuple(
@@ -182,7 +185,17 @@ def load_segmentations(pth: str, method: str, labels, filtered_names) -> dict:
                         nature_mask = masks["vegetation"] | masks["terrain"]
                         sky_mask = masks["sky"]
                         human_mask = masks["person"] | masks["rider"]
-                        vehicle_mask = masks["car"] | masks["truck"] | masks["bus"] | masks["caravan"] | masks["trailer"] | masks["train"] | masks["motorcycle"] | masks["bicycle"] | masks["license plate"]
+                        vehicle_mask = (
+                            masks["car"]
+                            | masks["truck"]
+                            | masks["bus"]
+                            | masks["caravan"]
+                            | masks["trailer"]
+                            | masks["train"]
+                            | masks["motorcycle"]
+                            | masks["bicycle"]
+                            | masks["license plate"]
+                        )
                         selected_segmentations: dict = {
                             "nature": nature_mask,
                             "sky": sky_mask,

@@ -1,22 +1,24 @@
 import argparse
+import itertools
+import os
 import subprocess
 import sys
 from pathlib import Path
 from pprint import pformat
-import os
-import itertools
+
 import pycolmap
 import torch
 from configs import feature_configs, matcher_configs, retrieval_configs
 
 sys.path.append("/home/lukas/PycharmProjects/dissertation/Hierarchical-Localization")
 try:
-    user_paths = os.environ['PYTHONPATH'].split(os.pathsep)
+    user_paths = os.environ["PYTHONPATH"].split(os.pathsep)
 except KeyError:
     pass
 else:
     print(f"__PYTHONPATH: {user_paths}")
 
+from feature_filter import FeatureFilter
 from hloc import (
     colmap_from_nvm,
     extract_features,
@@ -26,9 +28,6 @@ from hloc import (
     pairs_from_retrieval,
     triangulation,
 )
-
-from feature_filter import FeatureFilter
-
 
 # Parameters.
 parser = argparse.ArgumentParser()
@@ -103,21 +102,19 @@ dynamic_percentages: list = list(range(dynamic_from, dynamic_to + dynamic_step, 
 static_dynamic_combinations: list = list(itertools.product(static_percentages, dynamic_percentages))
 print("Planned static/dynamic percentages:")
 for static_dynamic_combination in static_dynamic_combinations:
-    print(f"Static = {' ' if static_dynamic_combination[0] < 100 else ''}{static_dynamic_combination[0]}%, dynamic = {' ' if static_dynamic_combination[1] < 100 else ''}{static_dynamic_combination[1]}%")
+    print(
+        f"Static = {' ' if static_dynamic_combination[0] < 100 else ''}{static_dynamic_combination[0]}%, dynamic = {' ' if static_dynamic_combination[1] < 100 else ''}{static_dynamic_combination[1]}%"
+    )
 print("\n")
 print("-" * 50)
 print("STARTING\n\n")
 
-all_features_pth = extract_features.main(
-    conf=feature_conf,
-    image_dir=images_path,
-    export_dir=outputs_path
-)
+all_features_pth = extract_features.main(conf=feature_conf, image_dir=images_path, export_dir=outputs_path)
 colmap_from_nvm.main(
     nvm=dataset_name / "3D-models/aachen_cvpr2018_db.nvm",
     intrinsics=dataset_name / "3D-models/database_intrinsics.txt",
     database=dataset_name / "aachen.db",
-    output=sift_sfm_path
+    output=sift_sfm_path,
 )
 
 pairs_from_covisibility.main(sift_sfm_path, sfm_pairs_path, num_matched=args.num_covis)
@@ -136,19 +133,16 @@ for static_percentage in static_percentages:
         ff = FeatureFilter(
             h5_file_path=all_features_pth,
             new_h5_file_path=str(new_features_pth),
-            segmentations_file=segmentations_file_path
+            segmentations_file=segmentations_file_path,
         )
-        ff.filter_and_update_kp(
-            static_percentage_keep=static_percentage,
-            dynamic_percentage_keep=dynamic_percentage
-        )
+        ff.filter_and_update_kp(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
         ff.filter_and_update_matches()
 
         sfm_matches = match_features.main(
             conf=matcher_conf,
             pairs=sfm_pairs_path,
             features=filtered_kp_file_prefix + feature_conf["output"],
-            export_dir=outputs_path
+            export_dir=outputs_path,
         )
 
         # Triangulation.
@@ -160,30 +154,29 @@ for static_percentage in static_percentages:
             features=new_features_pth,
             matches=sfm_matches,
             skip_geometric_verification=False,
-            verbose=True
+            verbose=True,
         )
 
         # Global descriptors, pairs, and local matches.
-        global_descriptors = extract_features.main(
-            conf=retrieval_conf,
-            image_dir=images_path,
-            export_dir=outputs_path
-        )
+        global_descriptors = extract_features.main(conf=retrieval_conf, image_dir=images_path, export_dir=outputs_path)
         pairs_from_retrieval.main(
             descriptors=global_descriptors,
             output=loc_pairs_path,
             num_matched=args.num_loc,
             query_prefix="query",
-            db_model=reference_sfm_path
+            db_model=reference_sfm_path,
         )
         loc_matches = match_features.main(
             conf=matcher_conf,
             pairs=loc_pairs_path,
-            features=filtered_kp_file_prefix + feature_conf['output'],
-            export_dir=outputs_path
+            features=filtered_kp_file_prefix + feature_conf["output"],
+            export_dir=outputs_path,
         )
 
-        results = outputs_path / f"Aachen_hloc-{args.feature_conf.lower()}+{args.matcher_conf.lower()}_netvlad{args.num_loc}+s{static_percentage}_d{dynamic_percentage}.txt"
+        results = (
+            outputs_path
+            / f"Aachen_hloc-{args.feature_conf.lower()}+{args.matcher_conf.lower()}_netvlad{args.num_loc}+s{static_percentage}_d{dynamic_percentage}.txt"
+        )
         localize_sfm.main(
             reference_sfm=reference_sfm_path,
             queries=dataset_name / "queries/*_time_queries_with_intrinsics.txt",

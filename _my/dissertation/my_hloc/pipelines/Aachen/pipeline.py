@@ -6,6 +6,7 @@ from pprint import pformat
 
 import torch
 from configs import feature_configs, matcher_configs, retrieval_configs
+from feature_filter import FeatureFilter
 from hloc import (
     colmap_from_nvm,
     extract_features,
@@ -15,8 +16,6 @@ from hloc import (
     pairs_from_retrieval,
     triangulation,
 )
-from feature_filter import FeatureFilter
-
 
 # parameters
 parser = argparse.ArgumentParser()

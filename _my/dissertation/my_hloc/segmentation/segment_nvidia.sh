@@ -10,7 +10,10 @@ DATASET_NAME="aachen_v1_1"
 cd /home/lukas/PycharmProjects/dissertation/_segmentation/semantic_segmentation_NVIDIA/ || exit
 export OMP_NUM_THREADS=3
 echo "Starting segmentation: $DATASET_NAME ..."
-python -m runx.runx scripts/aachen_dump_all_v1.yml -i
+# aachen_v1
+# python -m runx.runx scripts/aachen_dump_all_v1.yml -i
+# aachen_v1_1
+python -m runx.runx scripts/aachen_dump_all_v1_1.yml -i
 echo "DONE segmentation: $DATASET_NAME ..."
 
 # ---------------------------------------------------------------------------------
