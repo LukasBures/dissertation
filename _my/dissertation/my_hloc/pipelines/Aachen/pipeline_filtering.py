@@ -124,7 +124,7 @@ pairs_from_covisibility.main(sift_sfm_path, sfm_pairs_path, num_matched=args.num
 
 for static_percentage in static_percentages:
     for dynamic_percentage in dynamic_percentages:
-        filtered_kp_file_prefix: str = f"s{static_percentage}_d{dynamic_percentages}_"
+        filtered_kp_file_prefix: str = f"s{static_percentage}_d{dynamic_percentage}_"
 
         # Print static and dynamic percentages.
         print("-" * 50)
