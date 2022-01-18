@@ -1,8 +1,6 @@
-
+/_my/dissertation/my_SuperPoint/notebooks/.ipynb_checkpoints/
 **/tst*.py
-
 .idea
-
 poetry.lock
 /_my/dissertation/my_hloc/logs
 /_my/experiments_rigo
@@ -255,5 +253,3 @@ fabric.properties
 [Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json
-
-/_my/dissertation/my_SuperPoint/notebooks/.ipynb_checkpoints/
