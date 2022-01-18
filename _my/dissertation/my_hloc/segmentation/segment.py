@@ -26,7 +26,7 @@ store_name = "_".join(store_names)
 
 dataset: str = "aachen"
 method: str = "segment_nvidia"
-version: str = "v02"
+version: str = "v01"
 to_pickle: bool = True
 DEBUG: bool = False
 TEST: bool = False
