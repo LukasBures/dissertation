@@ -1,6 +1,5 @@
 import os
 from collections import namedtuple
-import pickle
 import cv2
 import h5py
 import numpy as np
@@ -44,7 +43,8 @@ destination_folder: str = "/data512/dissertation_results/aachen_all_v1"
 # destination_folder: str = "/data512/dissertation_results/aachen_all_v1_1"
 
 print(f"Dataset: {dataset}, segmentation method: {method}")
-output_dst_root: str = f"{destination_folder}/{store_name}"
+print(f"Image source path: {path_root}")
+print(f"Segmentation h5 file destination path: {destination_folder}")
 os.makedirs(destination_folder, exist_ok=True)
 
 # --------------------------------------------------------------------------------
@@ -174,13 +174,11 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
     :param filtered_names:
     :return:
     """
-    output_data: dict = dict()
     if method is "segment_nvidia":
         with h5py.File(str(output_file_path), "w") as destination_file:
             for file in tqdm(os.listdir(pth)):
                 if file.endswith(".png"):
                     if "_input.png" in file:
-                        # print("Processing: ", file)
                         original_file_name = file.replace("_input.png", "")
                         segmented_img = cv2.imread(os.path.join(pth, file.replace("_input.png", "_prediction.png")))
                         masks = mask_it(segmented_img, labels, filtered_names)
@@ -206,15 +204,6 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
                         grp.create_dataset("human", data=human_mask)
                         grp.create_dataset("vehicle", data=vehicle_mask)
 
-                        # selected_segmentations: dict = {
-                        #     "nature": nature_mask,
-                        #     "sky": sky_mask,
-                        #     "human": human_mask,
-                        #     "vehicle": vehicle_mask,
-                        # }
-                        # pickle.dump({f"{original_file_name}": selected_segmentations}, flw, pickle.HIGHEST_PROTOCOL)
-                        # output_data[f"{original_file_name}.jpg"] = selected_segmentations
-
                         if DEBUG:
                             original_img = cv2.imread(os.path.join(pth, file))
                             # masks[f"{original_file_name}.jpg"] = {"original_img": original_img, "segmented_img": segmented_img}
@@ -233,43 +222,10 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
                         del sky_mask
                         del human_mask
                         del vehicle_mask
-                        # del selected_segmentations
     else:
         raise Exception(f"Unknown method: {method}.")
-
-
-def save_segmentations(segmentations, pth) -> None:
-    """
-
-
-    :param segmentations:
-    :param pth:
-    :return:
-    """
-    for key in segmentations:
-        cv2.imwrite(f"{pth}/{key}", segmentations[key]["total_mask"])
-
-
-def save_segmentations_to_pickle(data: dict, pth: str) -> None:
-    """
-
-
-    :param data:
-    :param pth:
-    :return:
-    """
-    with open(pth, "wb") as flw:
-        pickle.dump(data, flw)
-
 
 print("Segmenting ...")
 output_file_path: str = f"{destination_folder}/{method}_{version}.h5"
 process_segmentations(path_root, method, labels, filtered_names, output_file_path)
-
-# print("Saving ...")
-# if to_pickle:
-#     save_segmentations_to_pickle(segmentations, f"{pickle_output_dst_root}/{method}_{version}.pkl")
-# else:
-#     save_segmentations(segmentations, output_dst_root)
-
 print("DONE segment.py")
