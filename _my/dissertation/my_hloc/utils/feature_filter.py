@@ -22,7 +22,8 @@ class FeatureFilter:
         """
         self._segmentations_file: str = segmentations_file
         self._segmentation_data: dict = dict()
-        if dataset_name == "aachen":
+        self._dataset_name: str = dataset_name
+        if self._dataset_name == "aachen":
             with open(self._segmentations_file, "rb") as fl:
                 self._segmentation_data = pickle.load(fl)
         else:
@@ -142,8 +143,12 @@ class FeatureFilter:
                         grp.create_dataset("image_size", data=image_size)
                         continue
 
+                    img_name: str = image_name.split("/")[-1]
+                    if self._dataset_name != "aachen":
+                        img_name: str = img_name.split(".")[0]
+
                     dynamic, static = self._split_keypoints(
-                        keypoints, image_name.split("/")[-1], image_width=image_size[0], image_height=image_size[1]
+                        keypoints=keypoints, image_name=img_name, image_width=image_size[0], image_height=image_size[1]
                     )
 
                     if static_percentage_keep == 100:
