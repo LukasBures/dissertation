@@ -18,9 +18,9 @@ class FeatureFilter:
         :param new_h5_file_path: Path to the new h5 file that will be created.
         :param segmentation_h5_file_path: Path to the h5 file with segmentations.
         """
-        self._h5_file_path: str = h5_file_path
-        self._new_h5_file_path: str = new_h5_file_path
-        self._segmentation_h5_file_path: str = segmentation_h5_file_path
+        self._h5_file_path: str = str(h5_file_path)
+        self._new_h5_file_path: str = str(new_h5_file_path)
+        self._segmentation_h5_file_path: str = str(segmentation_h5_file_path)
         if dynamic_group_classes is None:
             self._dynamic_group_classes = ["vehicle", "human"]
         else:
@@ -34,7 +34,7 @@ class FeatureFilter:
         :return: List of h5 names.
         """
         names: list = list()
-        with h5py.File(str(self._h5_file_path), "r") as fd:
+        with h5py.File(self._h5_file_path, "r") as fd:
 
             def visit_fn(_, obj):
                 if isinstance(obj, h5py.Dataset):
@@ -44,7 +44,7 @@ class FeatureFilter:
         return list(set(names))
 
     def _split_keypoints(
-        self, keypoints, segmentations: dict, image_width: int, image_height: int
+        self, keypoints, segmentations, image_width: int, image_height: int
     ) -> (List[dict], List[dict]):
         """
         Split keypoints to static and dynamic lists.
@@ -69,7 +69,8 @@ class FeatureFilter:
                 y: int = int(round(k[1]))
                 x: int = x if x < image_width else image_width - 1
                 y: int = y if y < image_height else image_height - 1
-                if segmentations[d][y, x] > 0:
+                segmentation_data = segmentations[d].__array__()
+                if segmentation_data[y, x] > 0:
                     is_k_dynamic: bool = True
                     dynamic_keypoints.append(
                         {
@@ -111,9 +112,9 @@ class FeatureFilter:
         kept_static_kp_count: int = 0
         kept_dynamic_kp_count: int = 0
 
-        with h5py.File(str(self._h5_file_path), "r") as source_file:
-            with h5py.File(str(self._new_h5_file_path), "w") as destination_file:
-                with h5py.File(str(self._segmentation_h5_file_path), "r") as segmentation_file:
+        with h5py.File(self._h5_file_path, "r") as source_file:
+            with h5py.File(self._new_h5_file_path, "w") as destination_file:
+                with h5py.File(self._segmentation_h5_file_path, "r") as segmentation_file:
                     for idx, image_name in enumerate(self._names):
                         keypoints = source_file[image_name]["keypoints"].__array__()
                         descriptors = source_file[image_name]["descriptors"].__array__()
