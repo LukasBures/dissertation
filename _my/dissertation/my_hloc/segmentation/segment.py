@@ -32,10 +32,16 @@ TEST: bool = False
 
 # ------------------------------------------------------------------------
 # TODO: Implement arg parser.
-path_root: str = (
-    "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1_1/best_images"
-)
-destination_folder: str = f"/data512/dissertation_results/aachen_all_v1_1"
+
+# aachen
+path_root: str = "/media/lukas/WD_2TB/dissertation/aachen_all_v1/best_images"
+destination_folder: str = "/data512/dissertation_results/aachen_all_v1"
+
+# aachen v1.1
+# path_root: str = (
+#     "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1_1/best_images"
+# )
+# destination_folder: str = "/data512/dissertation_results/aachen_all_v1_1"
 
 print(f"Dataset: {dataset}, segmentation method: {method}")
 output_dst_root: str = f"{destination_folder}/{store_name}"
