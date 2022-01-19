@@ -20,16 +20,16 @@ outputs_folder=results
 # EXPERIMENTS:
 # -----------------------------------------------------------------------------
 retrieval_conf="netvlad"
-feature_conf="superpoint_aachen"
-matcher_conf="superglue"
+feature_conf="superpoint_fast"
+matcher_conf="superglue_fast"
 num_covis=20
 num_loc=50
-static_from=50
+static_from=5
 static_to=100
-static_step=10
-dynamic_from=100
+static_step=5
+dynamic_from=0
 dynamic_to=100
-dynamic_step=10
+dynamic_step=100
 folder_name="$used_dataset"'-'"$(date +%Y.%m.%d_%H.%M.%S)"
 mkdir -p "$output_root_folder"/"$folder_name"/code
 cp $pipeline "$output_root_folder"/"$folder_name"/code

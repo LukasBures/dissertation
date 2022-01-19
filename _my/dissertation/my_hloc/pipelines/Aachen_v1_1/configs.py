@@ -18,7 +18,7 @@ retrieval_configs = {
 
 feature_configs = {
     "superpoint_fast": {
-        "output": "feats-superpoint-n4096-r1024",
+        "output": "feats-superpoint-n1024-r1024",
         "model": {
             "name": "superpoint",
             "nms_radius": 3,
