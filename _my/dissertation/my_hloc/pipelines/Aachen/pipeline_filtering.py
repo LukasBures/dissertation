@@ -102,9 +102,25 @@ dynamic_percentages: list = list(range(dynamic_to, dynamic_from - dynamic_step, 
 static_dynamic_combinations: list = list(itertools.product(static_percentages, dynamic_percentages))
 print("Planned static/dynamic percentages:")
 for static_dynamic_combination in static_dynamic_combinations:
+    if static_dynamic_combination[0] < 10:
+        static_str_prefix: str = "  "
+    elif 10 <= static_dynamic_combination[0] < 100:
+        static_str_prefix: str = " "
+    else:
+        static_str_prefix: str = ""
+
+    if static_dynamic_combination[1] < 10:
+        dynamic_str_prefix: str = "  "
+    elif 10 <= static_dynamic_combination[1] < 100:
+        dynamic_str_prefix: str = " "
+    else:
+        dynamic_str_prefix: str = ""
+
     print(
-        f"Static = {' ' if static_dynamic_combination[0] < 100 else ''}{static_dynamic_combination[0]}%, dynamic = {' ' if static_dynamic_combination[1] < 100 else ''}{static_dynamic_combination[1]}%"
+        f"Static = {static_str_prefix}{static_dynamic_combination[0]}%, "
+        f"dynamic = {dynamic_str_prefix}{static_dynamic_combination[1]}%"
     )
+
 print("\n")
 print("-" * 50)
 print("STARTING\n\n")
