@@ -3,7 +3,7 @@
 
 # Global settings.
 selected_gpu=1  # 1080
-output_root_folder=/media/lukas/WD_2TB/dissertation
+output_root_folder=/data512/dissertation_results
 project_folder=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc
 this_file_name=`basename "$0"`
 cd "$project_folder" || exit 1
