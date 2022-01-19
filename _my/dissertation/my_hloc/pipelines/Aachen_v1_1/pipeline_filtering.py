@@ -137,7 +137,6 @@ for static_percentage in static_percentages:
             dataset_name=dataset_name,
         )
         ff.filter_and_update_kp(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
-        ff.filter_and_update_matches()
 
         sfm_matches = match_features.main(
             conf=matcher_conf,
