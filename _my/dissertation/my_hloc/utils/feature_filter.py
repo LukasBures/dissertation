@@ -113,7 +113,7 @@ class FeatureFilter:
 
         with h5py.File(str(self._h5_file_path), "r") as source_file:
             with h5py.File(str(self._new_h5_file_path), "w") as destination_file:
-                with h5py.File(str(self._segmentation_h5_file_path), "w") as segmentation_file:
+                with h5py.File(str(self._segmentation_h5_file_path), "r") as segmentation_file:
                     for idx, image_name in enumerate(self._names):
                         keypoints = source_file[image_name]["keypoints"].__array__()
                         descriptors = source_file[image_name]["descriptors"].__array__()
