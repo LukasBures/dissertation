@@ -50,8 +50,9 @@ class FeatureFilter:
             fd.visititems(visit_fn)
         return list(set(names))
 
+    @staticmethod
     def _split_keypoints(
-        self, keypoints, segmentations: list, image_width: int, image_height: int
+        keypoints, segmentations: list, image_width: int, image_height: int
     ) -> (List[dict], List[dict]):
         """
         Split keypoints to static and dynamic lists.
@@ -65,8 +66,6 @@ class FeatureFilter:
 
         dynamic_keypoints: List[dict] = list()
         static_keypoints: List[dict] = list()
-        # all_segmentations: dict = self._segmentation_data[image_name]
-
         for idx, k in enumerate(keypoints):
             is_k_dynamic: bool = False
             for segmentation in segmentations:
