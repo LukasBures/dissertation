@@ -97,8 +97,8 @@ print(f"\nSelected feature configuration:\n{pformat(feature_conf)}")
 print(f"\nSelected matcher configuration:\n{pformat(matcher_conf)}")
 print("\n")
 
-static_percentages: list = list(range(static_from, static_to + static_step, static_step))
-dynamic_percentages: list = list(range(dynamic_from, dynamic_to + dynamic_step, dynamic_step))
+static_percentages: list = list(range(static_to, static_from - static_step, -static_step))
+dynamic_percentages: list = list(range(dynamic_to, dynamic_from - dynamic_step, -dynamic_step))
 static_dynamic_combinations: list = list(itertools.product(static_percentages, dynamic_percentages))
 print("Planned static/dynamic percentages:")
 for static_dynamic_combination in static_dynamic_combinations:
@@ -137,6 +137,7 @@ for static_percentage in static_percentages:
             dataset_name="aachen",
         )
         ff.filter_and_update_kp(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
+        del ff
 
         sfm_matches = match_features.main(
             conf=matcher_conf,
