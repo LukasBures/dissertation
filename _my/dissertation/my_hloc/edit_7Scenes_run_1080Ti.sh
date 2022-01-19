@@ -34,10 +34,6 @@ time python "$output_root_folder"/"$folder_name"/code/pipeline.py --sequence "te
 time python "$output_root_folder"/"$folder_name"/code/pipeline.py --sequence "test1" --dataset $dataset_folder --outputs $outputs_folder_1 --num_ref $num_ref --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu 2>&1 | tee mylog.log
 cd "$project_folder" || exit 1
 
-
-
-
-
-
 # -----------------------------------------------------------------------------
 echo "ALL DONE!"
+date
