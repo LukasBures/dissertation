@@ -11,7 +11,7 @@ cd "$project_folder" || exit 1
 # Aachen v1_1 dataset settings.
 used_dataset="aachen_v1_1"
 dataset_folder=/data512/datasets/aachen_v1_1/
-segmentations_file=/data512/dissertation_results/aachen_all_v1_1/segment_nvidia_v01.pkl
+segmentations_file=/data512/dissertation_results/aachen_all_v1_1/segment_nvidia_v01.h5
 pipeline=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen_v1_1/pipeline_filtering.py
 configs=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/Aachen_v1_1/configs.py
 feature_filter=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/utils/feature_filter.py
