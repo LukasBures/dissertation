@@ -10,21 +10,28 @@ class FeatureFilter:
     Feature filter class.
     """
 
-    def __init__(self, h5_file_path: str, new_h5_file_path: str, segmentation_h5_file_path: str, dynamic_group_classes: list = None) -> None:
+    def __init__(
+        self,
+        h5_file_path: str,
+        new_h5_file_path: str,
+        segmentation_h5_file_path: str,
+        dynamic_group_classes: list = None,
+    ) -> None:
         """
         Constructor.
 
         :param h5_file_path: Path to the h5 feature path for filtering.
         :param new_h5_file_path: Path to the new h5 file that will be created.
         :param segmentation_h5_file_path: Path to the h5 file with segmentations.
+        :param dynamic_group_classes: List of dynamic group of classes, can contain: vehicle, human, sky, and nature.
         """
         self._h5_file_path: str = str(h5_file_path)
         self._new_h5_file_path: str = str(new_h5_file_path)
         self._segmentation_h5_file_path: str = str(segmentation_h5_file_path)
         if dynamic_group_classes is None:
-            self._dynamic_group_classes = ["vehicle", "human"]
+            self._dynamic_group_classes: list = ["vehicle", "human"]
         else:
-            self._dynamic_group_classes = dynamic_group_classes
+            self._dynamic_group_classes: list = dynamic_group_classes
         self._names: list = self._list_h5_names()
 
     def _list_h5_names(self) -> list:
@@ -49,8 +56,8 @@ class FeatureFilter:
         """
         Split keypoints to static and dynamic lists.
 
-        :param keypoints:
-        :param segmentations:
+        :param keypoints: Keypoints in the image.
+        :param segmentations: Selected segmentations from pre-calculated h5 file.
         :param image_width: Image width.
         :param image_height: Image height.
         :return: Tuple of dynamic and static lists.
@@ -92,7 +99,7 @@ class FeatureFilter:
 
         return dynamic_keypoints, static_keypoints
 
-    def filter_and_update_kp(self, static_percentage_keep, dynamic_percentage_keep) -> Optional[dict]:
+    def filter_and_update_kp(self, static_percentage_keep, dynamic_percentage_keep) -> Optional[dict]:  # noqa: C901
         """
         Filter and update keypoints -> reduce number of keypoints.
 
@@ -135,7 +142,7 @@ class FeatureFilter:
                             keypoints=keypoints,
                             segmentations=segmentation_file[img_name],
                             image_width=image_size[0],
-                            image_height=image_size[1]
+                            image_height=image_size[1],
                         )
 
                         if static_percentage_keep == 100:
