@@ -1,7 +1,6 @@
 import os
-import pickle
 from collections import namedtuple
-
+import pickle
 import cv2
 import h5py
 import numpy as np
@@ -228,7 +227,7 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
                         del sky_mask
                         del human_mask
                         del vehicle_mask
-                        del selected_segmentations
+                        # del selected_segmentations
     else:
         raise Exception(f"Unknown method: {method}.")
 
