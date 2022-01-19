@@ -27,22 +27,19 @@ store_name = "_".join(store_names)
 dataset: str = "aachen"
 method: str = "segment_nvidia"
 version: str = "v01"
-to_pickle: bool = True
 DEBUG: bool = False
 TEST: bool = False
 
 # ------------------------------------------------------------------------
 # TODO: Implement arg parser.
 path_root: str = (
-    "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1/best_images"
+    "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1_1/best_images"
 )
-pickle_output_dst_root: str = f"/data512/dissertation_results/aachen_all_v1"
+pickle_output_dst_root: str = f"/data512/dissertation_results/aachen_all_v1_1"
+
 print(f"Dataset: {dataset}, segmentation method: {method}")
-output_dst_root: str = f"/data512/dissertation_results/aachen_all_v1/{store_name}"
-if to_pickle:
-    os.makedirs(pickle_output_dst_root, exist_ok=True)
-else:
-    os.makedirs(output_dst_root, exist_ok=True)
+output_dst_root: str = f"{pickle_output_dst_root}/{store_name}"
+os.makedirs(pickle_output_dst_root, exist_ok=True)
 
 # --------------------------------------------------------------------------------
 # Definitions:
@@ -130,7 +127,7 @@ labels: list = [
 # ------------------------------------------------------------------------
 
 
-def mask_it(segmented_img, labels, filtered_names) -> dict:
+def mask_it(segmented_img, labels: list, filtered_names: list) -> dict:
     masks: dict = dict()
     total_mask = None
     for nm in filtered_names:
@@ -161,7 +158,7 @@ def mask_it(segmented_img, labels, filtered_names) -> dict:
     return masks
 
 
-def load_segmentations(pth: str, method: str, labels, filtered_names) -> dict:
+def process_segmentations(pth: str, method: str, labels: list, filtered_names: list, output_file_path: str) -> None:
     """
 
 
@@ -173,15 +170,15 @@ def load_segmentations(pth: str, method: str, labels, filtered_names) -> dict:
     """
     output_data: dict = dict()
     if method is "segment_nvidia":
-        for file in tqdm(os.listdir(pth)):
-            if file.endswith(".png"):
-                if "_input.png" in file:
-                    # print("Processing: ", file)
-                    original_file_name = file.replace("_input.png", "")
-                    segmented_img = cv2.imread(os.path.join(pth, file.replace("_input.png", "_prediction.png")))
-                    masks = mask_it(segmented_img, labels, filtered_names)
+        with open(output_file_path, "wb") as flw:
+            for file in tqdm(os.listdir(pth)):
+                if file.endswith(".png"):
+                    if "_input.png" in file:
+                        # print("Processing: ", file)
+                        original_file_name = file.replace("_input.png", "")
+                        segmented_img = cv2.imread(os.path.join(pth, file.replace("_input.png", "_prediction.png")))
+                        masks = mask_it(segmented_img, labels, filtered_names)
 
-                    if to_pickle:
                         nature_mask = masks["vegetation"] | masks["terrain"]
                         sky_mask = masks["sky"]
                         human_mask = masks["person"] | masks["rider"]
@@ -202,30 +199,31 @@ def load_segmentations(pth: str, method: str, labels, filtered_names) -> dict:
                             "human": human_mask,
                             "vehicle": vehicle_mask,
                         }
-                        output_data[f"{original_file_name}.jpg"] = selected_segmentations
+                        # output_data[f"{original_file_name}.jpg"] = selected_segmentations
 
-                    if DEBUG:
-                        original_img = cv2.imread(os.path.join(pth, file))
-                        # masks[f"{original_file_name}.jpg"] = {"original_img": original_img, "segmented_img": segmented_img}
-                        # masks[f"{original_file_name}.jpg"].update(masks)
-                        cv2.imshow("seg", segmented_img)
-                        cv2.imshow("orig", original_img)
-                        if cv2.waitKey(0) == ord("n"):
-                            print("Next")
+                        if DEBUG:
+                            original_img = cv2.imread(os.path.join(pth, file))
+                            # masks[f"{original_file_name}.jpg"] = {"original_img": original_img, "segmented_img": segmented_img}
+                            # masks[f"{original_file_name}.jpg"].update(masks)
+                            cv2.imshow("seg", segmented_img)
+                            cv2.imshow("orig", original_img)
+                            if cv2.waitKey(0) == ord("n"):
+                                print("Next")
 
-                    if TEST:
-                        break
+                        if TEST:
+                            break
 
-                    del segmented_img
-                    del masks
-                    del nature_mask
-                    del sky_mask
-                    del human_mask
-                    del vehicle_mask
-                    del selected_segmentations
+                        pickle.dump({f"{original_file_name}": selected_segmentations}, flw, pickle.HIGHEST_PROTOCOL)
+
+                        del segmented_img
+                        del masks
+                        del nature_mask
+                        del sky_mask
+                        del human_mask
+                        del vehicle_mask
+                        del selected_segmentations
     else:
-        assert Exception(f"Unknown method: {method}.")
-    return output_data
+        raise Exception(f"Unknown method: {method}.")
 
 
 def save_segmentations(segmentations, pth) -> None:
@@ -253,12 +251,13 @@ def save_segmentations_to_pickle(data: dict, pth: str) -> None:
 
 
 print("Segmenting ...")
-segmentations: dict = load_segmentations(path_root, method, labels, filtered_names)
+output_file_path: str = f"{pickle_output_dst_root}/{method}_{version}.pkl"
+process_segmentations(path_root, method, labels, filtered_names, output_file_path)
 
-print("Saving ...")
-if to_pickle:
-    save_segmentations_to_pickle(segmentations, f"{pickle_output_dst_root}/{method}_{version}.pkl")
-else:
-    save_segmentations(segmentations, output_dst_root)
+# print("Saving ...")
+# if to_pickle:
+#     save_segmentations_to_pickle(segmentations, f"{pickle_output_dst_root}/{method}_{version}.pkl")
+# else:
+#     save_segmentations(segmentations, output_dst_root)
 
 print("DONE segment.py")

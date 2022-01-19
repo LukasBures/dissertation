@@ -134,6 +134,7 @@ for static_percentage in static_percentages:
             h5_file_path=all_features_pth,
             new_h5_file_path=str(new_features_pth),
             segmentations_file=segmentations_file_path,
+            dataset_name=dataset_name
         )
         ff.filter_and_update_kp(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
         ff.filter_and_update_matches()

@@ -7,10 +7,20 @@ import numpy as np
 
 
 class FeatureFilter:
-    def __init__(self, h5_file_path: str, new_h5_file_path: str, segmentations_file: str = None) -> None:
+    def __init__(self, h5_file_path: str, new_h5_file_path: str, segmentations_file: str, dataset_name: str) -> None:
         self._segmentations_file: str = segmentations_file
-        with open(self._segmentations_file, "rb") as fl:
-            self._segmentation_data = pickle.load(fl)
+        if dataset_name == "aachen":
+            with open(self._segmentations_file, "rb") as fl:
+                self._segmentation_data = pickle.load(fl)
+        else:
+            with open(self._segmentations_file, "rb") as fl:
+                while True:
+                    try:
+                        data = pickle.load(fl)
+                        for d in data:
+                            self._segmentation_data[d] = data[d]
+                    except EOFError:
+                        break
 
         self._h5_file_path: str = h5_file_path
         self._new_h5_file_path: str = new_h5_file_path
@@ -254,7 +264,7 @@ if __name__ == "__main__":
         "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/test2_feats-superpoint-n4096-r1024.h5"
     )
     segmentations_file = "/data512/dissertation_results/aachen_all_v1/segment_nvidia_v01.pkl"
-    ff = FeatureFilter(h5_file_path=file_name, new_h5_file_path=new_h5_file_path, segmentations_file=segmentations_file)
+    ff = FeatureFilter(h5_file_path=file_name, new_h5_file_path=new_h5_file_path, segmentations_file=segmentations_file, dataset_name="aachen")
     ff.filter_and_update_kp(static_percentage_keep=50, dynamic_percentage_keep=100)
     # filter_info = ff.filter_and_update_v2(total_kp_keep=512, dynamic_percentage_keep=100)
     ff.filter_and_update_matches()
