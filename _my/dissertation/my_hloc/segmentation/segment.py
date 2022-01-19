@@ -3,6 +3,7 @@ import pickle
 from collections import namedtuple
 
 import cv2
+import h5py
 import numpy as np
 from tqdm import tqdm
 
@@ -35,11 +36,11 @@ TEST: bool = False
 path_root: str = (
     "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1_1/best_images"
 )
-pickle_output_dst_root: str = f"/data512/dissertation_results/aachen_all_v1_1"
+destination_folder: str = f"/data512/dissertation_results/aachen_all_v1_1"
 
 print(f"Dataset: {dataset}, segmentation method: {method}")
-output_dst_root: str = f"{pickle_output_dst_root}/{store_name}"
-os.makedirs(pickle_output_dst_root, exist_ok=True)
+output_dst_root: str = f"{destination_folder}/{store_name}"
+os.makedirs(destination_folder, exist_ok=True)
 
 # --------------------------------------------------------------------------------
 # Definitions:
@@ -170,7 +171,7 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
     """
     output_data: dict = dict()
     if method is "segment_nvidia":
-        with open(output_file_path, "wb") as flw:
+        with h5py.File(str(output_file_path), "w") as destination_file:
             for file in tqdm(os.listdir(pth)):
                 if file.endswith(".png"):
                     if "_input.png" in file:
@@ -193,12 +194,20 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
                             | masks["bicycle"]
                             | masks["license plate"]
                         )
-                        selected_segmentations: dict = {
-                            "nature": nature_mask,
-                            "sky": sky_mask,
-                            "human": human_mask,
-                            "vehicle": vehicle_mask,
-                        }
+
+                        grp = destination_file.create_group(original_file_name)
+                        grp.create_dataset("nature", data=nature_mask)
+                        grp.create_dataset("sky", data=sky_mask)
+                        grp.create_dataset("human", data=human_mask)
+                        grp.create_dataset("vehicle", data=vehicle_mask)
+
+                        # selected_segmentations: dict = {
+                        #     "nature": nature_mask,
+                        #     "sky": sky_mask,
+                        #     "human": human_mask,
+                        #     "vehicle": vehicle_mask,
+                        # }
+                        # pickle.dump({f"{original_file_name}": selected_segmentations}, flw, pickle.HIGHEST_PROTOCOL)
                         # output_data[f"{original_file_name}.jpg"] = selected_segmentations
 
                         if DEBUG:
@@ -212,8 +221,6 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
 
                         if TEST:
                             break
-
-                        pickle.dump({f"{original_file_name}": selected_segmentations}, flw, pickle.HIGHEST_PROTOCOL)
 
                         del segmented_img
                         del masks
@@ -251,7 +258,7 @@ def save_segmentations_to_pickle(data: dict, pth: str) -> None:
 
 
 print("Segmenting ...")
-output_file_path: str = f"{pickle_output_dst_root}/{method}_{version}.pkl"
+output_file_path: str = f"{destination_folder}/{method}_{version}.h5"
 process_segmentations(path_root, method, labels, filtered_names, output_file_path)
 
 # print("Saving ...")
