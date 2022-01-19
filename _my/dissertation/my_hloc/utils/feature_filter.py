@@ -51,7 +51,7 @@ class FeatureFilter:
         return list(set(names))
 
     def _split_keypoints(
-        self, keypoints, segmentations, image_width: int, image_height: int
+        self, keypoints, segmentations: list, image_width: int, image_height: int
     ) -> (List[dict], List[dict]):
         """
         Split keypoints to static and dynamic lists.
@@ -69,15 +69,14 @@ class FeatureFilter:
 
         for idx, k in enumerate(keypoints):
             is_k_dynamic: bool = False
-            for d in self._dynamic_group_classes:
+            for segmentation in segmentations:
                 # k[0] = x-axis
                 # k[1] = y-axis
                 x: int = int(round(k[0]))
                 y: int = int(round(k[1]))
                 x: int = x if x < image_width else image_width - 1
                 y: int = y if y < image_height else image_height - 1
-                segmentation_data = segmentations[d].__array__()
-                if segmentation_data[y, x] > 0:
+                if segmentation[y, x] > 0:
                     is_k_dynamic: bool = True
                     dynamic_keypoints.append(
                         {
@@ -138,9 +137,12 @@ class FeatureFilter:
                             continue
 
                         img_name: str = image_name.split("/")[-1].split(".")[0]
+                        segmentations: list = list()
+                        for d in self._dynamic_group_classes:
+                            segmentations.append(segmentation_file[img_name][d].__array__())
                         dynamic, static = self._split_keypoints(
                             keypoints=keypoints,
-                            segmentations=segmentation_file[img_name],
+                            segmentations=segmentations,
                             image_width=image_size[0],
                             image_height=image_size[1],
                         )
