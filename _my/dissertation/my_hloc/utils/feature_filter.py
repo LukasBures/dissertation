@@ -165,7 +165,9 @@ class FeatureFilter:
                             keep_dynamic: list = list()
 
                     print(
-                        f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}"
+                        f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - "
+                        f"dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, "
+                        f"total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}"
                     )
 
                     kept_static_kp_count += len(keep_static)
@@ -211,15 +213,12 @@ if __name__ == "__main__":
     output_file_path = (
         "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/test2_feats-superpoint-n4096-r1024.h5"
     )
-    segmentations_file = "/data512/dissertation_results/aachen_all_v1/segment_nvidia_v01.pkl"
+    input_segmentations_path = "/data512/dissertation_results/aachen_all_v1/segment_nvidia_v01.pkl"
     ff = FeatureFilter(
         h5_file_path=input_file_path,
         new_h5_file_path=output_file_path,
-        segmentations_file=segmentations_file,
-        dataset_name="aachen"
+        segmentations_file=input_segmentations_path,
+        dataset_name="aachen",
     )
-    ff.filter_and_update_kp(
-        static_percentage_keep=50,
-        dynamic_percentage_keep=100
-    )
+    ff.filter_and_update_kp(static_percentage_keep=50, dynamic_percentage_keep=100)
     print("DONE feature_filter.py")

@@ -1,6 +1,5 @@
 import pickle
 
-
 segmentations_file: str = "/data512/dissertation_results/aachen_all_v1_1/segment_nvidia_v01.pkl"
 
 segmentation_data: dict = dict()
