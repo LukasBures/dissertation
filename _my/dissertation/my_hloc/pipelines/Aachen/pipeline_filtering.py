@@ -202,3 +202,24 @@ for static_percentage in static_percentages:
             results=results,
             covisibility_clustering=False,
         )
+
+        # Empty space:
+        # Delete new features
+        if os.path.exists(str(new_features_pth)):
+            os.remove(str(new_features_pth))
+        else:
+            print(f"Can not delete the file as it doesn't exists: {str(new_features_pth)}")
+
+        # Co-visibility db
+        covisibility_db_path: Path = outputs_path / f"{filtered_kp_file_prefix}-{feature_conf['output']}_{matcher_conf['output']}_pairs-db-covis{args.num_covis}.h5"
+        if os.path.exists(str(covisibility_db_path)):
+            os.remove(str(covisibility_db_path))
+        else:
+            print(f"Can not delete the file as it doesn't exists: {str(covisibility_db_path)}")
+
+        # Netvlad query
+        netvlad_query_path: Path = outputs_path / f"{filtered_kp_file_prefix}-{feature_conf['output']}_{matcher_conf['output']}_pairs-query-netvlad{args.num_loc}.h5"
+        if os.path.exists(str(netvlad_query_path)):
+            os.remove(str(netvlad_query_path))
+        else:
+            print(f"Can not delete the file as it doesn't exists: {str(netvlad_query_path)}")
