@@ -48,23 +48,21 @@ parser.add_argument("--dynamic_step", type=int, default=10, help="Dynamic percen
 parser.add_argument("--segmentations_file", type=Path, help="Path to the file with semantic segmentations.")
 args = parser.parse_args()
 
-# Paths.
-dataset_name = args.dataset
-images_path = dataset_name / "images/images_upright/"
-
 # Configurations.
-outputs_path = args.outputs  # where everything will be saved
-sift_sfm_path = outputs_path / "sfm_sift"  # from which we extract the reference poses
-reference_sfm_path = outputs_path / "sfm_superpoint+superglue"  # the SfM model we will build
-sfm_pairs_path = outputs_path / f"pairs-db-covis{args.num_covis}.txt"  # top-k most covisible in SIFT model
-loc_pairs_path = outputs_path / f"pairs-query-netvlad{args.num_loc}.txt"  # top-k retrieved by NetVLAD
+dataset_name: Path = args.dataset
+images_path: Path = dataset_name / "images/images_upright/"
+outputs_path: Path = args.outputs  # where everything will be saved
+sift_sfm_path: Path = outputs_path / "sfm_sift"  # from which we extract the reference poses
+reference_sfm_path: Path = outputs_path / "sfm_superpoint+superglue"  # the SfM model we will build
+sfm_pairs_path: Path = outputs_path / f"pairs-db-covis{args.num_covis}.txt"  # top-k most covisible in SIFT model
+loc_pairs_path: Path = outputs_path / f"pairs-query-netvlad{args.num_loc}.txt"  # top-k retrieved by NetVLAD
 static_from: int = args.static_from
 static_to: int = args.static_to
 static_step: int = args.static_step
 dynamic_from: int = args.dynamic_from
 dynamic_to: int = args.dynamic_to
 dynamic_step: int = args.dynamic_step
-segmentations_file_path = args.segmentations_file
+segmentations_file_path: Path = args.segmentations_file
 
 # Test package versions.
 print(f"__Python VERSION: {sys.version}")  # 3.6.12 (default, Aug 18 2020, 02:08:22)
@@ -86,10 +84,10 @@ print(f"__Current CUDA Device: {torch.cuda.get_device_name(torch.cuda.current_de
 torch.cuda.set_device(args.gpu_number)
 print(f"__CUDA Device Changed To: {torch.cuda.get_device_name(torch.cuda.current_device())}")
 
-# pick one of the configurations for extraction and matching
-retrieval_conf = retrieval_configs[args.retrieval_conf]
-feature_conf = feature_configs[args.feature_conf]
-matcher_conf = matcher_configs[args.matcher_conf]
+# Pick one of the configurations for extraction and matching.
+retrieval_conf: dict = retrieval_configs[args.retrieval_conf]
+feature_conf: dict = feature_configs[args.feature_conf]
+matcher_conf: dict = matcher_configs[args.matcher_conf]
 
 # Print used configs.
 print(f"\nSelected retrieval configuration:\n{pformat(retrieval_conf)}")

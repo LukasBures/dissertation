@@ -4,6 +4,14 @@ import cv2
 import h5py
 import numpy as np
 from tqdm import tqdm
+import argparse
+
+# Parameters.
+parser = argparse.ArgumentParser()
+parser.add_argument("--dataset_name", type=str, help="Dataset name.")
+parser.add_argument("--path_root", type=str, help="Dataset name.")
+parser.add_argument("--destination_folder", type=str, help="Dataset name.")
+args = parser.parse_args()
 
 nature: list = ["vegetation", "terrain"]
 sky: list = ["sky"]
@@ -23,24 +31,15 @@ if "vegetation" in filtered_names:
     store_names.append("nature")
 store_name = "_".join(store_names)
 
-dataset: str = "aachen"
+dataset: str = args.dataset_name
 method: str = "segment_nvidia"
 version: str = "v01"
 DEBUG: bool = False
 TEST: bool = False
 
 # ------------------------------------------------------------------------
-# TODO: Implement arg parser.
-
-# aachen
-path_root: str = "/media/lukas/WD_2TB/dissertation/aachen_all_v1/best_images"
-destination_folder: str = "/data512/dissertation_results/aachen_all_v1"
-
-# aachen v1.1
-# path_root: str = (
-#     "/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/aachen_all_v1_1/best_images"
-# )
-# destination_folder: str = "/data512/dissertation_results/aachen_all_v1_1"
+path_root: str = args.path_root
+destination_folder: str = args.destination_folder
 
 print(f"Dataset: {dataset}, segmentation method: {method}")
 print(f"Image source path: {path_root}")
@@ -226,6 +225,6 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
         raise Exception(f"Unknown method: {method}.")
 
 print("Segmenting ...")
-output_file_path: str = f"{destination_folder}/{method}_{version}.h5"
+output_file_path: str = f"{destination_folder}/{method}_{dataset}_{version}.h5"
 process_segmentations(path_root, method, labels, filtered_names, output_file_path)
 print("DONE segment.py")
