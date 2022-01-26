@@ -2,7 +2,7 @@ from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
 
-dataset_name: str = "Aachen"
+dataset_name: str = "Aachen v1"
 
 results_without_dynamic_kp: List[dict] = [
     {
