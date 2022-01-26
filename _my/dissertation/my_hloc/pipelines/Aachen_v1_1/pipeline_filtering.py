@@ -95,7 +95,10 @@ print(f"\nSelected feature configuration:\n{pformat(feature_conf)}")
 print(f"\nSelected matcher configuration:\n{pformat(matcher_conf)}")
 print("\n")
 
-static_percentages: list = list(range(static_to, static_from - static_step, -static_step))
+if static_from == static_step == static_to == 0:
+    static_percentages: list = [0]
+else:
+    static_percentages: list = list(range(static_to, static_from - static_step, -static_step))
 dynamic_percentages: list = list(range(dynamic_to, dynamic_from - dynamic_step, -dynamic_step))
 static_dynamic_combinations: list = list(itertools.product(static_percentages, dynamic_percentages))
 print("Planned static/dynamic percentages:")

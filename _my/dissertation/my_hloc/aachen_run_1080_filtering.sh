@@ -24,12 +24,12 @@ feature_conf="superpoint_fast"
 matcher_conf="superglue_fast"
 num_covis=20
 num_loc=50
-static_from=50
-static_to=100
-static_step=10
+static_from=0
+static_to=0
+static_step=0
 dynamic_from=100
 dynamic_to=100
-dynamic_step=10
+dynamic_step=100
 folder_name="$used_dataset"'-'"$(date +%Y.%m.%d_%H.%M.%S)"
 mkdir -p "$output_root_folder"/"$folder_name"/code
 cp $pipeline "$output_root_folder"/"$folder_name"/code
