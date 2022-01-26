@@ -13,6 +13,10 @@ parser.add_argument("--path_root", type=str, help="Dataset name.")
 parser.add_argument("--destination_folder", type=str, help="Dataset name.")
 args = parser.parse_args()
 
+print(f"dataset_name: {args.dataset_name}")
+print(f"path_root: {args.path_root}")
+print(f"destination_folder: {args.destination_folder}")
+
 nature: list = ["vegetation", "terrain"]
 sky: list = ["sky"]
 human: list = ["person", "rider"]

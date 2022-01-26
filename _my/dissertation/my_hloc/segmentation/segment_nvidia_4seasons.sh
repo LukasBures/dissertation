@@ -5,7 +5,7 @@
 
 # ---------------------------------------------------------------------------------
 DATASET_NAME="4Seasons_test0_cam0"
-PATH_ROOT="/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/4Seasons_test0_cam0/"
+PATH_ROOT="/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/4Seasons_test0_cam0/best_images/"
 DESTINATION_FOLDER="/data512/dissertation_results/4Seasons/"
 
 # Segment NVIDIA
@@ -23,7 +23,7 @@ echo "DONE saved to h5 ..."
 
 # ---------------------------------------------------------------------------------
 DATASET_NAME="4Seasons_test0_cam1"
-PATH_ROOT="/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/4Seasons_test0_cam1/"
+PATH_ROOT="/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/4Seasons_test0_cam1/best_images/"
 DESTINATION_FOLDER="/data512/dissertation_results/4Seasons/"
 
 # Segment NVIDIA
@@ -41,7 +41,7 @@ echo "DONE saved to h5 ..."
 
 # ---------------------------------------------------------------------------------
 DATASET_NAME="4Seasons_test1_cam0"
-PATH_ROOT="/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/4Seasons_test1_cam0/"
+PATH_ROOT="/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/4Seasons_test1_cam0/best_images/"
 DESTINATION_FOLDER="/data512/dissertation_results/4Seasons/"
 
 # Segment NVIDIA
@@ -59,7 +59,7 @@ echo "DONE saved to h5 ..."
 
 # ---------------------------------------------------------------------------------
 DATASET_NAME="4Seasons_test1_cam1"
-PATH_ROOT="/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/4Seasons_test1_cam1/"
+PATH_ROOT="/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/4Seasons_test1_cam1/best_images/"
 DESTINATION_FOLDER="/data512/dissertation_results/4Seasons/"
 
 # Segment NVIDIA
