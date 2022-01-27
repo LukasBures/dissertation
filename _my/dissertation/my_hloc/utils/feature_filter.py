@@ -177,27 +177,22 @@ class FeatureFilter:
 
                         kp_info_unsorted: list = keep_static + keep_dynamic
                         kp_info: list = sorted(kp_info_unsorted, key=lambda dt: dt["idx"])
-                        new_descriptors: list = list()
+                        new_descriptors: np.ndarray = np.empty(0)
                         new_scores: list = list()
                         new_keypoints: list = list()
 
                         for i, k in enumerate(kp_info):
                             if i == 0:
-                                new_descriptors = descriptors[:, k["idx"]]
+                                new_descriptors: np.ndarray = descriptors[:, k["idx"]]
                             else:
                                 new_descriptors: np.ndarray = np.vstack([new_descriptors, descriptors[:, k["idx"]]])
                             new_scores.append(scores[k["idx"]])
                             new_keypoints.append(keypoints[k["idx"]])
 
-                        if len(new_descriptors) > 0:
-                            new_descriptors: np.ndarray = np.swapaxes(new_descriptors, 0, 1)
-                        else:
-                            new_descriptors: np.ndarray = np.asarray(new_descriptors)
-
                         # Write to the new file.
                         grp = destination_file.create_group(image_name)
                         grp.create_dataset("keypoints", data=new_keypoints)
-                        grp.create_dataset("descriptors", data=new_descriptors)
+                        grp.create_dataset("descriptors", data=new_descriptors.T)
                         grp.create_dataset("scores", data=np.asarray(new_scores))
                         grp.create_dataset("image_size", data=image_size)
 
