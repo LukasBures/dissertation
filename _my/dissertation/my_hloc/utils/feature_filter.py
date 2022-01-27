@@ -189,7 +189,7 @@ class FeatureFilter:
                             new_scores.append(scores[k["idx"]])
                             new_keypoints.append(keypoints[k["idx"]])
 
-                        if new_descriptors:
+                        if len(new_descriptors) > 0:
                             new_descriptors: np.ndarray = np.swapaxes(new_descriptors, 0, 1)
                         else:
                             new_descriptors: np.ndarray = np.asarray(new_descriptors)
