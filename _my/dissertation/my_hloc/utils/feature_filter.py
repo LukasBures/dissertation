@@ -185,14 +185,19 @@ class FeatureFilter:
                             if i == 0:
                                 new_descriptors = descriptors[:, k["idx"]]
                             else:
-                                new_descriptors = np.vstack([new_descriptors, descriptors[:, k["idx"]]])
+                                new_descriptors: np.ndarray = np.vstack([new_descriptors, descriptors[:, k["idx"]]])
                             new_scores.append(scores[k["idx"]])
                             new_keypoints.append(keypoints[k["idx"]])
+
+                        if new_descriptors:
+                            new_descriptors: np.ndarray = np.swapaxes(new_descriptors, 0, 1)
+                        else:
+                            new_descriptors: np.ndarray = np.asarray(new_descriptors)
 
                         # Write to the new file.
                         grp = destination_file.create_group(image_name)
                         grp.create_dataset("keypoints", data=new_keypoints)
-                        grp.create_dataset("descriptors", data=np.swapaxes(new_descriptors, 0, 1))
+                        grp.create_dataset("descriptors", data=new_descriptors)
                         grp.create_dataset("scores", data=np.asarray(new_scores))
                         grp.create_dataset("image_size", data=image_size)
 
