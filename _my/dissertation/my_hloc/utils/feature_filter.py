@@ -194,7 +194,7 @@ class FeatureFilter:
                             # Write to the new file.
                             grp = destination_file.create_group(image_name)
                             grp.create_dataset("keypoints", data=new_keypoints)
-                            grp.create_dataset("descriptors", data=np.swapaxes(new_descriptors, 0, 1))
+                            grp.create_dataset("descriptors", data=new_descriptors.T)
                             grp.create_dataset("scores", data=np.asarray(new_scores))
                             grp.create_dataset("image_size", data=image_size)
 
