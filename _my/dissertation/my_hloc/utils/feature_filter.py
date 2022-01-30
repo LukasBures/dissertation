@@ -176,25 +176,27 @@ class FeatureFilter:
                         total_dynamic_kp_count += len(dynamic)
 
                         kp_info_unsorted: list = keep_static + keep_dynamic
-                        kp_info: list = sorted(kp_info_unsorted, key=lambda dt: dt["idx"])
-                        new_descriptors: np.ndarray = np.empty(0)
-                        new_scores: list = list()
-                        new_keypoints: list = list()
 
-                        for i, k in enumerate(kp_info):
-                            if i == 0:
-                                new_descriptors: np.ndarray = descriptors[:, k["idx"]]
-                            else:
-                                new_descriptors: np.ndarray = np.vstack([new_descriptors, descriptors[:, k["idx"]]])
-                            new_scores.append(scores[k["idx"]])
-                            new_keypoints.append(keypoints[k["idx"]])
+                        if len(kp_info_unsorted) > 0:
+                            kp_info: list = sorted(kp_info_unsorted, key=lambda dt: dt["idx"])
+                            new_descriptors: np.ndarray = np.empty(0)
+                            new_scores: list = list()
+                            new_keypoints: list = list()
 
-                        # Write to the new file.
-                        grp = destination_file.create_group(image_name)
-                        grp.create_dataset("keypoints", data=new_keypoints)
-                        grp.create_dataset("descriptors", data=new_descriptors.T)
-                        grp.create_dataset("scores", data=np.asarray(new_scores))
-                        grp.create_dataset("image_size", data=image_size)
+                            for i, k in enumerate(kp_info):
+                                if i == 0:
+                                    new_descriptors: np.ndarray = descriptors[:, k["idx"]]
+                                else:
+                                    new_descriptors: np.ndarray = np.vstack([new_descriptors, descriptors[:, k["idx"]]])
+                                new_scores.append(scores[k["idx"]])
+                                new_keypoints.append(keypoints[k["idx"]])
+
+                            # Write to the new file.
+                            grp = destination_file.create_group(image_name)
+                            grp.create_dataset("keypoints", data=new_keypoints)
+                            grp.create_dataset("descriptors", data=np.swapaxes(new_descriptors, 0, 1))
+                            grp.create_dataset("scores", data=np.asarray(new_scores))
+                            grp.create_dataset("image_size", data=image_size)
 
         summary_info: dict = {
             "static_percentage_to_keep": static_percentage_keep,
