@@ -64,7 +64,6 @@ parser.add_argument("--dynamic_step", type=int, default=10, help="Dynamic percen
 parser.add_argument("--segmentations_file", type=Path, help="Path to the file with semantic segmentations.")
 args = parser.parse_args()
 
-sequence = args.sequence
 static_from: int = args.static_from
 static_to: int = args.static_to
 static_step: int = args.static_step
@@ -133,31 +132,45 @@ print("\n")
 print("-" * 50)
 print("STARTING\n\n")
 
+sequence = args.sequence
+data_dir = args.dataset
+output_dir = args.outputs
+output_dir.mkdir(exist_ok=True, parents=True)
+
+ref_dir = data_dir / "reference"
+assert ref_dir.exists(), f"{ref_dir} does not exist"
+seq_dir = data_dir / sequence
+assert seq_dir.exists(), f"{seq_dir} does not exist"
+seq_images = seq_dir / "undistorted_images"
+reloc = ref_dir / relocalization_files[sequence]
+ref_sfm = output_dir / "sfm_superpoint+superglue"
+submission_dir = output_dir / f"submission_superpoint+superglue"
+submission_dir.mkdir(exist_ok=True)
+
 
 for static_percentage in static_percentages:
     for dynamic_percentage in dynamic_percentages:
         filtered_kp_file_prefix: str = f"s{static_percentage}_d{dynamic_percentage}_"
 
+        query_list = output_dir / f"{sequence}_queries_with_intrinsics.txt"
+        ref_pairs = output_dir / "pairs-db-dist20.txt"
+        results_path = output_dir / f"localization_{sequence}_hloc+superglue.txt"
+        loc_pairs = output_dir / f"pairs-query-{sequence}-dist{num_loc_pairs}.txt"
+
         # Print static and dynamic percentages.
         print("-" * 50)
         print(f"Starting: static: {static_percentage}%, dynamic: {dynamic_percentage}")
 
-        data_dir = args.dataset
-        ref_dir = data_dir / "reference"
-        assert ref_dir.exists(), f"{ref_dir} does not exist"
-        seq_dir = data_dir / sequence
-        assert seq_dir.exists(), f"{seq_dir} does not exist"
-        seq_images = seq_dir / "undistorted_images"
-        reloc = ref_dir / relocalization_files[sequence]
-
-        output_dir = args.outputs
-        output_dir.mkdir(exist_ok=True, parents=True)
-        query_list = output_dir / f"{sequence}_queries_with_intrinsics.txt"
-        ref_pairs = output_dir / "pairs-db-dist20.txt"
-        ref_sfm = output_dir / "sfm_superpoint+superglue"
-        results_path = output_dir / f"localization_{sequence}_hloc+superglue.txt"
-        submission_dir = output_dir / "submission_hloc+superglue"
-        loc_pairs = output_dir / f"pairs-query-{sequence}-dist{num_loc_pairs}.txt"
+        # Filter dynamic / static features.
+        # pth, nm = os.path.split(os.path.abspath(all_features_pth))
+        # new_features_pth = Path(os.path.join(pth, filtered_kp_file_prefix + nm))
+        # ff = FeatureFilter(
+        #     h5_file_path=str(all_features_pth),
+        #     new_h5_file_path=str(new_features_pth),
+        #     segmentation_h5_file_path=str(segmentations_file_path),
+        # )
+        # ff.filter_and_update_kp(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
+        # del ff
 
         # Not all query images that are used for the evaluation.
         # To save time in feature extraction, we delete unused images.
@@ -187,10 +200,8 @@ for static_percentage in static_percentages:
         )
 
         # Convert the absolute poses to relative poses with the reference frames.
-        submission_dir.mkdir(exist_ok=True)
         prepare_submission(results=results_path, relocs=reloc, poses_path=ref_dir / "poses.txt", out_dir=submission_dir)
 
-        # If not a test sequence: evaluation the localization accuracy.
-        if "test" not in sequence:
-            logger.info("Evaluating the relocalization submission ...")
-            evaluate_submission(submission_dir=submission_dir, relocs=reloc, ths=[0.1, 0.2, 0.5])
+        # Evaluation the localization accuracy.
+        logger.info("Evaluating the relocalization submission ...")
+        evaluate_submission(submission_dir=submission_dir, relocs=reloc, ths=[0.1, 0.2, 0.5])
