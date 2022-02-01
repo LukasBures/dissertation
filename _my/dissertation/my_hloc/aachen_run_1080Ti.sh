@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Activate virtual environment.
 . /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
 

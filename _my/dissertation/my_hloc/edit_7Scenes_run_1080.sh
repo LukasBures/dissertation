@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # activate venv
 source /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
 
