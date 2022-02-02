@@ -1,4 +1,3 @@
-import logging
 import os
 import sys
 from pathlib import Path
@@ -15,8 +14,6 @@ else:
 
 from hloc.utils.parsers import parse_retrieval
 from hloc.utils.read_write_model import Camera, Image, qvec2rotmat, rotmat2qvec, write_model
-
-logger = logging.getLogger(__name__)
 
 
 def get_timestamps(files, idx):
@@ -44,7 +41,7 @@ def delete_unused_images(root, timestamps):
         if ts not in timestamps:
             os.remove(image)
             deleted += 1
-    logger.info(f"Deleted {deleted} images in {root}.")
+    print(f"Deleted {deleted} images in {root}.")
 
 
 def camera_from_calibration_file(id_, path):
@@ -203,7 +200,7 @@ def prepare_submission(results, relocs, poses_path, out_dir):
         out_path = out_dir / reloc.name
         with open(out_path, "w") as f:
             f.write("\n".join(relative_poses))
-        logger.info(f"Submission file written to {out_path}.")
+        print(f"Submission file written to {out_path}.")
 
 
 def evaluate_submission(submission_dir, relocs, ths=[0.1, 0.2, 0.5]):
@@ -224,7 +221,7 @@ def evaluate_submission(submission_dir, relocs, ths=[0.1, 0.2, 0.5]):
         s = f"Relocalization evaluation {submission_dir.name}/{reloc.name}\n"
         s += " / ".join([f"{th:>7}m" for th in ths]) + "\n"
         s += " / ".join([f"{100*r:>7.3f}%" for r in recall])
-        logger.info(s)
+        print(s)
 
 
 def evaluate_submission_filtering(submission_dir, relocs, static_dynamic_info: dict, thresholds: list = None) -> None:
@@ -254,10 +251,10 @@ def evaluate_submission_filtering(submission_dir, relocs, static_dynamic_info: d
 
             error = np.array(error)
             recall = [np.mean(error <= th) for th in thresholds]
-            logger.info(f"Relocalization evaluation {submission_dir.name}/{reloc.name}\n")
+            print(f"Relocalization evaluation {submission_dir.name}/{reloc.name}\n")
             s = " / ".join([f"{th:>7}m" for th in thresholds]) + "\n"
             s += " / ".join([f"{100*r:>7.3f}%" for r in recall]) + "\n\n"
-            logger.info(s)
+            print(s)
 
             f.write(f"static={static_dynamic_info['static']}%, dynamic={static_dynamic_info['dynamic']}%\n")
             f.write(s)
