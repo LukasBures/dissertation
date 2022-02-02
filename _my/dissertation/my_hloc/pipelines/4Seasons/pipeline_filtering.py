@@ -27,7 +27,7 @@ else:
     print(f"__PYTHONPATH: {user_paths}")
 
 from feature_filter import FeatureFilter
-from hloc import extract_features, localize_sfm, logger, match_features
+from hloc import extract_features, localize_sfm, match_features
 
 relocalization_files = {
     "training": "RelocalizationFilesTrain/relocalizationFile_recording_2020-03-24_17-36-22.txt",
@@ -209,10 +209,10 @@ for static_percentage in static_percentages:
 
         # If not a test sequence: evaluation the localization accuracy
         if 'test' not in sequence:
-            logger.info("Evaluating the relocalization submission ...")
+            print("Evaluating the relocalization submission ...")
             static_dynamic_info = {"static": static_percentage, "dynamic": dynamic_percentage}
             evaluate_submission_filtering(
                 submission_dir=submission_dir, relocs=reloc, static_dynamic_info=static_dynamic_info
             )
         else:
-            logger.info(f"For sequence '{sequence}' can not evaluate relocalization.")
+            print(f"For sequence '{sequence}' can not evaluate relocalization.")

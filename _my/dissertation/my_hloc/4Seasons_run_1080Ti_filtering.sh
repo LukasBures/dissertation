@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Activate virtual environment.
 . /home/lukas/PycharmProjects/dissertation/.venv/bin/activate
 
@@ -21,7 +19,7 @@ utils=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipeline
 prepare_reference=/home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/pipelines/4Seasons/prepare_reference.py
 outputs_folder_0=results_test0
 outputs_folder_1=results_test1
-outputs_folder_train=results_train
+outputs_folder_training=results_training
 outputs_folder_validation=results_validation
 
 # EXPERIMENTS:
@@ -30,10 +28,10 @@ feature_conf="superpoint_fast"
 matcher_conf="superglue_fast"
 num_ref=20
 num_loc=10
-static_from=5
+static_from=100
 static_to=100
-static_step=5
-dynamic_from=0
+static_step=100
+dynamic_from=100
 dynamic_to=100
 dynamic_step=100
 folder_name="$used_dataset"'-'"$(date +%Y.%m.%d_%H.%M.%S)"
@@ -47,8 +45,8 @@ cp $this_file_name "$output_root_folder"/"$folder_name"/code
 cd "$output_root_folder"/"$folder_name"/ || exit 1
 
 # TRAIN
-time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_train  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_train.log
-time python "$output_root_folder"/"$folder_name"/code/pipeline_filtering.py --sequence "training" --dataset $dataset_folder --outputs $outputs_folder_train --num_ref $num_ref --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu --static_from $static_from --static_to $static_to --static_step $static_step --dynamic_from $dynamic_from --dynamic_to $dynamic_to --dynamic_step $dynamic_step --segmentations_file $segmentations_file 2>&1 | tee mylog_training.log
+time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_training  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_train.log
+time python "$output_root_folder"/"$folder_name"/code/pipeline_filtering.py --sequence "training" --dataset $dataset_folder --outputs $outputs_folder_training --num_ref $num_ref --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu --static_from $static_from --static_to $static_to --static_step $static_step --dynamic_from $dynamic_from --dynamic_to $dynamic_to --dynamic_step $dynamic_step --segmentations_file $segmentations_file 2>&1 | tee mylog_training.log
 
 # VALIDATION
 time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_validation  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_validation.log
