@@ -227,22 +227,37 @@ def evaluate_submission(submission_dir, relocs, ths=[0.1, 0.2, 0.5]):
         logger.info(s)
 
 
-def evaluate_submission_filtering(submission_dir, relocs, ths=[0.1, 0.2, 0.5]):
-    """Compute the relocalization recall from predicted and ground truth poses."""
-    for reloc in relocs.parent.glob(relocs.name):
-        poses_gt = parse_relocalization(reloc, has_poses=True)
-        poses_pred = parse_relocalization(submission_dir / reloc.name, has_poses=True)
-        poses_pred = {(ref_ts, q_ts): (R, t) for ref_ts, q_ts, R, t in poses_pred}
+def evaluate_submission_filtering(submission_dir, relocs, static_dynamic_info: dict, thresholds: list = None) -> None:
+    """
+    Compute the relocalization recall from predicted and ground truth poses.
 
-        error = []
-        for ref_ts, q_ts, R_gt, t_gt in poses_gt:
-            R, t = poses_pred[(ref_ts, q_ts)]
-            e = np.linalg.norm(t - t_gt)
-            error.append(e)
+    :param submission_dir:
+    :param relocs:
+    :param static_dynamic_info:
+    :param thresholds:
+    :return:
+    """
+    if not thresholds:
+        thresholds: list = [0.1, 0.2, 0.5]
 
-        error = np.array(error)
-        recall = [np.mean(error <= th) for th in ths]
-        s = f"Relocalization evaluation {submission_dir.name}/{reloc.name}\n"
-        s += " / ".join([f"{th:>7}m" for th in ths]) + "\n"
-        s += " / ".join([f"{100*r:>7.3f}%" for r in recall])
-        logger.info(s)
+    with open(submission_dir / "evaluate_submission_filtering.txt", "a") as f:
+        for reloc in relocs.parent.glob(relocs.name):
+            poses_gt = parse_relocalization(reloc, has_poses=True)
+            poses_pred = parse_relocalization(submission_dir / reloc.name, has_poses=True)
+            poses_pred = {(ref_ts, q_ts): (R, t) for ref_ts, q_ts, R, t in poses_pred}
+
+            error = []
+            for ref_ts, q_ts, R_gt, t_gt in poses_gt:
+                R, t = poses_pred[(ref_ts, q_ts)]
+                e = np.linalg.norm(t - t_gt)
+                error.append(e)
+
+            error = np.array(error)
+            recall = [np.mean(error <= th) for th in thresholds]
+            logger.info(f"Relocalization evaluation {submission_dir.name}/{reloc.name}\n")
+            s = " / ".join([f"{th:>7}m" for th in thresholds]) + "\n"
+            s += " / ".join([f"{100*r:>7.3f}%" for r in recall]) + "\n\n"
+            logger.info(s)
+
+            f.write(f"static={static_dynamic_info['static']}%, dynamic={static_dynamic_info['dynamic']}%\n")
+            f.write(s)

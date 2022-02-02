@@ -11,7 +11,7 @@ import torch
 from configs import feature_configs, matcher_configs
 from utils2 import (
     delete_unused_images,
-    evaluate_submission,
+    evaluate_submission_filtering,
     generate_localization_pairs,
     generate_query_lists,
     get_timestamps,
@@ -132,19 +132,20 @@ print("\n")
 print("-" * 50)
 print("STARTING\n\n")
 
-sequence = args.sequence
-data_dir = args.dataset
-output_dir = args.outputs
+sequence: str = args.sequence
+data_dir: Path = args.dataset
+output_dir: Path = args.outputs
+segmentations_file_path: Path = args.segmentations_file
 output_dir.mkdir(exist_ok=True, parents=True)
 
-ref_dir = data_dir / "reference"
+ref_dir: Path = data_dir / "reference"
 assert ref_dir.exists(), f"{ref_dir} does not exist"
-seq_dir = data_dir / sequence
+seq_dir: Path = data_dir / sequence
 assert seq_dir.exists(), f"{seq_dir} does not exist"
-seq_images = seq_dir / "undistorted_images"
-reloc = ref_dir / relocalization_files[sequence]
-ref_sfm = output_dir / "sfm_superpoint+superglue"
-submission_dir = output_dir / f"submission_superpoint+superglue"
+seq_images: Path = seq_dir / "undistorted_images"
+reloc: Path = ref_dir / relocalization_files[sequence]
+ref_sfm: Path = output_dir / "sfm_superpoint+superglue"
+submission_dir: Path = output_dir / f"submission_superpoint+superglue"
 submission_dir.mkdir(exist_ok=True)
 
 
@@ -152,25 +153,14 @@ for static_percentage in static_percentages:
     for dynamic_percentage in dynamic_percentages:
         filtered_kp_file_prefix: str = f"s{static_percentage}_d{dynamic_percentage}_"
 
-        query_list = output_dir / f"{sequence}_queries_with_intrinsics.txt"
-        ref_pairs = output_dir / "pairs-db-dist20.txt"
-        results_path = output_dir / f"localization_{sequence}_hloc+superglue.txt"
-        loc_pairs = output_dir / f"pairs-query-{sequence}-dist{num_loc_pairs}.txt"
+        query_list: Path = output_dir / f"{sequence}_queries_with_intrinsics.txt"
+        ref_pairs: Path = output_dir / "pairs-db-dist20.txt"
+        results_path: Path = output_dir / f"localization_{sequence}_hloc+superglue.txt"
+        loc_pairs: Path = output_dir / f"pairs-query-{sequence}-dist{num_loc_pairs}.txt"
 
         # Print static and dynamic percentages.
         print("-" * 50)
         print(f"Starting: static: {static_percentage}%, dynamic: {dynamic_percentage}")
-
-        # Filter dynamic / static features.
-        # pth, nm = os.path.split(os.path.abspath(all_features_pth))
-        # new_features_pth = Path(os.path.join(pth, filtered_kp_file_prefix + nm))
-        # ff = FeatureFilter(
-        #     h5_file_path=str(all_features_pth),
-        #     new_h5_file_path=str(new_features_pth),
-        #     segmentation_h5_file_path=str(segmentations_file_path),
-        # )
-        # ff.filter_and_update_kp(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
-        # del ff
 
         # Not all query images that are used for the evaluation.
         # To save time in feature extraction, we delete unused images.
@@ -185,16 +175,31 @@ for static_percentage in static_percentages:
             sequence=sequence, reloc=reloc, num=num_loc_pairs, ref_pairs=ref_pairs, out_path=loc_pairs
         )
 
-        # Extract, match, and localize.
-        feature_file = extract_features.main(conf=feature_conf, image_dir=seq_images, export_dir=output_dir)
+        # Extract features.
+        all_features_pth = extract_features.main(conf=feature_conf, image_dir=seq_images, export_dir=output_dir)
+
+        # Filter dynamic / static features.
+        pth, nm = os.path.split(os.path.abspath(all_features_pth))
+        new_features_pth: Path = Path(os.path.join(pth, filtered_kp_file_prefix + nm))
+        ff: FeatureFilter = FeatureFilter(
+            h5_file_path=str(all_features_pth),
+            new_h5_file_path=str(new_features_pth),
+            segmentation_h5_file_path=str(segmentations_file_path),
+        )
+        ff.filter_and_update_kp(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
+        del ff
+
+        # Match features.
         matches_file = match_features.main(
             conf=matcher_conf, pairs=loc_pairs, features=feature_conf["output"], export_dir=output_dir
         )
+
+        # Localize features.
         localize_sfm.main(
             reference_sfm=ref_sfm,
             queries=query_list,
             retrieval=loc_pairs,
-            features=feature_file,
+            features=new_features_pth,
             matches=matches_file,
             results=results_path,
         )
@@ -205,6 +210,9 @@ for static_percentage in static_percentages:
         # If not a test sequence: evaluation the localization accuracy
         if 'test' not in sequence:
             logger.info("Evaluating the relocalization submission ...")
-            evaluate_submission(submission_dir=submission_dir, relocs=reloc, ths=[0.1, 0.2, 0.5])
+            static_dynamic_info = {"static": static_percentage, "dynamic": dynamic_percentage}
+            evaluate_submission_filtering(
+                submission_dir=submission_dir, relocs=reloc, static_dynamic_info=static_dynamic_info
+            )
         else:
             logger.info(f"For sequence '{sequence}' can not evaluate relocalization.")

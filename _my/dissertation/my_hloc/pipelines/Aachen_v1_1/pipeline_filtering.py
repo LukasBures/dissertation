@@ -146,8 +146,8 @@ for static_percentage in static_percentages:
 
         # Filter dynamic / static features.
         pth, nm = os.path.split(os.path.abspath(all_features_pth))
-        new_features_pth = Path(os.path.join(pth, filtered_kp_file_prefix + nm))
-        ff = FeatureFilter(
+        new_features_pth: Path = Path(os.path.join(pth, filtered_kp_file_prefix + nm))
+        ff: FeatureFilter = FeatureFilter(
             h5_file_path=str(all_features_pth),
             new_h5_file_path=str(new_features_pth),
             segmentation_h5_file_path=str(segmentations_file_path),
