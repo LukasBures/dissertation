@@ -30,7 +30,7 @@ from feature_filter import FeatureFilter
 from hloc import extract_features, localize_sfm, logger, match_features
 
 relocalization_files = {
-    "training": "RelocalizationFilesTrain//relocalizationFile_recording_2020-03-24_17-36-22.txt",
+    "training": "RelocalizationFilesTrain/relocalizationFile_recording_2020-03-24_17-36-22.txt",
     "validation": "RelocalizationFilesVal/relocalizationFile_recording_2020-03-03_12-03-23.txt",
     "test0": "RelocalizationFilesTest/relocalizationFile_recording_2020-03-24_17-45-31_*.txt",
     "test1": "RelocalizationFilesTest/relocalizationFile_recording_2020-04-23_19-37-00_*.txt",
@@ -202,6 +202,9 @@ for static_percentage in static_percentages:
         # Convert the absolute poses to relative poses with the reference frames.
         prepare_submission(results=results_path, relocs=reloc, poses_path=ref_dir / "poses.txt", out_dir=submission_dir)
 
-        # Evaluation the localization accuracy.
-        logger.info("Evaluating the relocalization submission ...")
-        evaluate_submission(submission_dir=submission_dir, relocs=reloc, ths=[0.1, 0.2, 0.5])
+        # If not a test sequence: evaluation the localization accuracy
+        if 'test' not in sequence:
+            logger.info("Evaluating the relocalization submission ...")
+            evaluate_submission(submission_dir=submission_dir, relocs=reloc, ths=[0.1, 0.2, 0.5])
+        else:
+            logger.info(f"For sequence '{sequence}' can not evaluate relocalization.")
