@@ -8,9 +8,9 @@ relocalization_files = {
     "test1": "RelocalizationFilesTest/relocalizationFile_recording_2020-04-23_19-37-00_*.txt",
 }
 ref_dir = Path("/data512/datasets/4Seasons/reference")
-root_dir = Path("/data512/dissertation_results/4Seasons-2022.02.01_22.11.09/results_test0")
+root_dir = Path("/data512/dissertation_results/4Seasons-2022.02.02_09.14.49/results_validation")
 submission_dir = root_dir / "submission_superpoint+superglue"
-reloc = ref_dir / relocalization_files["test0"]
+reloc = ref_dir / relocalization_files["validation"]
 
 print("Evaluating the relocalization submission ...")
 evaluate_submission(submission_dir=Path(submission_dir), relocs=Path(reloc), ths=[0.1, 0.2, 0.5])
