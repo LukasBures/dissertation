@@ -186,7 +186,9 @@ for static_percentage in static_percentages:
             new_h5_file_path=str(new_features_pth),
             segmentation_h5_file_path=str(segmentations_file_path),
         )
-        ff.filter_and_update_kp(static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage)
+        ff.filter_and_update_kp_4seasons(
+            static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage
+        )
         del ff
 
         # Match features.
