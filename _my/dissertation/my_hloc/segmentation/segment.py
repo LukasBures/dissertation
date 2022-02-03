@@ -9,19 +9,25 @@ import argparse
 # Parameters.
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset_name", type=str, help="Dataset name.")
-parser.add_argument("--path_root", type=str, help="Dataset name.")
+parser.add_argument("--path_roots", nargs="+", help="Root folders.")
 parser.add_argument("--destination_folder", type=str, help="Dataset name.")
+parser.add_argument("--segmentation_classes", nargs="+", help="Segmentation classes.", default=["nature", "sky", "human", "vehicle"])
 args = parser.parse_args()
 
-print(f"dataset_name: {args.dataset_name}")
-print(f"path_root: {args.path_root}")
-print(f"destination_folder: {args.destination_folder}")
+print(f"Dataset name: {args.dataset_name}")
+print(f"Path roots: {args.path_roots}")
+print(f"Destination folder: {args.destination_folder}")
+segmentation_classes: list = args.segmentation_classes
 
-nature: list = ["vegetation", "terrain"]
-sky: list = ["sky"]
-human: list = ["person", "rider"]
-vehicle: list = ["car", "truck", "bus", "caravan", "trailer", "train", "motorcycle", "bicycle", "license plate"]
-filtered_names: list = sky + human + vehicle + nature
+filtered_names: list = list()
+if "nature" in segmentation_classes:
+    filtered_names: list = filtered_names + ["vegetation", "terrain"]
+if "sky" in segmentation_classes:
+    filtered_names: list = filtered_names + ["sky"]
+if "human" in segmentation_classes:
+    filtered_names: list = filtered_names + ["person", "rider"]
+if "vehicle" in segmentation_classes:
+    filtered_names: list = filtered_names + ["car", "truck", "bus", "caravan", "trailer", "train", "motorcycle", "bicycle", "license plate"]
 print(f"Filtered names: {filtered_names}")
 
 store_names: list = list()
@@ -42,11 +48,11 @@ DEBUG: bool = False
 TEST: bool = False
 
 # ------------------------------------------------------------------------
-path_root: str = args.path_root
+path_roots: list = args.path_roots
 destination_folder: str = args.destination_folder
 
 print(f"Dataset: {dataset}, segmentation method: {method}")
-print(f"Image source path: {path_root}")
+print(f"Image source paths: {path_roots}")
 print(f"Segmentation h5 file destination path: {destination_folder}")
 os.makedirs(destination_folder, exist_ok=True)
 
@@ -167,11 +173,11 @@ def mask_it(segmented_img, labels: list, filtered_names: list) -> dict:
     return masks
 
 
-def process_segmentations(pth: str, method: str, labels: list, filtered_names: list, output_file_path: str) -> None:
+def process_segmentations(root_path: str, method: str, labels: list, filtered_names: list, output_file_path: str) -> None:
     """
 
 
-    :param pth:
+    :param root_path:
     :param method:
     :param labels:
     :param filtered_names:
@@ -179,11 +185,11 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
     """
     if method is "segment_nvidia":
         with h5py.File(str(output_file_path), "w") as destination_file:
-            for file in tqdm(os.listdir(pth)):
+            for file in tqdm(os.listdir(root_path)):
                 if file.endswith(".png"):
                     if "_input.png" in file:
                         original_file_name = file.replace("_input.png", "")
-                        segmented_img = cv2.imread(os.path.join(pth, file.replace("_input.png", "_prediction.png")))
+                        segmented_img = cv2.imread(os.path.join(root_path, file.replace("_input.png", "_prediction.png")))
                         masks = mask_it(segmented_img, labels, filtered_names)
 
                         nature_mask = masks["vegetation"] | masks["terrain"]
@@ -208,7 +214,7 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
                         grp.create_dataset("vehicle", data=vehicle_mask)
 
                         if DEBUG:
-                            original_img = cv2.imread(os.path.join(pth, file))
+                            original_img = cv2.imread(os.path.join(root_path, file))
                             # masks[f"{original_file_name}.jpg"] = {"original_img": original_img, "segmented_img": segmented_img}
                             # masks[f"{original_file_name}.jpg"].update(masks)
                             cv2.imshow("seg", segmented_img)
@@ -228,7 +234,73 @@ def process_segmentations(pth: str, method: str, labels: list, filtered_names: l
     else:
         raise Exception(f"Unknown method: {method}.")
 
+
+def process_multiple_segmentations(root_paths: list, method: str, labels: list, filtered_names: list, output_file_path: str) -> None:
+    """
+
+
+    :param root_paths:
+    :param method:
+    :param labels:
+    :param filtered_names:
+    :return:
+    """
+    if method is "segment_nvidia":
+        with h5py.File(str(output_file_path), "w") as destination_file:
+            for pth in root_paths:
+                cam = pth.split("_")[-1]
+                cam_grp = destination_file.create_group(cam)
+                for file in tqdm(os.listdir(pth)):
+                    if file.endswith(".png"):
+                        if "_input.png" in file:
+                            original_file_name = file.replace("_input.png", "")
+                            segmented_img = cv2.imread(os.path.join(pth, file.replace("_input.png", "_prediction.png")))
+                            masks = mask_it(segmented_img, labels, filtered_names)
+
+                            grp = cam_grp.create_group(original_file_name)
+
+                            if "nature" in segmentation_classes:
+                                nature_mask = masks["vegetation"] | masks["terrain"]
+                                grp.create_dataset("nature", data=nature_mask)
+                                del nature_mask
+
+                            if "sky" in segmentation_classes:
+                                sky_mask = masks["sky"]
+                                grp.create_dataset("sky", data=sky_mask)
+                                del sky_mask
+
+                            if "human" in segmentation_classes:
+                                human_mask = masks["person"] | masks["rider"]
+                                grp.create_dataset("human", data=human_mask)
+                                del human_mask
+
+                            if "vehicle" in segmentation_classes:
+                                vehicle_mask = (
+                                    masks["car"]
+                                    | masks["truck"]
+                                    | masks["bus"]
+                                    | masks["caravan"]
+                                    | masks["trailer"]
+                                    | masks["train"]
+                                    | masks["motorcycle"]
+                                    | masks["bicycle"]
+                                    | masks["license plate"]
+                                )
+                                grp.create_dataset("vehicle", data=vehicle_mask)
+                                del vehicle_mask
+
+                            del segmented_img
+                            del masks
+
+    else:
+        raise Exception(f"Unknown method: {method}.")
+
+
 print("Segmenting ...")
 output_file_path: str = f"{destination_folder}/{method}_{dataset}_{version}.h5"
-process_segmentations(path_root, method, labels, filtered_names, output_file_path)
+if len(path_roots) == 1:
+    process_segmentations(path_roots[0], method, labels, filtered_names, output_file_path)
+else:
+    process_multiple_segmentations(path_roots, method, labels, filtered_names, output_file_path)
+
 print("DONE segment.py")

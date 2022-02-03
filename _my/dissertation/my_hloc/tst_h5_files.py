@@ -3,6 +3,22 @@ from pathlib import Path
 import h5py
 from hloc import triangulation
 
+
+
+
+fl = "/data512/dissertation_results/4Seasons-2022.02.02_09.14.49/results_validation/feats-superpoint-n1024-r1024.h5"
+new_h5_file_path = "/data512/dissertation_results/4Seasons-2022.02.02_09.14.49/results_validation/test.h5"
+
+with h5py.File(new_h5_file_path, "w") as destination_file:
+    cam0 = destination_file.create_group("cam0")
+    grp = cam0.create_group("image_sasa")
+    grp.create_dataset("keypoints", data=123)
+
+
+
+with h5py.File(str(new_h5_file_path), 'r') as fo:
+    print(fo.keys())
+
 #
 #
 # root = "/data512/dissertation_results/aachen-2021.12.13_13.47.06/results/"
