@@ -1,5 +1,6 @@
-from utils2 import evaluate_submission
 from pathlib import Path
+
+from utils2 import evaluate_submission
 
 relocalization_files = {
     "training": "RelocalizationFilesTrain/relocalizationFile_recording_2020-03-24_17-36-22.txt",

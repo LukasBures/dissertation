@@ -1,17 +1,20 @@
+import argparse
 import os
 from collections import namedtuple
+
 import cv2
 import h5py
 import numpy as np
 from tqdm import tqdm
-import argparse
 
 # Parameters.
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset_name", type=str, help="Dataset name.")
 parser.add_argument("--path_roots", nargs="+", help="Root folders.")
 parser.add_argument("--destination_folder", type=str, help="Dataset name.")
-parser.add_argument("--segmentation_classes", nargs="+", help="Segmentation classes.", default=["nature", "sky", "human", "vehicle"])
+parser.add_argument(
+    "--segmentation_classes", nargs="+", help="Segmentation classes.", default=["nature", "sky", "human", "vehicle"]
+)
 args = parser.parse_args()
 
 print(f"Dataset name: {args.dataset_name}")
@@ -27,7 +30,17 @@ if "sky" in segmentation_classes:
 if "human" in segmentation_classes:
     filtered_names: list = filtered_names + ["person", "rider"]
 if "vehicle" in segmentation_classes:
-    filtered_names: list = filtered_names + ["car", "truck", "bus", "caravan", "trailer", "train", "motorcycle", "bicycle", "license plate"]
+    filtered_names: list = filtered_names + [
+        "car",
+        "truck",
+        "bus",
+        "caravan",
+        "trailer",
+        "train",
+        "motorcycle",
+        "bicycle",
+        "license plate",
+    ]
 print(f"Filtered names: {filtered_names}")
 
 store_names: list = list()
@@ -173,7 +186,9 @@ def mask_it(segmented_img, labels: list, filtered_names: list) -> dict:
     return masks
 
 
-def process_segmentations(root_path: str, method: str, labels: list, filtered_names: list, output_file_path: str) -> None:
+def process_segmentations(
+    root_path: str, method: str, labels: list, filtered_names: list, output_file_path: str
+) -> None:
     """
 
 
@@ -183,13 +198,15 @@ def process_segmentations(root_path: str, method: str, labels: list, filtered_na
     :param filtered_names:
     :return:
     """
-    if method is "segment_nvidia":
+    if method == "segment_nvidia":
         with h5py.File(str(output_file_path), "w") as destination_file:
             for file in tqdm(os.listdir(root_path)):
                 if file.endswith(".png"):
                     if "_input.png" in file:
                         original_file_name = file.replace("_input.png", "")
-                        segmented_img = cv2.imread(os.path.join(root_path, file.replace("_input.png", "_prediction.png")))
+                        segmented_img = cv2.imread(
+                            os.path.join(root_path, file.replace("_input.png", "_prediction.png"))
+                        )
                         masks = mask_it(segmented_img, labels, filtered_names)
 
                         nature_mask = masks["vegetation"] | masks["terrain"]
@@ -235,7 +252,9 @@ def process_segmentations(root_path: str, method: str, labels: list, filtered_na
         raise Exception(f"Unknown method: {method}.")
 
 
-def process_multiple_segmentations(root_paths: list, method: str, labels: list, filtered_names: list, output_file_path: str) -> None:
+def process_multiple_segmentations(
+    root_paths: list, method: str, labels: list, filtered_names: list, output_file_path: str
+) -> None:
     """
 
 
@@ -245,7 +264,7 @@ def process_multiple_segmentations(root_paths: list, method: str, labels: list, 
     :param filtered_names:
     :return:
     """
-    if method is "segment_nvidia":
+    if method == "segment_nvidia":
         with h5py.File(str(output_file_path), "w") as destination_file:
             for pth in root_paths:
                 cam = pth.split("_")[-1]

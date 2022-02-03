@@ -1,4 +1,5 @@
 from typing import List
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -130,7 +131,7 @@ results_without_dynamic_kp: List[dict] = [
         "dynamic_percentage": 0,
         "day": "87.0 / 94.5 / 98.3",
         "night": "73.3 / 88.5 / 98.4",
-    }
+    },
 ]
 
 results_with_dynamic_kp: List[dict] = [
@@ -260,7 +261,7 @@ results_with_dynamic_kp: List[dict] = [
         "dynamic_percentage": 100,
         "day": "86.8 / 94.3 / 98.3",
         "night": "74.3 / 89.0 / 98.4",
-    }
+    },
 ]
 
 # Preprocessing the data.
@@ -305,17 +306,39 @@ y_day_without_dynamic_kp = np.array(y_day_without_dynamic_kp)
 
 offset: int = 1
 plt.plot(
-    x_static[offset:], y_day_with_dynamic_kp[offset:, 0], "r.-",
-    x_static[offset:], y_day_with_dynamic_kp[offset:, 1], "g.-",
-    x_static[offset:], y_day_with_dynamic_kp[offset:, 2], "b.-",
-    x_static[offset:], y_day_without_dynamic_kp[offset:, 0], "r^--",
-    x_static[offset:], y_day_without_dynamic_kp[offset:, 1], "g^--",
-    x_static[offset:], y_day_without_dynamic_kp[offset:, 2], "b^--"
+    x_static[offset:],
+    y_day_with_dynamic_kp[offset:, 0],
+    "r.-",
+    x_static[offset:],
+    y_day_with_dynamic_kp[offset:, 1],
+    "g.-",
+    x_static[offset:],
+    y_day_with_dynamic_kp[offset:, 2],
+    "b.-",
+    x_static[offset:],
+    y_day_without_dynamic_kp[offset:, 0],
+    "r^--",
+    x_static[offset:],
+    y_day_without_dynamic_kp[offset:, 1],
+    "g^--",
+    x_static[offset:],
+    y_day_without_dynamic_kp[offset:, 2],
+    "b^--",
 )
 plt.title(f"{dataset_name}, day.")
 plt.xlabel("% of kept static keypoints")
 plt.ylabel("% of images from dataset")
-plt.legend(["0.25m, 2°, with dynamic KPs", "0.50m, 5°, with dynamic KPs", "5.00m, 10°, with dynamic KPs", "0.25m, 2°, without dynamic KPs", "0.50m, 5°, without dynamic KPs", "5.00m, 10°, without dynamic KPs"], title="Conditions")
+plt.legend(
+    [
+        "0.25m, 2°, with dynamic KPs",
+        "0.50m, 5°, with dynamic KPs",
+        "5.00m, 10°, with dynamic KPs",
+        "0.25m, 2°, without dynamic KPs",
+        "0.50m, 5°, without dynamic KPs",
+        "5.00m, 10°, without dynamic KPs",
+    ],
+    title="Conditions",
+)
 plt.grid(axis="both", color="0.95")
 plt.savefig(f"{dataset_name}_day.pdf")
 plt.savefig(f"{dataset_name}_day.png")

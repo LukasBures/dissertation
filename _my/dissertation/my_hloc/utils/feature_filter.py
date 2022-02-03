@@ -209,8 +209,9 @@ class FeatureFilter:
         print(f"Filter summary info: {summary_info}.")
         return summary_info
 
-    def filter_and_update_kp_4seasons(
-            self, static_percentage_keep, dynamic_percentage_keep) -> Optional[dict]:  # noqa: C901
+    def filter_and_update_kp_4seasons(  # noqa: C901
+        self, static_percentage_keep, dynamic_percentage_keep
+    ) -> Optional[dict]:
         """
         Filter and update keypoints -> reduce number of keypoints.
 
@@ -293,7 +294,9 @@ class FeatureFilter:
                                     if i == 0:
                                         new_descriptors: np.ndarray = descriptors[:, k["idx"]]
                                     else:
-                                        new_descriptors: np.ndarray = np.vstack([new_descriptors, descriptors[:, k["idx"]]])
+                                        new_descriptors: np.ndarray = np.vstack(
+                                            [new_descriptors, descriptors[:, k["idx"]]]
+                                        )
                                     new_scores.append(scores[k["idx"]])
                                     new_keypoints.append(keypoints[k["idx"]])
 

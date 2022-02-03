@@ -210,7 +210,7 @@ for static_percentage in static_percentages:
         prepare_submission(results=results_path, relocs=reloc, poses_path=ref_dir / "poses.txt", out_dir=submission_dir)
 
         # If not a test sequence: evaluation the localization accuracy
-        if 'test' not in sequence:
+        if "test" not in sequence:
             print("Evaluating the relocalization submission ...")
             static_dynamic_info = {"static": static_percentage, "dynamic": dynamic_percentage}
             evaluate_submission_filtering(
