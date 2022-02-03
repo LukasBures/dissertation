@@ -267,7 +267,12 @@ def process_multiple_segmentations(
     if method == "segment_nvidia":
         with h5py.File(str(output_file_path), "w") as destination_file:
             for pth in root_paths:
-                cam = pth.split("_")[-1]
+                if "cam0" in pth:
+                    cam: str = "cam0"
+                elif "cam1" in pth:
+                    cam: str = "cam1"
+                else:
+                    raise Exception(f"Unknown camera: can not get camera number from path: {pth}.")
                 cam_grp = destination_file.create_group(cam)
                 for file in tqdm(os.listdir(pth)):
                     if file.endswith(".png"):
