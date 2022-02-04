@@ -273,48 +273,56 @@ def process_multiple_segmentations(
                     cam: str = "cam1"
                 else:
                     raise Exception(f"Unknown camera: can not get camera number from path: {pth}.")
-                cam_grp = destination_file.create_group(cam)
+
+                # If group does not exist in destination_file - create it
+                if cam in destination_file:
+                    cam_grp = destination_file[cam]
+                else:
+                    cam_grp = destination_file.create_group(cam)
+
                 for file in tqdm(os.listdir(pth)):
                     if file.endswith(".png"):
                         if "_input.png" in file:
                             original_file_name = file.replace("_input.png", "")
-                            segmented_img = cv2.imread(os.path.join(pth, file.replace("_input.png", "_prediction.png")))
-                            masks = mask_it(segmented_img, labels, filtered_names)
 
-                            grp = cam_grp.create_group(original_file_name)
+                            # If group does not exist in destination_file - create it
+                            if original_file_name not in cam_grp:
+                                segmented_img = cv2.imread(os.path.join(pth, file.replace("_input.png", "_prediction.png")))
+                                masks = mask_it(segmented_img, labels, filtered_names)
+                                grp = cam_grp.create_group(original_file_name)
 
-                            if "nature" in segmentation_classes:
-                                nature_mask = masks["vegetation"] | masks["terrain"]
-                                grp.create_dataset("nature", data=nature_mask)
-                                del nature_mask
+                                if "nature" in segmentation_classes:
+                                    nature_mask = masks["vegetation"] | masks["terrain"]
+                                    grp.create_dataset("nature", data=nature_mask)
+                                    del nature_mask
 
-                            if "sky" in segmentation_classes:
-                                sky_mask = masks["sky"]
-                                grp.create_dataset("sky", data=sky_mask)
-                                del sky_mask
+                                if "sky" in segmentation_classes:
+                                    sky_mask = masks["sky"]
+                                    grp.create_dataset("sky", data=sky_mask)
+                                    del sky_mask
 
-                            if "human" in segmentation_classes:
-                                human_mask = masks["person"] | masks["rider"]
-                                grp.create_dataset("human", data=human_mask)
-                                del human_mask
+                                if "human" in segmentation_classes:
+                                    human_mask = masks["person"] | masks["rider"]
+                                    grp.create_dataset("human", data=human_mask)
+                                    del human_mask
 
-                            if "vehicle" in segmentation_classes:
-                                vehicle_mask = (
-                                    masks["car"]
-                                    | masks["truck"]
-                                    | masks["bus"]
-                                    | masks["caravan"]
-                                    | masks["trailer"]
-                                    | masks["train"]
-                                    | masks["motorcycle"]
-                                    | masks["bicycle"]
-                                    | masks["license plate"]
-                                )
-                                grp.create_dataset("vehicle", data=vehicle_mask)
-                                del vehicle_mask
+                                if "vehicle" in segmentation_classes:
+                                    vehicle_mask = (
+                                        masks["car"]
+                                        | masks["truck"]
+                                        | masks["bus"]
+                                        | masks["caravan"]
+                                        | masks["trailer"]
+                                        | masks["train"]
+                                        | masks["motorcycle"]
+                                        | masks["bicycle"]
+                                        | masks["license plate"]
+                                    )
+                                    grp.create_dataset("vehicle", data=vehicle_mask)
+                                    del vehicle_mask
 
-                            del segmented_img
-                            del masks
+                                del segmented_img
+                                del masks
 
     else:
         raise Exception(f"Unknown method: {method}.")
