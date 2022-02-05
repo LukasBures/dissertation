@@ -32,6 +32,7 @@ class FeatureFilter:
             self._dynamic_group_classes: list = ["vehicle", "human"]
         else:
             self._dynamic_group_classes: list = dynamic_group_classes
+        print(f"Selected group of classes for filtering: {self._dynamic_group_classes}")
         self._names: list = self._list_h5_names()
 
     def _list_h5_names(self) -> list:

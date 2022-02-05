@@ -185,6 +185,7 @@ for static_percentage in static_percentages:
             h5_file_path=str(all_features_pth),
             new_h5_file_path=str(new_features_pth),
             segmentation_h5_file_path=str(segmentations_file_path),
+            dynamic_group_classes=["human", "vehicle"],
         )
         ff.filter_and_update_kp_4seasons(
             static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage
