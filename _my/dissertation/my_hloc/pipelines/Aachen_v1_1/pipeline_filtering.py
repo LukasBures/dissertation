@@ -208,6 +208,7 @@ for static_percentage in static_percentages:
         # Delete new features
         if os.path.exists(str(new_features_pth)):
             os.remove(str(new_features_pth))
+            print(f"Removed file: {str(new_features_pth)}")
         else:
             print(f"Can not delete the file as it doesn't exists: {str(new_features_pth)}")
 
@@ -219,6 +220,7 @@ for static_percentage in static_percentages:
         covisibility_db_path: Path = outputs_path / fn_db
         if os.path.exists(str(covisibility_db_path)):
             os.remove(str(covisibility_db_path))
+            print(f"Removed file: {str(covisibility_db_path)}")
         else:
             print(f"Can not delete the file as it doesn't exists: {str(covisibility_db_path)}")
 
@@ -230,5 +232,6 @@ for static_percentage in static_percentages:
         netvlad_query_path: Path = outputs_path / fn_query
         if os.path.exists(str(netvlad_query_path)):
             os.remove(str(netvlad_query_path))
+            print(f"Removed file: {str(netvlad_query_path)}")
         else:
             print(f"Can not delete the file as it doesn't exists: {str(netvlad_query_path)}")

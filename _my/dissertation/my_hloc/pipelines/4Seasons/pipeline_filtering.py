@@ -193,7 +193,10 @@ for static_percentage in static_percentages:
 
         # Match features.
         matches_file = match_features.main(
-            conf=matcher_conf, pairs=loc_pairs, features=feature_conf["output"], export_dir=output_dir
+            conf=matcher_conf,
+            pairs=loc_pairs,
+            features=filtered_kp_file_prefix + feature_conf["output"],
+            export_dir=output_dir,
         )
 
         # Localize features.
@@ -204,6 +207,7 @@ for static_percentage in static_percentages:
             features=new_features_pth,
             matches=matches_file,
             results=results_path,
+            covisibility_clustering=False,
         )
 
         # Convert the absolute poses to relative poses with the reference frames.
@@ -218,3 +222,35 @@ for static_percentage in static_percentages:
             )
         else:
             print(f"For sequence '{sequence}' can not evaluate relocalization.")
+
+        # Empty space:
+        # Delete new features
+        if os.path.exists(str(new_features_pth)):
+            os.remove(str(new_features_pth))
+            print(f"Removed file: {str(new_features_pth)}")
+        else:
+            print(f"Can not delete the file as it doesn't exists: {str(new_features_pth)}")
+
+        # Co-visibility db
+        fn_db: str = (
+            f"{filtered_kp_file_prefix}{feature_conf['output']}_"
+            f"{matcher_conf['output']}_pairs-db-covis{args.num_covis}.h5"
+        )
+        covisibility_db_path: Path = output_dir / fn_db
+        if os.path.exists(str(covisibility_db_path)):
+            os.remove(str(covisibility_db_path))
+            print(f"Removed file: {str(covisibility_db_path)}")
+        else:
+            print(f"Can not delete the file as it doesn't exists: {str(covisibility_db_path)}")
+
+        # Netvlad query
+        fn_query: str = (
+            f"{filtered_kp_file_prefix}{feature_conf['output']}_"
+            f"{matcher_conf['output']}_pairs-query-netvlad{args.num_loc}.h5"
+        )
+        netvlad_query_path: Path = output_dir / fn_query
+        if os.path.exists(str(netvlad_query_path)):
+            os.remove(str(netvlad_query_path))
+            print(f"Removed file: {str(netvlad_query_path)}")
+        else:
+            print(f"Can not delete the file as it doesn't exists: {str(netvlad_query_path)}")

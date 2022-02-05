@@ -287,7 +287,9 @@ def process_multiple_segmentations(
 
                             # If group does not exist in destination_file - create it
                             if original_file_name not in cam_grp:
-                                segmented_img = cv2.imread(os.path.join(pth, file.replace("_input.png", "_prediction.png")))
+                                segmented_img = cv2.imread(
+                                    os.path.join(pth, file.replace("_input.png", "_prediction.png"))
+                                )
                                 masks = mask_it(segmented_img, labels, filtered_names)
                                 grp = cam_grp.create_group(original_file_name)
 
