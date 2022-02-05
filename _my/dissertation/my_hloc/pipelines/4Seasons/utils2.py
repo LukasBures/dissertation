@@ -251,10 +251,9 @@ def evaluate_submission_filtering(submission_dir, relocs, static_dynamic_info: d
 
             error = np.array(error)
             recall = [np.mean(error <= th) for th in thresholds]
-            print(f"Relocalization evaluation {submission_dir.name}/{reloc.name}\n")
-            s = " / ".join([f"{th:>7}m" for th in thresholds]) + "\n"
+            print(f"Relocalization evaluation file destination: {submission_dir.name}/{reloc.name}\n")
+            s = f"static={static_dynamic_info['static']}%, dynamic={static_dynamic_info['dynamic']}%\n"
+            s += " / ".join([f"{th:>7}m" for th in thresholds]) + "\n"
             s += " / ".join([f"{100*r:>7.3f}%" for r in recall]) + "\n\n"
             print(s)
-
-            f.write(f"static={static_dynamic_info['static']}%, dynamic={static_dynamic_info['dynamic']}%\n")
             f.write(s)

@@ -232,26 +232,14 @@ for static_percentage in static_percentages:
         else:
             print(f"Can not delete the file as it doesn't exists: {str(new_features_pth)}")
 
-        # Co-visibility db
-        fn_db: str = (
-            f"{filtered_kp_file_prefix}{feature_conf['output']}_"
-            f"{matcher_conf['output']}_pairs-db-covis{args.num_covis}.h5"
-        )
-        covisibility_db_path: Path = output_dir / fn_db
-        if os.path.exists(str(covisibility_db_path)):
-            os.remove(str(covisibility_db_path))
-            print(f"Removed file: {str(covisibility_db_path)}")
-        else:
-            print(f"Can not delete the file as it doesn't exists: {str(covisibility_db_path)}")
-
-        # Netvlad query
+        # Query
         fn_query: str = (
             f"{filtered_kp_file_prefix}{feature_conf['output']}_"
-            f"{matcher_conf['output']}_pairs-query-netvlad{args.num_loc}.h5"
+            f"{matcher_conf['output']}_pairs-query-{sequence}-dist{num_loc_pairs}.h5"
         )
-        netvlad_query_path: Path = output_dir / fn_query
-        if os.path.exists(str(netvlad_query_path)):
-            os.remove(str(netvlad_query_path))
-            print(f"Removed file: {str(netvlad_query_path)}")
+        query_path: Path = output_dir / fn_query
+        if os.path.exists(str(query_path)):
+            os.remove(str(query_path))
+            print(f"Removed file: {str(query_path)}")
         else:
-            print(f"Can not delete the file as it doesn't exists: {str(netvlad_query_path)}")
+            print(f"Can not delete the file as it doesn't exists: {str(query_path)}")
