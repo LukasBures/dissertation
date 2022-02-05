@@ -147,16 +147,14 @@ reloc: Path = ref_dir / relocalization_files[sequence]
 ref_sfm: Path = output_dir / "sfm_superpoint+superglue"
 submission_dir: Path = output_dir / f"submission_superpoint+superglue"
 submission_dir.mkdir(exist_ok=True)
-
+query_list: Path = output_dir / f"{sequence}_queries_with_intrinsics.txt"
+ref_pairs: Path = output_dir / "pairs-db-dist20.txt"
+results_path: Path = output_dir / f"localization_{sequence}_hloc+superglue.txt"
+loc_pairs: Path = output_dir / f"pairs-query-{sequence}-dist{num_loc_pairs}.txt"
 
 for static_percentage in static_percentages:
     for dynamic_percentage in dynamic_percentages:
         filtered_kp_file_prefix: str = f"s{static_percentage}_d{dynamic_percentage}_"
-
-        query_list: Path = output_dir / f"{sequence}_queries_with_intrinsics.txt"
-        ref_pairs: Path = output_dir / "pairs-db-dist20.txt"
-        results_path: Path = output_dir / f"localization_{sequence}_hloc+superglue.txt"
-        loc_pairs: Path = output_dir / f"pairs-query-{sequence}-dist{num_loc_pairs}.txt"
 
         # Print static and dynamic percentages.
         print("-" * 50)
