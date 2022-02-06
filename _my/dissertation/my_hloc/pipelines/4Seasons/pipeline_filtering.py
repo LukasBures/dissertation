@@ -152,6 +152,22 @@ ref_pairs: Path = output_dir / "pairs-db-dist20.txt"
 results_path: Path = output_dir / f"localization_{sequence}_hloc+superglue.txt"
 loc_pairs: Path = output_dir / f"pairs-query-{sequence}-dist{num_loc_pairs}.txt"
 
+# Not all query images that are used for the evaluation.
+# To save time in feature extraction, we delete unused images.
+timestamps = get_timestamps(files=reloc, idx=1)
+delete_unused_images(root=seq_images, timestamps=timestamps)
+
+# Generate a list of query images with their intrinsics.
+generate_query_lists(timestamps=timestamps, seq_dir=seq_dir, out_path=query_list)
+
+# Generate the localization pairs from the given reference frames.
+generate_localization_pairs(
+    sequence=sequence, reloc=reloc, num=num_loc_pairs, ref_pairs=ref_pairs, out_path=loc_pairs
+)
+
+# Extract features.
+all_features_pth = extract_features.main(conf=feature_conf, image_dir=seq_images, export_dir=output_dir)
+
 for static_percentage in static_percentages:
     for dynamic_percentage in dynamic_percentages:
         filtered_kp_file_prefix: str = f"s{static_percentage}_d{dynamic_percentage}_"
@@ -159,22 +175,6 @@ for static_percentage in static_percentages:
         # Print static and dynamic percentages.
         print("-" * 50)
         print(f"Starting: static: {static_percentage}%, dynamic: {dynamic_percentage}")
-
-        # Not all query images that are used for the evaluation.
-        # To save time in feature extraction, we delete unused images.
-        timestamps = get_timestamps(files=reloc, idx=1)
-        delete_unused_images(root=seq_images, timestamps=timestamps)
-
-        # Generate a list of query images with their intrinsics.
-        generate_query_lists(timestamps=timestamps, seq_dir=seq_dir, out_path=query_list)
-
-        # Generate the localization pairs from the given reference frames.
-        generate_localization_pairs(
-            sequence=sequence, reloc=reloc, num=num_loc_pairs, ref_pairs=ref_pairs, out_path=loc_pairs
-        )
-
-        # Extract features.
-        all_features_pth = extract_features.main(conf=feature_conf, image_dir=seq_images, export_dir=output_dir)
 
         # Filter dynamic / static features.
         pth, nm = os.path.split(os.path.abspath(all_features_pth))
@@ -231,13 +231,13 @@ for static_percentage in static_percentages:
             print(f"Can not delete the file as it doesn't exists: {str(new_features_pth)}")
 
         # Query
-        fn_query: str = (
-            f"{filtered_kp_file_prefix}{feature_conf['output']}_"
-            f"{matcher_conf['output']}_pairs-query-{sequence}-dist{num_loc_pairs}.h5"
-        )
-        query_path: Path = output_dir / fn_query
-        if os.path.exists(str(query_path)):
-            os.remove(str(query_path))
-            print(f"Removed file: {str(query_path)}")
-        else:
-            print(f"Can not delete the file as it doesn't exists: {str(query_path)}")
+        # fn_query: str = (
+        #     f"{filtered_kp_file_prefix}{feature_conf['output']}_"
+        #     f"{matcher_conf['output']}_pairs-query-{sequence}-dist{num_loc_pairs}.h5"
+        # )
+        # query_path: Path = output_dir / fn_query
+        # if os.path.exists(str(query_path)):
+        #     os.remove(str(query_path))
+        #     print(f"Removed file: {str(query_path)}")
+        # else:
+        #     print(f"Can not delete the file as it doesn't exists: {str(query_path)}")
