@@ -237,8 +237,10 @@ def evaluate_submission_filtering(submission_dir, relocs, static_dynamic_info: d
     if not thresholds:
         thresholds: list = [0.1, 0.2, 0.5]
 
-    with open(submission_dir / "evaluate_submission_filtering.txt", "a") as f:
+    destination_path: Path = submission_dir / f"evaluate_submission_filtering.txt"
+    with open(destination_path, "a") as f:
         for reloc in relocs.parent.glob(relocs.name):
+            print(f"Relocalization evaluation file destination: {destination_path}\n")
             poses_gt = parse_relocalization(reloc, has_poses=True)
             poses_pred = parse_relocalization(submission_dir / reloc.name, has_poses=True)
             poses_pred = {(ref_ts, q_ts): (R, t) for ref_ts, q_ts, R, t in poses_pred}
@@ -251,8 +253,7 @@ def evaluate_submission_filtering(submission_dir, relocs, static_dynamic_info: d
 
             error = np.array(error)
             recall = [np.mean(error <= th) for th in thresholds]
-            print(f"Relocalization evaluation file destination: {submission_dir.name}/{reloc.name}\n")
-            s = f"static={static_dynamic_info['static']}%, dynamic={static_dynamic_info['dynamic']}%\n"
+            s = f"static={static_dynamic_info['static']}%, dynamic={static_dynamic_info['dynamic']}%, reloc={reloc.name}\n"
             s += " / ".join([f"{th:>7}m" for th in thresholds]) + "\n"
             s += " / ".join([f"{100*r:>7.3f}%" for r in recall]) + "\n\n"
             print(s)
