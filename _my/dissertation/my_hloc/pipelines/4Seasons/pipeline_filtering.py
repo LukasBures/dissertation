@@ -50,7 +50,6 @@ parser.add_argument(
 parser.add_argument(
     "--outputs", type=Path, default="outputs/4Seasons", help="Path to the output directory, default: %(default)s"
 )
-parser.add_argument("--num_ref", type=int, default=20, help="Number of image pairs for SfM, default: %(default)s")
 parser.add_argument("--num_loc", type=int, default=10, help="Number of image pairs for loc, default: %(default)s")
 parser.add_argument("--feature_conf", type=str, help="Feature config")
 parser.add_argument("--matcher_conf", type=str, help="Matcher config")
@@ -70,7 +69,6 @@ static_step: int = args.static_step
 dynamic_from: int = args.dynamic_from
 dynamic_to: int = args.dynamic_to
 dynamic_step: int = args.dynamic_step
-num_ref_pairs: int = args.num_ref
 num_loc_pairs: int = args.num_loc
 
 # Test package versions

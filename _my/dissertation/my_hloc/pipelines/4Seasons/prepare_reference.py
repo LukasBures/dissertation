@@ -45,7 +45,7 @@ feature_conf: dict = feature_configs[args.feature_conf]
 matcher_conf: dict = matcher_configs[args.matcher_conf]
 
 # Only reference images that have a pose are used in the pipeline.
-# To save time in feature extraction, we delete unsused images.
+# To save time in feature extraction, we delete unused images.
 delete_unused_images(ref_images, get_timestamps(ref_dir / "poses.txt", 0))
 
 # Build an empty COLMAP model containing only camera and images
@@ -56,6 +56,6 @@ build_empty_colmap_model(ref_dir, ref_sfm_empty)
 pairs_from_poses.main(ref_sfm_empty, ref_pairs, num_ref_pairs)
 
 # Extract, match, and triangulate the reference SfM model.
-ffile = extract_features.main(feature_conf, ref_images, output_dir)
-mfile = match_features.main(matcher_conf, ref_pairs, feature_conf["output"], output_dir)
-triangulation.main(ref_sfm, ref_sfm_empty, ref_images, ref_pairs, ffile, mfile)
+features_file = extract_features.main(feature_conf, ref_images, output_dir)
+matches_file = match_features.main(matcher_conf, ref_pairs, feature_conf["output"], output_dir)
+triangulation.main(ref_sfm, ref_sfm_empty, ref_images, ref_pairs, features_file, matches_file)
