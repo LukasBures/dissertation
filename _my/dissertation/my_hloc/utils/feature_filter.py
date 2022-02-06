@@ -98,14 +98,19 @@ class FeatureFilter:
 
         return dynamic_keypoints, static_keypoints
 
-    def filter_and_update_kp(self, static_percentage_keep, dynamic_percentage_keep) -> Optional[dict]:  # noqa: C901
+    def filter_and_update_kp(  # noqa: C901
+        self, static_percentage_keep, dynamic_percentage_keep, verbose: bool = False
+    ) -> Optional[dict]:
         """
         Filter and update keypoints -> reduce number of keypoints.
 
         :param static_percentage_keep: Percentage of static keypoint to keep.
         :param dynamic_percentage_keep: Percentage of dynamic keypoint to keep.
+        :param verbose: If true additional info is printed, otherwise it is not printed.
         :return: Optional dictionary with summary info.
         """
+        print("Starting feature filtering processing ...")
+
         # Percentage check.
         if static_percentage_keep > 100:
             raise Exception("Static percentage to keep has to be lower or equal to 100%.")
@@ -121,6 +126,7 @@ class FeatureFilter:
         with h5py.File(self._h5_file_path, "r") as source_file:
             with h5py.File(self._new_h5_file_path, "w") as destination_file:
                 with h5py.File(self._segmentation_h5_file_path, "r") as segmentation_file:
+                    print(f"Processing {len(self._names)} images.")
                     for idx, image_name in enumerate(self._names):
                         keypoints = source_file[image_name]["keypoints"].__array__()
                         descriptors = source_file[image_name]["descriptors"].__array__()
@@ -165,11 +171,12 @@ class FeatureFilter:
                             else:
                                 keep_dynamic: list = list()
 
-                        print(
-                            f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - "
-                            f"dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, "
-                            f"total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}"
-                        )
+                        if verbose:
+                            print(
+                                f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - "
+                                f"dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, "
+                                f"total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}"
+                            )
 
                         kept_static_kp_count += len(keep_static)
                         kept_dynamic_kp_count += len(keep_dynamic)
@@ -211,15 +218,18 @@ class FeatureFilter:
         return summary_info
 
     def filter_and_update_kp_4seasons(  # noqa: C901
-        self, static_percentage_keep, dynamic_percentage_keep
+        self, static_percentage_keep, dynamic_percentage_keep, verbose: bool = False
     ) -> Optional[dict]:
         """
         Filter and update keypoints -> reduce number of keypoints.
 
         :param static_percentage_keep: Percentage of static keypoint to keep.
         :param dynamic_percentage_keep: Percentage of dynamic keypoint to keep.
+        :param verbose: If true additional info is printed, otherwise it is not printed.
         :return: Optional dictionary with summary info.
         """
+        print("Starting feature filtering processing ...")
+
         # Percentage check.
         if static_percentage_keep > 100:
             raise Exception("Static percentage to keep has to be lower or equal to 100%.")
@@ -236,6 +246,7 @@ class FeatureFilter:
             with h5py.File(self._new_h5_file_path, "w") as destination_file:
                 with h5py.File(self._segmentation_h5_file_path, "r") as segmentation_file:
                     for cam in source_file.keys():
+                        print(f"Processing cam: {cam} ({len(source_file[cam].keys())} images).")
                         cam_grp = destination_file.create_group(cam)
                         for idx, image_name in enumerate(source_file[cam].keys()):
                             keypoints = source_file[cam][image_name]["keypoints"].__array__()
@@ -272,11 +283,12 @@ class FeatureFilter:
                                 else:
                                     keep_dynamic: list = list()
 
-                            print(
-                                f"{idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - "
-                                f"dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, "
-                                f"total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}"
-                            )
+                            if verbose:
+                                print(
+                                    f"{cam} {idx + 1}/{len(self._names)}) {image_name.split('/')[-1]} - "
+                                    f"dynamic: {len(keep_dynamic)}, static: {len(keep_static)}, "
+                                    f"total: {len(keep_static) + len(keep_dynamic)}/{len(keypoints)}"
+                                )
 
                             kept_static_kp_count += len(keep_static)
                             kept_dynamic_kp_count += len(keep_dynamic)

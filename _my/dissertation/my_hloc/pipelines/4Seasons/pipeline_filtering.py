@@ -145,11 +145,10 @@ assert seq_dir.exists(), f"{seq_dir} does not exist"
 seq_images: Path = seq_dir / "undistorted_images"
 reloc: Path = ref_dir / relocalization_files[sequence]
 ref_sfm: Path = output_dir / "sfm_superpoint+superglue"
-submission_dir: Path = output_dir / f"submission_superpoint+superglue"
+submission_dir: Path = output_dir / "submission_superpoint+superglue"
 submission_dir.mkdir(exist_ok=True)
 query_list: Path = output_dir / f"{sequence}_queries_with_intrinsics.txt"
 ref_pairs: Path = output_dir / "pairs-db-dist20.txt"
-results_path: Path = output_dir / f"localization_{sequence}_hloc+superglue.txt"
 loc_pairs: Path = output_dir / f"pairs-query-{sequence}-dist{num_loc_pairs}.txt"
 
 # Not all query images that are used for the evaluation.
@@ -161,9 +160,7 @@ delete_unused_images(root=seq_images, timestamps=timestamps)
 generate_query_lists(timestamps=timestamps, seq_dir=seq_dir, out_path=query_list)
 
 # Generate the localization pairs from the given reference frames.
-generate_localization_pairs(
-    sequence=sequence, reloc=reloc, num=num_loc_pairs, ref_pairs=ref_pairs, out_path=loc_pairs
-)
+generate_localization_pairs(sequence=sequence, reloc=reloc, num=num_loc_pairs, ref_pairs=ref_pairs, out_path=loc_pairs)
 
 # Extract features.
 all_features_pth = extract_features.main(conf=feature_conf, image_dir=seq_images, export_dir=output_dir)
@@ -199,6 +196,10 @@ for static_percentage in static_percentages:
         )
 
         # Localize features.
+        results_path = (
+            output_dir / f"localization_{args.feature_conf.lower()}+{args.matcher_conf.lower()}"
+            f"_dist{num_loc_pairs}+s{static_percentage}_d{dynamic_percentage}.txt"
+        )
         localize_sfm.main(
             reference_sfm=ref_sfm,
             queries=query_list,
@@ -231,13 +232,13 @@ for static_percentage in static_percentages:
             print(f"Can not delete the file as it doesn't exists: {str(new_features_pth)}")
 
         # Query
-        # fn_query: str = (
-        #     f"{filtered_kp_file_prefix}{feature_conf['output']}_"
-        #     f"{matcher_conf['output']}_pairs-query-{sequence}-dist{num_loc_pairs}.h5"
-        # )
-        # query_path: Path = output_dir / fn_query
-        # if os.path.exists(str(query_path)):
-        #     os.remove(str(query_path))
-        #     print(f"Removed file: {str(query_path)}")
-        # else:
-        #     print(f"Can not delete the file as it doesn't exists: {str(query_path)}")
+        fn_query: str = (
+            f"{filtered_kp_file_prefix}{feature_conf['output']}_"
+            f"{matcher_conf['output']}_pairs-query-{sequence}-dist{num_loc_pairs}.h5"
+        )
+        query_path: Path = output_dir / fn_query
+        if os.path.exists(str(query_path)):
+            os.remove(str(query_path))
+            print(f"Removed file: {str(query_path)}")
+        else:
+            print(f"Can not delete the file as it doesn't exists: {str(query_path)}")
