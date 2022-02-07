@@ -251,7 +251,7 @@ class FeatureFilter:
                 with h5py.File(str(segmentation_h5_file_path), "r") as segmentation_file:
                     with h5py.File(str(segmentation_reference_h5_file_path), "r") as segmentation_reference_file:
                         for cam in source_file.keys():
-                            print(f"Processing cam: {cam} ({len(source_file[cam].keys())} images).")
+                            print(f"Processing {cam}: {len(source_file[cam].keys())} images.")
                             cam_grp = destination_file.create_group(cam)
                             for idx, image_name in enumerate(source_file[cam].keys()):
                                 keypoints = source_file[cam][image_name]["keypoints"].__array__()
@@ -260,7 +260,8 @@ class FeatureFilter:
                                 image_size = source_file[cam][image_name]["image_size"].__array__()
 
                                 # If it is reference file - ignore it.
-                                if image_name in segmentation_reference_file[cam].keys():
+                                img_name: str = image_name.split("/")[-1].split(".")[0]
+                                if img_name in segmentation_reference_file[cam].keys():
                                     grp = cam_grp.create_group(image_name)
                                     grp.create_dataset("keypoints", data=keypoints)
                                     grp.create_dataset("descriptors", data=descriptors)
@@ -268,7 +269,6 @@ class FeatureFilter:
                                     grp.create_dataset("image_size", data=image_size)
                                     continue
 
-                                img_name: str = image_name.split("/")[-1].split(".")[0]
                                 segmentations: list = list()
                                 for d in self._dynamic_group_classes:
                                     segmentations.append(segmentation_file[cam][img_name][d].__array__())

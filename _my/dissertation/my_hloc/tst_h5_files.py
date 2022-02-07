@@ -15,13 +15,14 @@ nnn = "/data512/dissertation_results/aachen-2022.02.05_16.35.22/results/global-f
 #     grp = cam0.create_group("image_sasa")
 #     grp.create_dataset("keypoints", data=123)
 
-with h5py.File(str(new_h5_file_path), "r") as fn:
-    with h5py.File(str(segmentations), "r") as fs:
-        with h5py.File(str(nnn), "r") as nnn:
-            print(fs.keys())
-            print(fn.keys())
-            print(fs.keys())
-            print(fs.keys())
+reference = "/data512/dissertation_results/4Seasons/segment_nvidia_4Seasons_reference_v01.h5"
+validation = "/data512/dissertation_results/4Seasons/segment_nvidia_4Seasons_validation_v01.h5"
+
+with h5py.File(str(reference), "r") as ref:
+    with h5py.File(str(validation), "r") as val:
+        print(val.keys())
+        print(ref.keys())
+        print("!")
 
 
 
