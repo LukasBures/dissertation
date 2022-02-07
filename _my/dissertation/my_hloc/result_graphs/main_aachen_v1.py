@@ -576,13 +576,13 @@ plt.plot(
     "b.-",
     x_static[offset:],
     y_day_without_dynamic_kp[offset:, 0],
-    "kx--",
+    "rx--",
     x_static[offset:],
     y_day_without_dynamic_kp[offset:, 1],
-    "kx--",
+    "gx--",
     x_static[offset:],
     y_day_without_dynamic_kp[offset:, 2],
-    "kx--",
+    "bx--",
 )
 plt.title(f"{dataset_name}, day.")
 plt.xlabel("% of kept static keypoints")
@@ -598,6 +598,10 @@ plt.legend(
     ],
     title="Conditions",
 )
+plt.xlim(xmin=0)
+plt.ylim(ymin=0)
+plt.xticks(np.arange(0, 101, 10))
+plt.yticks(np.arange(0, 101, 10))
 plt.grid(axis="both", color="0.95")
 plt.savefig(f"{dataset_name}_day.pdf")
 plt.savefig(f"{dataset_name}_day.png")
