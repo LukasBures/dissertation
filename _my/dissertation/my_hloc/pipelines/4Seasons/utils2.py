@@ -272,7 +272,10 @@ def evaluate_submission_filtering(submission_dir, relocs, static_dynamic_info: d
         for reloc in relocs.parent.glob(relocs.name):
             print(f"Relocalization evaluation file destination: {destination_path}\n")
             poses_gt = parse_relocalization(reloc, has_poses=True)
-            poses_pred = parse_relocalization(submission_dir / f"s{static_dynamic_info['static']}_d{static_dynamic_info['dynamic']}_{reloc.name}", has_poses=True)
+            poses_pred = parse_relocalization(
+                submission_dir / f"s{static_dynamic_info['static']}_d{static_dynamic_info['dynamic']}_{reloc.name}",
+                has_poses=True,
+            )
             poses_pred = {(ref_ts, q_ts): (R, t) for ref_ts, q_ts, R, t in poses_pred}
 
             error = []

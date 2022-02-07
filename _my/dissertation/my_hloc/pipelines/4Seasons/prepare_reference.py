@@ -60,12 +60,13 @@ features_file = extract_features.main(feature_conf, ref_images, output_dir)
 
 matches_file = match_features.main(matcher_conf, ref_pairs, feature_conf["output"], output_dir)
 
-triangulation.main(sfm_dir=ref_sfm,
-                   reference_model=ref_sfm_empty,
-                   image_dir=ref_images,
-                   pairs=ref_pairs,
-                   features=features_file,
-                   matches=matches_file,
-                   skip_geometric_verification=False,
-                   verbose=True
-                   )
+triangulation.main(
+    sfm_dir=ref_sfm,
+    reference_model=ref_sfm_empty,
+    image_dir=ref_images,
+    pairs=ref_pairs,
+    features=features_file,
+    matches=matches_file,
+    skip_geometric_verification=False,
+    verbose=True,
+)

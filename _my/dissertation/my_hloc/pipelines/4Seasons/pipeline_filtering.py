@@ -61,6 +61,7 @@ parser.add_argument("--dynamic_from", type=int, default=100, help="Dynamic from 
 parser.add_argument("--dynamic_to", type=int, default=100, help="Dynamic to percentage (included).")
 parser.add_argument("--dynamic_step", type=int, default=10, help="Dynamic percentage step.")
 parser.add_argument("--segmentations_file", type=Path, help="Path to the file with semantic segmentations.")
+parser.add_argument("--segmentations_reference_file", type=Path, help="Path to the file with reference semantic segmentations.")
 args = parser.parse_args()
 
 static_from: int = args.static_from
@@ -134,6 +135,7 @@ sequence: str = args.sequence
 data_dir: Path = args.dataset
 output_dir: Path = args.outputs
 segmentations_file_path: Path = args.segmentations_file
+segmentations_reference_file_path: Path = args.segmentations_reference_file
 output_dir.mkdir(exist_ok=True, parents=True)
 
 ref_dir: Path = data_dir / "reference"
@@ -178,11 +180,13 @@ for static_percentage in static_percentages:
         ff: FeatureFilter = FeatureFilter(
             h5_file_path=str(all_features_pth),
             new_h5_file_path=str(new_features_pth),
-            segmentation_h5_file_path=str(segmentations_file_path),
             dynamic_group_classes=["human", "vehicle"],
         )
         ff.filter_and_update_kp_4seasons(
-            static_percentage_keep=static_percentage, dynamic_percentage_keep=dynamic_percentage
+            static_percentage_keep=static_percentage,
+            dynamic_percentage_keep=dynamic_percentage,
+            segmentation_reference_h5_file_path=str(segmentations_reference_file_path),
+            segmentation_h5_file_path=str(segmentations_file_path),
         )
         del ff
 

@@ -2,6 +2,7 @@
 from pathlib import Path
 
 import h5py
+
 # from configs import feature_configs, matcher_configs, retrieval_configs
 
 # outputs = Path("/data512/dissertation_results/aachen-2022.01.13_09.23.30/results")
