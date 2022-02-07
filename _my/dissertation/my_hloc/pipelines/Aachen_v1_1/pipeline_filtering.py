@@ -155,7 +155,7 @@ for static_percentage in static_percentages:
         ff.filter_and_update_kp(
             static_percentage_keep=static_percentage,
             dynamic_percentage_keep=dynamic_percentage,
-            segmentation_h5_file_path=str(segmentations_file_path)
+            segmentation_h5_file_path=str(segmentations_file_path),
         )
         del ff
 

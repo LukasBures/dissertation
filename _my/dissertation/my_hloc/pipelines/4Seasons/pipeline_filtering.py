@@ -61,7 +61,9 @@ parser.add_argument("--dynamic_from", type=int, default=100, help="Dynamic from 
 parser.add_argument("--dynamic_to", type=int, default=100, help="Dynamic to percentage (included).")
 parser.add_argument("--dynamic_step", type=int, default=10, help="Dynamic percentage step.")
 parser.add_argument("--segmentations_file", type=Path, help="Path to the file with semantic segmentations.")
-parser.add_argument("--segmentations_reference_file", type=Path, help="Path to the file with reference semantic segmentations.")
+parser.add_argument(
+    "--segmentations_reference_file", type=Path, help="Path to the file with reference semantic segmentations."
+)
 args = parser.parse_args()
 
 static_from: int = args.static_from
