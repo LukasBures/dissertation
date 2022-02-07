@@ -57,5 +57,15 @@ pairs_from_poses.main(ref_sfm_empty, ref_pairs, num_ref_pairs)
 
 # Extract, match, and triangulate the reference SfM model.
 features_file = extract_features.main(feature_conf, ref_images, output_dir)
+
 matches_file = match_features.main(matcher_conf, ref_pairs, feature_conf["output"], output_dir)
-triangulation.main(ref_sfm, ref_sfm_empty, ref_images, ref_pairs, features_file, matches_file)
+
+triangulation.main(sfm_dir=ref_sfm,
+                   reference_model=ref_sfm_empty,
+                   image_dir=ref_images,
+                   pairs=ref_pairs,
+                   features=features_file,
+                   matches=matches_file,
+                   skip_geometric_verification=False,
+                   verbose=True
+                   )

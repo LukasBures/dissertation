@@ -15,7 +15,7 @@ from utils2 import (
     generate_localization_pairs,
     generate_query_lists,
     get_timestamps,
-    prepare_submission,
+    prepare_submission_filtering,
 )
 
 sys.path.append("/home/lukas/PycharmProjects/dissertation/Hierarchical-Localization")
@@ -165,6 +165,7 @@ all_features_pth = extract_features.main(conf=feature_conf, image_dir=seq_images
 
 for static_percentage in static_percentages:
     for dynamic_percentage in dynamic_percentages:
+        static_dynamic_info: dict = {"static": static_percentage, "dynamic": dynamic_percentage}
         filtered_kp_file_prefix: str = f"s{static_percentage}_d{dynamic_percentage}_"
 
         # Print static and dynamic percentages.
@@ -209,12 +210,17 @@ for static_percentage in static_percentages:
         )
 
         # Convert the absolute poses to relative poses with the reference frames.
-        prepare_submission(results=results_path, relocs=reloc, poses_path=ref_dir / "poses.txt", out_dir=submission_dir)
+        prepare_submission_filtering(
+            results=results_path,
+            relocs=reloc,
+            poses_path=ref_dir / "poses.txt",
+            out_dir=submission_dir,
+            static_dynamic_info=static_dynamic_info,
+        )
 
         # If not a test sequence: evaluation the localization accuracy
         if "test" not in sequence:
             print("Evaluating the relocalization submission ...")
-            static_dynamic_info = {"static": static_percentage, "dynamic": dynamic_percentage}
             evaluate_submission_filtering(
                 submission_dir=submission_dir, relocs=reloc, static_dynamic_info=static_dynamic_info
             )

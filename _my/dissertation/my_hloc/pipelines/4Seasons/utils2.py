@@ -203,6 +203,36 @@ def prepare_submission(results, relocs, poses_path, out_dir):
         print(f"Submission file written to {out_path}.")
 
 
+def prepare_submission_filtering(results, relocs, poses_path, out_dir, static_dynamic_info):
+    """Obtain relative poses from estimated absolute and reference poses."""
+    gt_poses = parse_poses(poses_path)
+    all_T_ref0_to_w = {ts: (R, t) for ts, R, t in gt_poses}
+
+    pred_poses = parse_poses(results, colmap=True)
+    all_T_w_to_q0 = {Path(name).stem: (R, t) for name, R, t in pred_poses}
+
+    for reloc in relocs.parent.glob(relocs.name):
+        relative_poses = []
+        reloc_ts = parse_relocalization(reloc)
+        for ref_ts, q_ts in reloc_ts:
+            R_w_to_q0, t_w_to_q0 = all_T_w_to_q0[q_ts]
+            R_ref0_to_w, t_ref0_to_w = all_T_ref0_to_w[ref_ts]
+
+            R_ref0_to_q0 = R_w_to_q0 @ R_ref0_to_w
+            t_ref0_to_q0 = R_w_to_q0 @ t_ref0_to_w + t_w_to_q0
+
+            tvec = t_ref0_to_q0.tolist()
+            qvec = rotmat2qvec(R_ref0_to_q0)[[1, 2, 3, 0]]  # wxyz to xyzw
+
+            out = [ref_ts, q_ts] + list(map(str, tvec)) + list(map(str, qvec))
+            relative_poses.append(" ".join(out))
+
+        out_path = out_dir / f"s{static_dynamic_info['static']}_d{static_dynamic_info['dynamic']}_{reloc.name}"
+        with open(out_path, "w") as f:
+            f.write("\n".join(relative_poses))
+        print(f"Submission file written to {out_path}.")
+
+
 def evaluate_submission(submission_dir, relocs, ths=[0.1, 0.2, 0.5]):
     """Compute the relocalization recall from predicted and ground truth poses."""
     for reloc in relocs.parent.glob(relocs.name):
@@ -242,7 +272,7 @@ def evaluate_submission_filtering(submission_dir, relocs, static_dynamic_info: d
         for reloc in relocs.parent.glob(relocs.name):
             print(f"Relocalization evaluation file destination: {destination_path}\n")
             poses_gt = parse_relocalization(reloc, has_poses=True)
-            poses_pred = parse_relocalization(submission_dir / reloc.name, has_poses=True)
+            poses_pred = parse_relocalization(submission_dir / f"s{static_dynamic_info['static']}_d{static_dynamic_info['dynamic']}_{reloc.name}", has_poses=True)
             poses_pred = {(ref_ts, q_ts): (R, t) for ref_ts, q_ts, R, t in poses_pred}
 
             error = []

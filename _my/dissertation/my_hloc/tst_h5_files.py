@@ -5,19 +5,25 @@ from hloc import triangulation
 
 # fl = "/data512/dissertation_results/4Seasons-2022.02.02_09.14.49/results_validation/feats-superpoint-n1024-r1024.h5"
 new_h5_file_path = (
-    "/data512/dissertation_results/4Seasons-2022.02.04_08.21.46/results_validation/feats-superpoint-n1024-r1024.h5"
+    "/data512/dissertation_results/4Seasons-2022.02.06_16.06.02/results_validation/feats-superpoint-n1024-r1024.h5"
 )
-segmentations = "/data512/dissertation_results/4Seasons/segment_nvidia_4Seasons_validation_v01.h5"
-
+segmentations = "/data512/dissertation_results/4Seasons-2022.02.06_16.06.02/results_validation/s65_d100_feats-superpoint-n1024-r1024.h5"
+nnn = "/data512/dissertation_results/aachen-2022.02.05_16.35.22/results/global-feats-netvlad.h5"
 # 1586247632370009088 - does not exist
 # with h5py.File(new_h5_file_path, "w") as destination_file:
 #     cam0 = destination_file.create_group("cam0")
 #     grp = cam0.create_group("image_sasa")
 #     grp.create_dataset("keypoints", data=123)
 
+with h5py.File(str(new_h5_file_path), "r") as fn:
+    with h5py.File(str(segmentations), "r") as fs:
+        with h5py.File(str(nnn), "r") as nnn:
+            print(fs.keys())
+            print(fn.keys())
+            print(fs.keys())
+            print(fs.keys())
 
-with h5py.File(str(new_h5_file_path), "r") as fo:
-    print(fo.keys())
+
 
 #
 #
