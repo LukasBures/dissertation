@@ -5,7 +5,7 @@ import numpy as np
 
 dataset_name: str = "Aachen v1"
 
-results_without_dynamic_kp: List[dict] = [
+results_without_dynamic_kp_run1: List[dict] = [
     {
         "static_percentage": 0,
         "dynamic_percentage": 0,
@@ -133,8 +133,7 @@ results_without_dynamic_kp: List[dict] = [
         "night": "85.7 / 90.8 / 100.0",
     },
 ]
-
-results_with_dynamic_kp: List[dict] = [
+results_with_dynamic_kp_run1: List[dict] = [
     # TODO: 0 static, 100 dynamic
     {
         "static_percentage": 0,
@@ -263,6 +262,266 @@ results_with_dynamic_kp: List[dict] = [
         "night": "84.7 / 89.8 / 100.0",
     },
 ]
+results_without_dynamic_kp_run2: List[dict] = [
+    {
+        "static_percentage": 0,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 0,
+        "day": "61.2 / 72.3 / 81.8",
+        "night": "35.7 / 39.8 / 50.0",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 0,
+        "day": "75.0 / 84.6 / 92.8",
+        "night": "61.2 / 71.4 / 87.8",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 0,
+        "day": "79.9 / 89.1 / 95.1",
+        "night": "71.4 / 82.7 / 94.9",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 0,
+        "day": "81.8 / 90.8 / 96.5",
+        "night": "77.6 / 86.7 / 98.0",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 0,
+        "day": "83.3 / 91.5 / 96.7",
+        "night": "77.6 / 87.8 / 99.0",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 0,
+        "day": "84.1 / 91.9 / 97.1",
+        "night": "81.6 / 89.8 / 100.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 0,
+        "day": "84.8 / 92.1 / 97.1",
+        "night": "80.6 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 0,
+        "day": "85.1 / 92.4 / 97.6",
+        "night": "82.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 0,
+        "day": "85.0 / 93.2 / 97.9",
+        "night": "79.6 / 92.9 / 100.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 0,
+        "day": "85.2 / 94.2 / 97.6",
+        "night": "83.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 0,
+        "day": "85.8 / 94.1 / 97.8",
+        "night": "83.7 / 89.8 / 100.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 0,
+        "day": "86.0 / 93.9 / 97.8",
+        "night": "85.7 / 90.8 / 100.0	",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 0,
+        "day": "86.9 / 94.3 / 98.1",
+        "night": "84.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 0,
+        "day": "85.3 / 94.1 / 97.9",
+        "night": "83.7 / 89.8 / 100.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 0,
+        "day": "86.2 / 94.5 / 98.3",
+        "night": "79.6 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 0,
+        "day": "86.7 / 94.4 / 98.3",
+        "night": "82.7 / 89.8 / 100.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 0,
+        "day": "86.5 / 93.3 / 97.8",
+        "night": "84.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 0,
+        "day": "87.4 / 94.7 / 98.2",
+        "night": "85.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 0,
+        "day": "87.7 / 95.0 / 98.3",
+        "night": "82.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 0,
+        "day": "87.4 / 94.9 / 98.3",
+        "night": "84.7 / 91.8 / 100.0",
+    },
+]
+results_with_dynamic_kp_run2: List[dict] = [
+    # TODO: 0 static, 100 dynamic
+    {
+        "static_percentage": 0,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 100,
+        "day": "63.3 / 74.3 / 84.6",
+        "night": "32.7 / 43.9 / 54.1",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 100,
+        "day": "74.2 / 85.8 / 93.3",
+        "night": "60.2 / 76.5 / 89.8",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 100,
+        "day": "79.6 / 88.8 / 95.4",
+        "night": "67.3 / 82.7 / 93.9",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 100,
+        "day": "82.6 / 90.7 / 96.2",
+        "night": "76.5 / 83.7 / 98.0",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 100,
+        "day": "83.1 / 91.3 / 96.8",
+        "night": "75.5 / 88.8 / 99.0",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 100,
+        "day": "83.5 / 90.8 / 96.6",
+        "night": "77.6 / 88.8 / 100.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 100,
+        "day": "84.3 / 92.6 / 97.3",
+        "night": "82.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 100,
+        "day": "86.2 / 93.3 / 97.6",
+        "night": "82.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 100,
+        "day": "85.2 / 92.7 / 97.3",
+        "night": "81.6 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 100,
+        "day": "85.3 / 93.2 / 97.5",
+        "night": "81.6 / 92.9 / 100.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 100,
+        "day": "85.8 / 93.2 / 97.9",
+        "night": "82.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 100,
+        "day": "85.7 / 93.4 / 97.9",
+        "night": "83.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 100,
+        "day": "86.3 / 94.3 / 98.1",
+        "night": "85.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 100,
+        "day": "85.6 / 93.7 / 97.9",
+        "night": "83.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 100,
+        "day": "86.0 / 94.3 / 98.1",
+        "night": "84.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 100,
+        "day": "86.5 / 93.8 / 98.3",
+        "night": "81.6 / 92.9 / 100.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 100,
+        "day": "86.8 / 94.5 / 98.2",
+        "night": "84.7 / 88.8 / 100.0",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 100,
+        "day": "86.4 / 94.7 / 98.2",
+        "night": "83.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 100,
+        "day": "87.4 / 94.9 / 98.2",
+        "night": "83.7 / 89.8 / 100.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 100,
+        "day": "86.4 / 94.5 / 98.2",
+        "night": "83.7 / 91.8 / 100.0",
+    },
+]
+
+results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run2
+results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run2
 
 # Preprocessing the data.
 for data in [results_without_dynamic_kp, results_with_dynamic_kp]:
@@ -317,13 +576,13 @@ plt.plot(
     "b.-",
     x_static[offset:],
     y_day_without_dynamic_kp[offset:, 0],
-    "r^--",
+    "kx--",
     x_static[offset:],
     y_day_without_dynamic_kp[offset:, 1],
-    "g^--",
+    "kx--",
     x_static[offset:],
     y_day_without_dynamic_kp[offset:, 2],
-    "b^--",
+    "kx--",
 )
 plt.title(f"{dataset_name}, day.")
 plt.xlabel("% of kept static keypoints")
