@@ -631,7 +631,7 @@ for i in range(0, 3):
         y_day_without_dynamic_kp[offset:, i],
         f"{color}x--",
     )
-    plt.title(f"{dataset_name.replace(' ', '_')} day, conditions: {limit}m, {angle}°")
+    plt.title(f"{dataset_name} day, conditions: {limit}m, {angle}°")
     plt.xlabel("% of kept static keypoints")
     plt.ylabel("% of images from dataset")
     plt.legend(
