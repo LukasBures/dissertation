@@ -14,32 +14,32 @@ results_without_dynamic_kp_run1: List[dict] = [
     {
         "static_percentage": 5,
         "dynamic_percentage": 0,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "24.883% /  49.870% /  75.639%",
     },
     {
         "static_percentage": 10,
         "dynamic_percentage": 0,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "55.608% /  82.994% /  95.670%",
     },
     {
         "static_percentage": 15,
         "dynamic_percentage": 0,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "67.397% /  91.601% /  98.435%",
     },
     {
         "static_percentage": 20,
         "dynamic_percentage": 0,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "78.873% /  95.357% /  99.374%",
     },
     {
         "static_percentage": 25,
         "dynamic_percentage": 0,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "81.168% /  96.922% /  99.478%",
     },
     {
         "static_percentage": 30,
         "dynamic_percentage": 0,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "84.455% /  97.340% /  99.739%",
     },
     {
         "static_percentage": 35,
@@ -121,32 +121,32 @@ results_with_dynamic_kp_run1: List[dict] = [
     {
         "static_percentage": 5,
         "dynamic_percentage": 100,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "26.813% /  51.852% /  71.883%",
     },
     {
         "static_percentage": 10,
         "dynamic_percentage": 100,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "48.774% /  72.300% /  88.002%",
     },
     {
         "static_percentage": 15,
         "dynamic_percentage": 100,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "57.173% /  80.230% /  91.967%",
     },
     {
         "static_percentage": 20,
         "dynamic_percentage": 100,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "65.884% /  83.568% /  94.105%",
     },
     {
         "static_percentage": 25,
         "dynamic_percentage": 100,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "70.370% /  86.437% /  95.305%",
     },
     {
         "static_percentage": 30,
         "dynamic_percentage": 100,
-        "results": "0.0 / 0.0 / 0.0",
+        "results": "73.239% /  88.628% /  95.722%",
     },
     {
         "static_percentage": 35,
