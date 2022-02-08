@@ -563,6 +563,7 @@ x_static = np.array(x_static)
 y_day_with_dynamic_kp = np.array(y_day_with_dynamic_kp)
 y_day_without_dynamic_kp = np.array(y_day_without_dynamic_kp)
 
+# MAIN PLOT
 offset: int = 1
 plt.plot(
     x_static[offset:],
@@ -603,8 +604,50 @@ plt.ylim(ymin=0)
 plt.xticks(np.arange(0, 101, 10))
 plt.yticks(np.arange(0, 101, 10))
 plt.grid(axis="both", color="0.95")
-plt.savefig(f"{dataset_name}_day.pdf")
-plt.savefig(f"{dataset_name}_day.png")
+plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_day.pdf")
+plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_day.png")
 plt.show()
 
-print("DONE")
+# INDIVIDUAL PLOTS
+for i in range(0, 3):
+    if i == 0:
+        color = "r"
+        limit = 0.25
+        angle = 2
+    elif i == 1:
+        color = "g"
+        limit = 0.50
+        angle = 5
+    else:
+        color = "b"
+        limit = 5.00
+        angle = 10
+
+    plt.plot(
+        x_static[offset:],
+        y_day_with_dynamic_kp[offset:, i],
+        f"{color}.-",
+        x_static[offset:],
+        y_day_without_dynamic_kp[offset:, i],
+        f"{color}x--",
+    )
+    plt.title(f"{dataset_name} day, conditions: {limit}m, {angle}°")
+    plt.xlabel("% of kept static keypoints")
+    plt.ylabel("% of images from dataset")
+    plt.legend(
+        [
+            f"{limit:2.2f}m, {angle}°, with dynamic KPs",
+            f"{limit:2.2f}m, {angle}°, without dynamic KPs",
+        ],
+        title="Conditions",
+    )
+    plt.xlim(xmin=0)
+    # plt.ylim(ymin=0)
+    plt.xticks(np.arange(0, 101, 10))
+    # plt.yticks(np.arange(0, 101, 10))
+    plt.grid(axis="both", color="0.95")
+    plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit:2.2f}m_{angle}.pdf")
+    plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit:2.2f}m_{angle}.png")
+    plt.show()
+
+print(f"{dataset_name} - DONE")

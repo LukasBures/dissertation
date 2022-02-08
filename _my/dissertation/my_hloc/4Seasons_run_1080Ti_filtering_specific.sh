@@ -40,7 +40,8 @@ static_step=5
 dynamic_from=0
 dynamic_to=100
 dynamic_step=100
-folder_name="$used_dataset"'-'"$(date +%Y.%m.%d_%H.%M.%S)"
+# folder_name="$used_dataset"'-'"$(date +%Y.%m.%d_%H.%M.%S)"
+folder_name="4Seasons-2022.02.07_12.04.32"
 mkdir -p "$output_root_folder"/"$folder_name"/code
 cp $pipeline "$output_root_folder"/"$folder_name"/code
 cp $configs "$output_root_folder"/"$folder_name"/code
@@ -51,11 +52,11 @@ cp $this_file_name "$output_root_folder"/"$folder_name"/code
 cd "$output_root_folder"/"$folder_name"/ || exit 1
 
 # VALIDATION
-time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_validation  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_validation.log
-time python "$output_root_folder"/"$folder_name"/code/pipeline_filtering.py --sequence "validation" --dataset $dataset_folder --outputs $outputs_folder_validation --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu --static_from $static_from --static_to $static_to --static_step $static_step --dynamic_from $dynamic_from --dynamic_to $dynamic_to --dynamic_step $dynamic_step --segmentations_file $segmentations_file_validation --segmentations_reference_file $segmentations_file_reference 2>&1 | tee mylog_validation.log
+# time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_validation  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_validation.log
+# time python "$output_root_folder"/"$folder_name"/code/pipeline_filtering.py --sequence "validation" --dataset $dataset_folder --outputs $outputs_folder_validation --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu --static_from $static_from --static_to $static_to --static_step $static_step --dynamic_from $dynamic_from --dynamic_to $dynamic_to --dynamic_step $dynamic_step --segmentations_file $segmentations_file_validation --segmentations_reference_file $segmentations_file_reference 2>&1 | tee mylog_validation.log
 
 # TRAIN
-time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_training  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_train.log
+# time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_training  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_train.log
 time python "$output_root_folder"/"$folder_name"/code/pipeline_filtering.py --sequence "training" --dataset $dataset_folder --outputs $outputs_folder_training --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu --static_from $static_from --static_to $static_to --static_step $static_step --dynamic_from $dynamic_from --dynamic_to $dynamic_to --dynamic_step $dynamic_step --segmentations_file $segmentations_file_training --segmentations_reference_file $segmentations_file_reference 2>&1 | tee mylog_training.log
 
 # TEST 0

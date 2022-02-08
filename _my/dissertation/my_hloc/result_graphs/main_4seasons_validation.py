@@ -3,7 +3,7 @@ from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
 
-dataset_name: str = "4Seasons - validation"
+dataset_name: str = "4Seasons validation"
 
 results_without_dynamic_kp_run1: List[dict] = [
     {
@@ -476,6 +476,7 @@ x_static = np.array(x_static)
 y_day_with_dynamic_kp = np.array(y_day_with_dynamic_kp)
 y_day_without_dynamic_kp = np.array(y_day_without_dynamic_kp)
 
+# MAIN PLOT
 offset: int = 1
 plt.plot(
     x_static[offset:],
@@ -516,8 +517,47 @@ plt.ylim(ymin=0)
 plt.xticks(np.arange(0, 101, 10))
 plt.yticks(np.arange(0, 101, 10))
 plt.grid(axis="both", color="0.95")
-plt.savefig(f"{dataset_name}.pdf")
-plt.savefig(f"{dataset_name}.png")
+plt.savefig(f"plots/{dataset_name.replace(' ', '_')}.pdf")
+plt.savefig(f"plots/{dataset_name.replace(' ', '_')}.png")
 plt.show()
 
-print("DONE")
+# INDIVIDUAL PLOTS
+for i in range(0, 3):
+    if i == 0:
+        color = "r"
+        limit = 0.1
+    elif i == 1:
+        color = "g"
+        limit = 0.2
+    else:
+        color = "b"
+        limit = 0.5
+
+    plt.plot(
+        x_static[offset:],
+        y_day_with_dynamic_kp[offset:, i],
+        f"{color}.-",
+        x_static[offset:],
+        y_day_without_dynamic_kp[offset:, i],
+        f"{color}x--",
+    )
+    plt.title(f"{dataset_name}, {limit}m")
+    plt.xlabel("% of kept static keypoints")
+    plt.ylabel("% of images from dataset")
+    plt.legend(
+        [
+            f"{limit}m, with dynamic KPs",
+            f"{limit}m, without dynamic KPs",
+        ],
+        title="Conditions",
+    )
+    plt.xlim(xmin=0)
+    # plt.ylim(ymin=0)
+    plt.xticks(np.arange(0, 101, 10))
+    # plt.yticks(np.arange(0, 101, 10))
+    plt.grid(axis="both", color="0.95")
+    plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit}m.pdf")
+    plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit}m.png")
+    plt.show()
+
+print(f"{dataset_name} - DONE")
