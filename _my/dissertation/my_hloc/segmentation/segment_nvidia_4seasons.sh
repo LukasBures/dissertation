@@ -103,7 +103,7 @@ DATASET_NAME="4Seasons_training"
 echo "Starting creating h5 file plus grouping segmentations ..."
 cd /home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/ || exit 1
 # python segment.py --dataset_name $DATASET_NAME --path_roots $PATH_ROOT_CAM0 $PATH_ROOT_CAM1 $REFERENCE_PATH_ROOT_CAM0 $REFERENCE_PATH_ROOT_CAM1 --destination_folder $DESTINATION_FOLDER --segmentation_classes $HUMAN $VEHICLE
-python segment.py --dataset_name $DATASET_NAME --path_roots $PATH_ROOT_CAM0 $PATH_ROOT_CAM1 --destination_folder $DESTINATION_FOLDER --segmentation_classes $HUMAN $VEHICLE
+# python segment.py --dataset_name $DATASET_NAME --path_roots $PATH_ROOT_CAM0 $PATH_ROOT_CAM1 --destination_folder $DESTINATION_FOLDER --segmentation_classes $HUMAN $VEHICLE
 echo "DONE saved to h5 ..."
 echo "-----------------------------------------------"
 echo ""
@@ -137,6 +137,7 @@ DATASET_NAME="4Seasons_test0"
 echo "Starting creating h5 file plus grouping segmentations ..."
 cd /home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/ || exit 1
 # python segment.py --dataset_name $DATASET_NAME --path_roots $PATH_ROOT_CAM0 $PATH_ROOT_CAM1 $REFERENCE_PATH_ROOT_CAM0 $REFERENCE_PATH_ROOT_CAM1 --destination_folder $DESTINATION_FOLDER --segmentation_classes $HUMAN $VEHICLE
+python segment.py --dataset_name $DATASET_NAME --path_roots $PATH_ROOT_CAM0 $PATH_ROOT_CAM1 --destination_folder $DESTINATION_FOLDER --segmentation_classes $HUMAN $VEHICLE
 echo "DONE saved to h5 ..."
 echo "-----------------------------------------------"
 echo ""
@@ -170,6 +171,7 @@ DATASET_NAME="4Seasons_test1"
 echo "Starting creating h5 file plus grouping segmentations ..."
 cd /home/lukas/PycharmProjects/dissertation/_my/dissertation/my_hloc/segmentation/ || exit 1
 # python segment.py --dataset_name $DATASET_NAME --path_roots $PATH_ROOT_CAM0 $PATH_ROOT_CAM1 $REFERENCE_PATH_ROOT_CAM0 $REFERENCE_PATH_ROOT_CAM1 --destination_folder $DESTINATION_FOLDER --segmentation_classes $HUMAN $VEHICLE
+python segment.py --dataset_name $DATASET_NAME --path_roots $PATH_ROOT_CAM0 $PATH_ROOT_CAM1 --destination_folder $DESTINATION_FOLDER --segmentation_classes $HUMAN $VEHICLE
 echo "DONE saved to h5 ..."
 echo "-----------------------------------------------"
 echo ""
