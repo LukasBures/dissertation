@@ -2,16 +2,13 @@ from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
+from pandas import DataFrame
 
+run: int = 1
 dataset_name: str = "Aachen v1"
+print(f"\n{dataset_name} - EXPERIMENT RUN {run}\n")
 
 results_without_dynamic_kp_run1: List[dict] = [
-    {
-        "static_percentage": 0,
-        "dynamic_percentage": 0,
-        "day": "0.0 / 0.0 / 0.0",
-        "night": "0.0 / 0.0 / 0.0",
-    },
     {
         "static_percentage": 5,
         "dynamic_percentage": 0,
@@ -134,13 +131,6 @@ results_without_dynamic_kp_run1: List[dict] = [
     },
 ]
 results_with_dynamic_kp_run1: List[dict] = [
-    # TODO: 0 static, 100 dynamic
-    {
-        "static_percentage": 0,
-        "dynamic_percentage": 100,
-        "day": "0.0 / 0.0 / 0.0",
-        "night": "0.0 / 0.0 / 0.0",
-    },
     {
         "static_percentage": 5,
         "dynamic_percentage": 100,
@@ -264,12 +254,6 @@ results_with_dynamic_kp_run1: List[dict] = [
 ]
 results_without_dynamic_kp_run2: List[dict] = [
     {
-        "static_percentage": 0,
-        "dynamic_percentage": 0,
-        "day": "0.0 / 0.0 / 0.0",
-        "night": "0.0 / 0.0 / 0.0",
-    },
-    {
         "static_percentage": 5,
         "dynamic_percentage": 0,
         "day": "61.2 / 72.3 / 81.8",
@@ -391,13 +375,6 @@ results_without_dynamic_kp_run2: List[dict] = [
     },
 ]
 results_with_dynamic_kp_run2: List[dict] = [
-    # TODO: 0 static, 100 dynamic
-    {
-        "static_percentage": 0,
-        "dynamic_percentage": 100,
-        "day": "0.0 / 0.0 / 0.0",
-        "night": "0.0 / 0.0 / 0.0",
-    },
     {
         "static_percentage": 5,
         "dynamic_percentage": 100,
@@ -519,9 +496,506 @@ results_with_dynamic_kp_run2: List[dict] = [
         "night": "83.7 / 91.8 / 100.0",
     },
 ]
+results_without_dynamic_kp_run3: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+]
+results_with_dynamic_kp_run3: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+]
+results_without_dynamic_kp_run4: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 0,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+]
+results_with_dynamic_kp_run4: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 100,
+        "day": "0.0 / 0.0 / 0.0",
+        "night": "0.0 / 0.0 / 0.0",
+    },
+]
 
-results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run2
-results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run2
+if run == 1:
+    results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run1
+    results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run1
+elif run == 2:
+    results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run2
+    results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run2
+elif run == 3:
+    results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run3
+    results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run3
+else:
+    raise Exception(f"Unknown experiment run (run = {run}).")
 
 # Preprocessing the data.
 for data in [results_without_dynamic_kp, results_with_dynamic_kp]:
@@ -543,11 +1017,28 @@ datasets: List[dict] = [
     },
 ]
 
+# Data to pd.DataFrame
+data_for_print: dict = {
+    "static %": list(),
+    "dynamic %": list(),
+    "day, 0.25m, 2°": list(),
+    "day, 0.50m, 5°": list(),
+    "day, 5.00m, 10°": list(),
+}
+for data in [results_without_dynamic_kp, results_with_dynamic_kp]:
+    for d in data:
+        data_for_print["static %"].append(d["static_percentage"])
+        data_for_print["dynamic %"].append(d["dynamic_percentage"])
+        data_for_print["day, 0.25m, 2°"].append(d["day"][0])
+        data_for_print["day, 0.50m, 5°"].append(d["day"][1])
+        data_for_print["day, 5.00m, 10°"].append(d["day"][2])
+
+df: DataFrame = DataFrame(data=data_for_print)
+print(df)
 
 x_static: list = list()
 y_day_with_dynamic_kp: list = list()
 y_day_without_dynamic_kp: list = list()
-
 for items in zip(results_without_dynamic_kp, results_with_dynamic_kp):
     r_without_dynamic_kp = items[0]
     r_with_dynamic_kp = items[1]
@@ -564,7 +1055,7 @@ y_day_with_dynamic_kp = np.array(y_day_with_dynamic_kp)
 y_day_without_dynamic_kp = np.array(y_day_without_dynamic_kp)
 
 # MAIN PLOT
-offset: int = 1
+offset: int = 0
 plt.plot(
     x_static[offset:],
     y_day_with_dynamic_kp[offset:, 0],
