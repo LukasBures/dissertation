@@ -50,20 +50,36 @@ cp $this_file_name "$output_root_folder"/"$folder_name"/code
 cd "$output_root_folder"/"$folder_name"/ || exit 1
 
 # VALIDATION
+cd "$output_root_folder"/"$folder_name"/ || exit 1
 time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_validation  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_validation.log
 time python "$output_root_folder"/"$folder_name"/code/pipeline_filtering.py --sequence "validation" --dataset $dataset_folder --outputs $outputs_folder_validation --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu --static_from $static_from --static_to $static_to --static_step $static_step --dynamic_from $dynamic_from --dynamic_to $dynamic_to --dynamic_step $dynamic_step --segmentations_file $segmentations_file_validation 2>&1 | tee mylog_validation.log
+cd "$output_root_folder"/"$folder_name"/"$outputs_folder_validation" || exit 1
+rm *.pkl
+rm *.h5
 
 # TRAIN
+cd "$output_root_folder"/"$folder_name"/ || exit 1
 time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_training  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_train.log
 time python "$output_root_folder"/"$folder_name"/code/pipeline_filtering.py --sequence "training" --dataset $dataset_folder --outputs $outputs_folder_training --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu --static_from $static_from --static_to $static_to --static_step $static_step --dynamic_from $dynamic_from --dynamic_to $dynamic_to --dynamic_step $dynamic_step --segmentations_file $segmentations_file_training 2>&1 | tee mylog_training.log
+cd "$output_root_folder"/"$folder_name"/"$outputs_folder_training" || exit 1
+rm *.pkl
+rm *.h5
 
 # TEST 0
+cd "$output_root_folder"/"$folder_name"/ || exit 1
 time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_0  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_test0.log
 time python "$output_root_folder"/"$folder_name"/code/pipeline_filtering.py --sequence "test0" --dataset $dataset_folder --outputs $outputs_folder_0 --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu --static_from $static_from --static_to $static_to --static_step $static_step --dynamic_from $dynamic_from --dynamic_to $dynamic_to --dynamic_step $dynamic_step --segmentations_file $segmentations_file_test0 2>&1 | tee mylog_test0.log
+cd "$output_root_folder"/"$folder_name"/"$outputs_folder_0" || exit 1
+rm *.pkl
+rm *.h5
 
 # TEST 1
+cd "$output_root_folder"/"$folder_name"/ || exit 1
 time python "$output_root_folder"/"$folder_name"/code/prepare_reference.py --dataset $dataset_folder --outputs $outputs_folder_1  --num_ref $num_ref --feature_conf $feature_conf --matcher_conf $matcher_conf 2>&1 | tee mylog_reference_test1.log
 time python "$output_root_folder"/"$folder_name"/code/pipeline_filtering.py --sequence "test1" --dataset $dataset_folder --outputs $outputs_folder_1 --num_loc $num_loc --feature_conf $feature_conf --matcher_conf $matcher_conf --gpu_number $selected_gpu --static_from $static_from --static_to $static_to --static_step $static_step --dynamic_from $dynamic_from --dynamic_to $dynamic_to --dynamic_step $dynamic_step --segmentations_file $segmentations_file_test1 2>&1 | tee mylog_test1.log
+cd "$output_root_folder"/"$folder_name"/"$outputs_folder_1" || exit 1
+rm *.pkl
+rm *.h5
 
 cd "$project_folder" || exit 1
 
