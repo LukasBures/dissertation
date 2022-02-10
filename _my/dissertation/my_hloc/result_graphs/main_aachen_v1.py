@@ -4,10 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pandas import DataFrame
 
-run: int = 1
+run: int = 100
 dataset_name: str = "Aachen v1"
 print(f"\n{dataset_name} - EXPERIMENT RUN {run}\n")
 
+# aachen-2022.01.19_23.19.22
 results_without_dynamic_kp_run1: List[dict] = [
     {
         "static_percentage": 5,
@@ -252,6 +253,8 @@ results_with_dynamic_kp_run1: List[dict] = [
         "night": "84.7 / 89.8 / 100.0",
     },
 ]
+
+# aachen-2022.01.26_18.04.03
 results_without_dynamic_kp_run2: List[dict] = [
     {
         "static_percentage": 5,
@@ -496,6 +499,8 @@ results_with_dynamic_kp_run2: List[dict] = [
         "night": "83.7 / 91.8 / 100.0",
     },
 ]
+
+# aachen-2022.02.09_20.43.08
 results_without_dynamic_kp_run3: List[dict] = [
     {
         "static_percentage": 5,
@@ -740,6 +745,254 @@ results_with_dynamic_kp_run3: List[dict] = [
         "night": "0.0 / 0.0 / 0.0",
     },
 ]
+
+# aachen-2022.02.05_16.35.22
+results_without_dynamic_kp_run_human: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 0,
+        "day": "61.8 / 71.4 / 80.3",
+        "night": "26.5 / 39.8 / 49.0",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 0,
+        "day": "76.5 / 84.8 / 91.7",
+        "night": "64.3 / 73.5 / 88.8",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 0,
+        "day": "81.6 / 90.0 / 94.9",
+        "night": "67.3 / 82.7 / 95.9",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 0,
+        "day": "82.0 / 90.9 / 96.4",
+        "night": "74.5 / 85.7 / 96.9",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 0,
+        "day": "83.3 / 91.1 / 96.6",
+        "night": "78.6 / 87.8 / 100.0	",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 0,
+        "day": "84.5 / 92.0 / 97.1",
+        "night": "81.6 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 0,
+        "day": "84.3 / 92.5 / 97.1",
+        "night": "81.6 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 0,
+        "day": "85.2 / 93.2 / 97.5",
+        "night": "83.7 / 89.8 / 99.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 0,
+        "day": "85.4 / 93.3 / 97.7",
+        "night": "83.7 / 88.8 / 100.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 0,
+        "day": "84.6 / 93.2 / 97.7",
+        "night": "81.6 / 89.8 / 100.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 0,
+        "day": "85.1 / 93.1 / 97.7",
+        "night": "83.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 0,
+        "day": "85.7 / 92.7 / 97.7",
+        "night": "78.6 / 92.9 / 100.0",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 0,
+        "day": "86.2 / 93.9 / 97.7",
+        "night": "82.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 0,
+        "day": "85.8 / 94.2 / 98.2	",
+        "night": "82.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 0,
+        "day": "86.3 / 94.4 / 98.2",
+        "night": "83.7 / 92.9 / 100.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 0,
+        "day": "87.0 / 93.8 / 98.1",
+        "night": "83.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 0,
+        "day": "86.4 / 94.7 / 98.2",
+        "night": "83.7 / 91.8 / 100.0	",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 0,
+        "day": "86.3 / 94.8 / 98.3",
+        "night": "84.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 0,
+        "day": "87.7 / 95.0 / 98.3",
+        "night": "84.7 / 89.8 / 100.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 0,
+        "day": "86.9 / 95.3 / 98.3",
+        "night": "83.7 / 90.8 / 100.0",
+    },
+]
+results_with_dynamic_kp_run_human: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 100,
+        "day": "61.9 / 72.7 / 82.6",
+        "night": "25.5 / 35.7 / 53.1",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 100,
+        "day": "75.1 / 85.0 / 92.4",
+        "night": "62.2 / 77.6 / 86.7",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 100,
+        "day": "80.5 / 89.4 / 95.6	",
+        "night": "67.3 / 78.6 / 96.9",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 100,
+        "day": "81.1 / 89.9 / 96.7",
+        "night": "73.5 / 84.7 / 98.0",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 100,
+        "day": "84.2 / 91.5 / 96.8",
+        "night": "75.5 / 88.8 / 100.0",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 100,
+        "day": "83.0 / 91.7 / 97.0",
+        "night": "78.6 / 88.8 / 100.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 100,
+        "day": "84.5 / 91.7 / 97.1",
+        "night": "80.6 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 100,
+        "day": "85.6 / 92.6 / 97.2	",
+        "night": "80.6 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 100,
+        "day": "86.0 / 93.8 / 97.3",
+        "night": "82.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 100,
+        "day": "85.3 / 93.7 / 97.8",
+        "night": "81.6 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 100,
+        "day": "85.1 / 93.6 / 97.8",
+        "night": "81.6 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 100,
+        "day": "86.3 / 94.3 / 98.1",
+        "night": "82.7 / 87.8 / 100.0",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 100,
+        "day": "85.6 / 93.7 / 97.8",
+        "night": "81.6 / 88.8 / 100.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 100,
+        "day": "85.9 / 94.2 / 98.1",
+        "night": "85.7 / 89.8 / 100.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 100,
+        "day": "85.7 / 93.7 / 97.8",
+        "night": "84.7 / 90.8 / 100.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 100,
+        "day": "86.8 / 94.5 / 98.1",
+        "night": "81.6 / 89.8 / 100.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 100,
+        "day": "86.0 / 94.8 / 98.1",
+        "night": "84.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 100,
+        "day": "86.9 / 94.1 / 98.2	",
+        "night": "84.7 / 92.9 / 100.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 100,
+        "day": "86.9 / 94.3 / 98.2",
+        "night": "86.7 / 91.8 / 100.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 100,
+        "day": "86.5 / 94.3 / 98.3",
+        "night": "83.7 / 91.8 / 100.0",
+    },
+]
+
+#
 results_without_dynamic_kp_run4: List[dict] = [
     {
         "static_percentage": 5,
@@ -994,6 +1247,11 @@ elif run == 2:
 elif run == 3:
     results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run3
     results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run3
+elif run == 100:
+    dataset_name: str = "Aachen v1 HUMAN ONLY"
+    print("WARNING: Only human segmentation group of classes!\n")
+    results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run_human
+    results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run_human
 else:
     raise Exception(f"Unknown experiment run (run = {run}).")
 

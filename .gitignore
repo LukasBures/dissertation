@@ -1,3 +1,10 @@
+/_my/dissertation/my_hloc/segmentation/4Seasons_reference_cam0/
+/_my/dissertation/my_hloc/segmentation/4Seasons_reference_cam1/
+/_my/dissertation/my_hloc/segmentation/4Seasons_training_cam0/
+/_my/dissertation/my_hloc/segmentation/ms_coco/
+
+
+/pycolmap_source/
 /_my/dissertation/my_SuperPoint/notebooks/.ipynb_checkpoints/
 **/tst*.py
 .idea
