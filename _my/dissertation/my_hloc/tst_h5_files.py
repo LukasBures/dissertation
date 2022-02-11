@@ -2,6 +2,7 @@ from pathlib import Path
 
 import h5py
 from hloc import triangulation
+import cv2
 
 # fl = "/data512/dissertation_results/4Seasons-2022.02.02_09.14.49/results_validation/feats-superpoint-n1024-r1024.h5"
 new_h5_file_path = (
@@ -17,12 +18,28 @@ nnn = "/data512/dissertation_results/aachen-2022.02.05_16.35.22/results/global-f
 
 reference = "/data512/dissertation_results/4Seasons/segment_nvidia_4Seasons_reference_v01.h5"
 validation = "/data512/dissertation_results/4Seasons/segment_nvidia_4Seasons_validation_v01.h5"
+aachen = "/data512/dissertation_results/aachen_all_v1/segment_nvidia_v01.h5"
 
 with h5py.File(str(reference), "r") as ref:
     with h5py.File(str(validation), "r") as val:
-        print(val.keys())
-        print(ref.keys())
-        print("!")
+        with h5py.File(str(aachen), "r") as aach:
+            print(val.keys())
+            print(ref.keys())
+            # print(aach.keys())
+
+            img_idx = "1583233677178885120"
+            mask = val["cam0"][img_idx]["human"].__array__()
+            cv2.imwrite(f"{img_idx}.jpg", mask)
+
+            img_idx = "1816"
+            human_mask = aach[img_idx]["human"].__array__()
+            vehicle_mask = aach[img_idx]["vehicle"].__array__()
+            # cv2.imwrite(f"{img_idx}_human.jpg", human_mask)
+            # cv2.imwrite(f"{img_idx}_vehicle.jpg", vehicle_mask)
+
+            # cv2.imshow("mask", mask)
+            # cv2.waitKey(0)
+            print("!")
 
 
 
