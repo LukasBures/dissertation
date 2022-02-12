@@ -30,8 +30,8 @@ outputs_folder_validation=results_validation
 
 # EXPERIMENTS:
 # -----------------------------------------------------------------------------
-feature_conf="superpoint_fast"
-matcher_conf="superglue_fast"
+feature_conf="superpoint_4seasons"
+matcher_conf="superglue_4seasons"
 num_ref=20
 num_loc=10
 static_from=5

@@ -29,6 +29,19 @@ feature_configs = {
             "resize_max": 1024,
         },
     },
+    "superpoint_4seasons": {
+        'output': 'feats-superpoint-n4096-rmax1600',
+        'model': {
+            'name': 'superpoint',
+            'nms_radius': 3,
+            'max_keypoints': 4096,
+        },
+        'preprocessing': {
+            'grayscale': True,
+            'resize_max': 1600,
+            'resize_force': True,
+        },
+    },
     "superpoint_aachen": {
         "output": "feats-superpoint-n4096-r1024",
         "model": {
@@ -110,6 +123,14 @@ matcher_configs = {
             "name": "superglue",
             "weights": "outdoor",
             "sinkhorn_iterations": 5,
+        },
+    },
+    "superglue_4seasons": {
+        "output": "matches-superglue",
+        "model": {
+            "name": "superglue",
+            "weights": "outdoor",
+            "sinkhorn_iterations": 50,
         },
     },
     "superglue": {
