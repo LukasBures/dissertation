@@ -214,6 +214,58 @@ class FeatureFilter:
         print(f"Filter summary info: {summary_info}.")
         return summary_info
 
+    def keypoint_statistics(self, segmentation_h5_file_path: str) -> Optional[dict]:
+        """
+        Calculate keypoint statistics.
+
+        :param segmentation_h5_file_path: Path to the h5 file with segmentations.
+        :return: Optional dictionary with summary info.
+        """
+        print("Starting feature filtering processing ...")
+
+        # Variable initialization.
+        total_static_kp_count: int = 0
+        total_dynamic_kp_count: int = 0
+        kept_static_kp_count: int = 0
+        kept_dynamic_kp_count: int = 0
+
+        with h5py.File(self._h5_file_path, "r") as source_file:
+            with h5py.File(str(segmentation_h5_file_path), "r") as segmentation_file:
+                print(f"Processing {len(self._names)} images.")
+                for idx, image_name in enumerate(self._names):
+                    keypoints = source_file[image_name]["keypoints"].__array__()
+                    image_size = source_file[image_name]["image_size"].__array__()
+
+                    # If it is db file - ignore it.
+                    if "db" == image_name.split("/")[0]:
+                        continue
+
+                    if "night" in image_name:
+                        continue
+
+                    img_name: str = image_name.split("/")[-1].split(".")[0]
+                    segmentations: list = list()
+                    for d in self._dynamic_group_classes:
+                        segmentations.append(segmentation_file[img_name][d].__array__())
+                    dynamic, static = self._split_keypoints(
+                        keypoints=keypoints,
+                        segmentations=segmentations,
+                        image_width=image_size[0],
+                        image_height=image_size[1],
+                    )
+
+                    total_static_kp_count += len(static)
+                    total_dynamic_kp_count += len(dynamic)
+
+        summary_info: dict = {
+            "total_static_kp_count": total_static_kp_count,
+            "total_dynamic_kp_count": total_dynamic_kp_count,
+            "kept_static_kp_count": kept_static_kp_count,
+            "kept_dynamic_kp_count": kept_dynamic_kp_count,
+        }
+        print(f"Filter summary info: {summary_info}.")
+        return summary_info
+
     def filter_and_update_kp_4seasons(  # noqa: C901
         self,
         static_percentage_keep,
@@ -347,18 +399,20 @@ class FeatureFilter:
 
 
 if __name__ == "__main__":
-    input_file_path = "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/feats-superpoint-n4096-r1024.h5"
-    output_file_path = (
-        "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/test2_feats-superpoint-n4096-r1024.h5"
-    )
-    input_segmentations_file_path = "/data512/dissertation_results/aachen_all_v1/segment_nvidia_v01.h5"
+    input_file_path = "/data512/dissertation_results/aachen_v1_1-2022.02.13_22.09.26/results/feats-superpoint-n1024-r1024.h5"
+    # output_file_path = "/data512/dissertation_results/aachen-2021.12.14_18.04.18/results/test2_feats-superpoint-n4096-r1024.h5"
+    output_file_path = ""
+    input_segmentations_file_path = "/data512/dissertation_results/aachen_all_v1_1/segment_nvidia_v01.h5"
     ff = FeatureFilter(
         h5_file_path=input_file_path,
         new_h5_file_path=output_file_path,
     )
-    ff.filter_and_update_kp(
-        static_percentage_keep=50,
-        dynamic_percentage_keep=100,
-        segmentation_h5_file_path=input_segmentations_file_path,
-    )
+    # ff.filter_and_update_kp(
+    #     static_percentage_keep=50,
+    #     dynamic_percentage_keep=100,
+    #    segmentation_h5_file_path=input_segmentations_file_path,
+    # )
+
+    ff.keypoint_statistics(segmentation_h5_file_path=input_segmentations_file_path)
+
     print("DONE feature_filter.py")
