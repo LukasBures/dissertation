@@ -3,7 +3,7 @@ from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
 
-run: int = 3
+run: int = 4
 dataset_name: str = "4Seasons training"
 print(f"\n{dataset_name} - EXPERIMENT RUN {run}\n")
 
@@ -626,6 +626,418 @@ results_with_dynamic_kp_run3: List[dict] = [
     },
 ]
 
+# 4Seasons-2022.02.12_15.28.29 - Sinkhorn iteration = 50
+results_without_dynamic_kp_run4: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 0,
+        "results": "45.801% /  70.214% /  86.020%",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 0,
+        "results": "76.474% /  94.262% /  98.070%",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 0,
+        "results": "83.985% /  96.922% /  99.374%",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 0,
+        "results": "86.385% /  97.600% /  99.948%",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 0,
+        "results": "90.089% /  99.113% /  99.896%",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 0,
+        "results": "90.245% /  98.748% /  99.948%",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 0,
+        "results": "91.132% /  99.478% /  99.948%",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 0,
+        "results": "91.706% /  99.374% / 100.000%",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 0,
+        "results": "92.280% /  99.322% / 100.000%",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 0,
+        "results": "92.436% /  99.531% / 100.000%",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 0,
+        "results": "92.384% /  99.531% /  99.948%",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 0,
+        "results": "93.219% /  99.478% / 100.000%",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 0,
+        "results": "93.323% /  99.531% / 100.000%",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 0,
+        "results": "92.906% /  99.478% / 100.000%",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 0,
+        "results": "93.010% /  99.687% / 100.000%",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 0,
+        "results": "93.375% /  99.791% / 100.000%",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 0,
+        "results": "93.219% /  99.791% / 100.000%",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 0,
+        "results": "93.532% /  99.687% / 100.000%",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 0,
+        "results": "93.584% /  99.791% / 100.000%",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 0,
+        "results": "93.427% /  99.844% / 100.000%",
+    },
+]
+results_with_dynamic_kp_run4: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 100,
+        "results": "42.984% /  66.667% /  82.055%",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 100,
+        "results": "62.963% /  81.481% /  91.132%",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 100,
+        "results": "70.631% /  85.811% /  94.158%",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 100,
+        "results": "76.995% /  89.671% /  96.192%",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 100,
+        "results": "80.021% /  91.341% /  96.974%",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 100,
+        "results": "80.647% /  92.540% /  97.131%",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 100,
+        "results": "82.890% /  93.636% /  97.757%",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 100,
+        "results": "84.403% /  95.357% /  97.757%",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 100,
+        "results": "85.237% /  95.305% /  97.809%",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 100,
+        "results": "86.698% /  95.983% /  97.966%",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 100,
+        "results": "87.376% /  96.140% /  97.966%",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 100,
+        "results": "87.480% /  96.505% /  98.122%",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 100,
+        "results": "88.732% /  96.661% /  98.122%",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 100,
+        "results": "89.671% /  97.287% /  98.383%",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 100,
+        "results": "89.619% /  97.392% /  98.383%",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 100,
+        "results": "89.932% /  97.757% /  98.592%",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 100,
+        "results": "90.297% /  97.757% /  98.539%",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 100,
+        "results": "90.975% /  97.653% /  98.696%",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 100,
+        "results": "91.445% /  98.279% /  98.696%",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 100,
+        "results": "91.601% /  98.592% /  99.113%",
+    },
+]
+
+#
+results_without_dynamic_kp_run5: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 0,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+]
+results_with_dynamic_kp_run5: List[dict] = [
+    {
+        "static_percentage": 5,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 10,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 15,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 20,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 25,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 30,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 35,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 40,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 45,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 50,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 55,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 60,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 65,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 70,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 75,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 80,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 85,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 90,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 95,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+    {
+        "static_percentage": 100,
+        "dynamic_percentage": 100,
+        "results": "0.0 / 0.0 / 0.0",
+    },
+]
+
 if run == 1:
     results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run1
     results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run1
@@ -635,6 +1047,9 @@ elif run == 2:
 elif run == 3:
     results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run3
     results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run3
+elif run == 4:
+    results_without_dynamic_kp: List[dict] = results_without_dynamic_kp_run4
+    results_with_dynamic_kp: List[dict] = results_with_dynamic_kp_run4
 else:
     raise Exception(f"Unknown experiment run (run = {run}).")
 
