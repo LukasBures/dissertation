@@ -8,6 +8,7 @@ run: int = 1
 dataset_name: str = "Aachen v1.1"
 print(f"\n{dataset_name} - EXPERIMENT RUN {run}\n")
 
+# 2022.01.19_23.19.29
 results_without_dynamic_kp_run1: List[dict] = [
     {
         "static_percentage": 5,
@@ -252,6 +253,8 @@ results_with_dynamic_kp_run1: List[dict] = [
         "night": "74.3 / 89.0 / 98.4",
     },
 ]
+
+# 2022.01.30_10.12.19
 results_without_dynamic_kp_run2: List[dict] = [
     {
         "static_percentage": 5,
@@ -496,6 +499,8 @@ results_with_dynamic_kp_run2: List[dict] = [
         "night": "74.3 / 89.0 / 98.4",
     },
 ]
+
+# 2022.02.13_22.09.26
 results_without_dynamic_kp_run3: List[dict] = [
     {
         "static_percentage": 5,
@@ -740,6 +745,8 @@ results_with_dynamic_kp_run3: List[dict] = [
         "night": "0.0 / 0.0 / 0.0",
     },
 ]
+
+#
 results_without_dynamic_kp_run4: List[dict] = [
     {
         "static_percentage": 5,
