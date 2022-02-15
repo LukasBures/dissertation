@@ -1347,6 +1347,7 @@ plt.legend(
         "5.00m, 10°, without dynamic KPs",
     ],
     title="Conditions:",
+    loc=4,
 )
 plt.xlim(xmin=0)
 plt.ylim(ymin=0)
@@ -1389,6 +1390,7 @@ for i in range(0, 3):
             f"{limit:2.2f}m, {angle}°, without dynamic KPs",
         ],
         title="Conditions:",
+        loc=4,
     )
     plt.xlim(xmin=0)
     # plt.ylim(ymin=0)
