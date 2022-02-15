@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pandas import DataFrame
 
-run: int = 1
+run: int = 2
 dataset_name: str = "Aachen v1.1"
 print(f"\n{dataset_name} - EXPERIMENT RUN {run}\n")
 
