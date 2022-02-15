@@ -1397,7 +1397,7 @@ for i in range(0, 3):
     plt.xticks(np.arange(0, 101, 10))
     # plt.yticks(np.arange(0, 101, 10))
     plt.grid(axis="both", color="0.95")
-    plt.savefig(f"plots/{dataset_name.replace(' ', '_').replace(',', '')}_{limit:2.2f}m_{angle}_run{run}.pdf")
+    plt.savefig(f"plots/{dataset_name.replace(' ', '_').replace(',', '')}_{f'{limit:2.2f}'.replace('.','')}m_{angle}_run{run}.pdf")
     # plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit:2.2f}m_{angle}_run{run}.png")
     plt.show()
 
