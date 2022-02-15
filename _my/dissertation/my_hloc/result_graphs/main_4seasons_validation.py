@@ -2,18 +2,14 @@ from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
+from pandas import DataFrame
 
 run: int = 4
-dataset_name: str = "4Seasons validation"
+dataset_name: str = "4Seasons, validation"
 print(f"\n{dataset_name} - EXPERIMENT RUN {run}\n")
 
 # 4Seasons-2022.02.07_12.04.32
 results_without_dynamic_kp_run1: List[dict] = [
-    {
-        "static_percentage": 0,
-        "dynamic_percentage": 0,
-        "results": "0.0 / 0.0 / 0.0",
-    },
     {
         "static_percentage": 5,
         "dynamic_percentage": 0,
@@ -116,11 +112,6 @@ results_without_dynamic_kp_run1: List[dict] = [
     },
 ]
 results_with_dynamic_kp_run1: List[dict] = [
-    {
-        "static_percentage": 0,
-        "dynamic_percentage": 100,
-        "results": "0.0 / 0.0 / 0.0",
-    },
     {
         "static_percentage": 5,
         "dynamic_percentage": 100,
@@ -226,11 +217,6 @@ results_with_dynamic_kp_run1: List[dict] = [
 # 4Seasons-2022.02.08_19.36.08
 results_without_dynamic_kp_run2: List[dict] = [
     {
-        "static_percentage": 0,
-        "dynamic_percentage": 0,
-        "results": "0.0 / 0.0 / 0.0",
-    },
-    {
         "static_percentage": 5,
         "dynamic_percentage": 0,
         "results": "31.283% /  62.566% /  89.347%",
@@ -332,11 +318,6 @@ results_without_dynamic_kp_run2: List[dict] = [
     },
 ]
 results_with_dynamic_kp_run2: List[dict] = [
-    {
-        "static_percentage": 0,
-        "dynamic_percentage": 100,
-        "results": "0.0 / 0.0 / 0.0",
-    },
     {
         "static_percentage": 5,
         "dynamic_percentage": 100,
@@ -1091,6 +1072,26 @@ datasets: List[dict] = [
 ]
 
 
+# Data to pd.DataFrame
+data_for_print: dict = {
+    "static %": list(),
+    "dynamic %": list(),
+    "0.10m": list(),
+    "0.20m": list(),
+    "0.50m": list(),
+}
+for data in [results_without_dynamic_kp, results_with_dynamic_kp]:
+    for d in data:
+        data_for_print["static %"].append(d["static_percentage"])
+        data_for_print["dynamic %"].append(d["dynamic_percentage"])
+        data_for_print["0.10m"].append(d["results"][0])
+        data_for_print["0.20m"].append(d["results"][1])
+        data_for_print["0.50m"].append(d["results"][2])
+
+df: DataFrame = DataFrame(data=data_for_print)
+print(df)
+
+
 x_static: list = list()
 y_day_with_dynamic_kp: list = list()
 y_day_without_dynamic_kp: list = list()
@@ -1134,25 +1135,25 @@ plt.plot(
 )
 plt.title(f"{dataset_name}")
 plt.xlabel("% of kept static keypoints")
-plt.ylabel("% of images from dataset")
+plt.ylabel("% of successfully localized images")
 plt.legend(
     [
-        "0.1m, with dynamic KPs",
-        "0.2m, with dynamic KPs",
-        "0.5m, with dynamic KPs",
-        "0.1m, without dynamic KPs",
-        "0.2m, without dynamic KPs",
-        "0.5m, without dynamic KPs",
+        "0.10m, with dynamic KPs",
+        "0.20m, with dynamic KPs",
+        "0.50m, with dynamic KPs",
+        "0.10m, without dynamic KPs",
+        "0.20m, without dynamic KPs",
+        "0.50m, without dynamic KPs",
     ],
-    title="Conditions",
+    title="Conditions:",
 )
 plt.xlim(xmin=0)
 plt.ylim(ymin=0)
 plt.xticks(np.arange(0, 101, 10))
 plt.yticks(np.arange(0, 101, 10))
 plt.grid(axis="both", color="0.95")
-plt.savefig(f"plots/{dataset_name.replace(' ', '_')}.pdf")
-plt.savefig(f"plots/{dataset_name.replace(' ', '_')}.png")
+plt.savefig(f"plots/{dataset_name.replace(' ', '_').replace(',', '')}_run{run}.pdf")
+# plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_run{run}.png")
 plt.show()
 
 # INDIVIDUAL PLOTS
@@ -1175,23 +1176,23 @@ for i in range(0, 3):
         y_day_without_dynamic_kp[offset:, i],
         f"{color}x--",
     )
-    plt.title(f"{dataset_name}, {limit}m")
+    plt.title(f"{dataset_name}, condition: {limit:2.2f}m")
     plt.xlabel("% of kept static keypoints")
-    plt.ylabel("% of images from dataset")
+    plt.ylabel("% of successfully localized images")
     plt.legend(
         [
-            f"{limit}m, with dynamic KPs",
-            f"{limit}m, without dynamic KPs",
+            f"{limit:2.2f}m, with dynamic KPs",
+            f"{limit:2.2f}m, without dynamic KPs",
         ],
-        title="Conditions",
+        title="Conditions:",
     )
     plt.xlim(xmin=0)
     # plt.ylim(ymin=0)
     plt.xticks(np.arange(0, 101, 10))
     # plt.yticks(np.arange(0, 101, 10))
     plt.grid(axis="both", color="0.95")
-    plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit}m.pdf")
-    plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit}m.png")
+    plt.savefig(f"plots/{dataset_name.replace(' ', '_').replace(',', '')}_{limit}m_run{run}.pdf")
+    # plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit}m_run{run}.png")
     plt.show()
 
 print(f"{dataset_name} - DONE")

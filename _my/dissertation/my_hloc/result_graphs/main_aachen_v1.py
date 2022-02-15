@@ -1334,9 +1334,9 @@ plt.plot(
     y_day_without_dynamic_kp[offset:, 2],
     "bx--",
 )
-plt.title(f"{dataset_name}, day.")
+plt.title(f"{dataset_name}, day")
 plt.xlabel("% of kept static keypoints")
-plt.ylabel("% of images from dataset")
+plt.ylabel("% of successfully localized images")
 plt.legend(
     [
         "0.25m, 2°, with dynamic KPs",
@@ -1346,15 +1346,15 @@ plt.legend(
         "0.50m, 5°, without dynamic KPs",
         "5.00m, 10°, without dynamic KPs",
     ],
-    title="Conditions",
+    title="Conditions:",
 )
 plt.xlim(xmin=0)
 plt.ylim(ymin=0)
 plt.xticks(np.arange(0, 101, 10))
 plt.yticks(np.arange(0, 101, 10))
 plt.grid(axis="both", color="0.95")
-plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_day.pdf")
-plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_day.png")
+plt.savefig(f"plots/{dataset_name.replace(' ', '_').replace(',', '')}_day_run{run}.pdf")
+# plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_day_run{run}.png")
 plt.show()
 
 # INDIVIDUAL PLOTS
@@ -1380,23 +1380,23 @@ for i in range(0, 3):
         y_day_without_dynamic_kp[offset:, i],
         f"{color}x--",
     )
-    plt.title(f"{dataset_name} day, conditions: {limit}m, {angle}°")
+    plt.title(f"{dataset_name}, day, conditions: {limit:2.2f}m, {angle}°")
     plt.xlabel("% of kept static keypoints")
-    plt.ylabel("% of images from dataset")
+    plt.ylabel("% of successfully localized images")
     plt.legend(
         [
             f"{limit:2.2f}m, {angle}°, with dynamic KPs",
             f"{limit:2.2f}m, {angle}°, without dynamic KPs",
         ],
-        title="Conditions",
+        title="Conditions:",
     )
     plt.xlim(xmin=0)
     # plt.ylim(ymin=0)
     plt.xticks(np.arange(0, 101, 10))
     # plt.yticks(np.arange(0, 101, 10))
     plt.grid(axis="both", color="0.95")
-    plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit:2.2f}m_{angle}.pdf")
-    plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit:2.2f}m_{angle}.png")
+    plt.savefig(f"plots/{dataset_name.replace(' ', '_').replace(',', '')}_{limit:2.2f}m_{angle}_run{run}.pdf")
+    # plt.savefig(f"plots/{dataset_name.replace(' ', '_')}_{limit:2.2f}m_{angle}_run{run}.png")
     plt.show()
 
 print(f"{dataset_name} - DONE")
