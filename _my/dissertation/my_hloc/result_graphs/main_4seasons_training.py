@@ -1089,6 +1089,7 @@ for data in [results_without_dynamic_kp, results_with_dynamic_kp]:
         data_for_print["0.50m"].append(d["results"][2])
 
 df: DataFrame = DataFrame(data=data_for_print)
+df.to_csv(f"csv/{dataset_name.replace(' ', '_').replace(',', '')}_run{run}.csv")
 print(df)
 
 

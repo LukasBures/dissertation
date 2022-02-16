@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pandas import DataFrame
 
-run: int = 2
+run: int = 3
 dataset_name: str = "Aachen v1.1"
 print(f"\n{dataset_name} - EXPERIMENT RUN {run}\n")
 
@@ -1041,6 +1041,7 @@ for data in [results_without_dynamic_kp, results_with_dynamic_kp]:
         data_for_print["day, 5.00m, 10°"].append(d["day"][2])
 
 df: DataFrame = DataFrame(data=data_for_print)
+df.to_csv(f"csv/{dataset_name.replace(' ', '_').replace(',', '')}_day_run{run}.csv")
 print(df)
 
 x_static: list = list()
