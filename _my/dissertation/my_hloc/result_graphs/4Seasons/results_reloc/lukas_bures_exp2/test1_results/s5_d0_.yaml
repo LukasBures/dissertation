@@ -1,0 +1,13 @@
+method: s5_d0_
+recall_at_thrs1: 20.3
+recall_at_thrs2: 40.7
+recall_at_thrs3: 61.0
+test_sequence: recording_2020-04-23_19-37-00
+threshold_rot:
+- .inf
+- .inf
+- .inf
+threshold_trans:
+- 0.1
+- 0.2
+- 0.5

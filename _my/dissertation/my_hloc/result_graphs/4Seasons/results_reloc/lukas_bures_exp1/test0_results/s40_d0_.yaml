@@ -1,0 +1,13 @@
+method: s40_d0_
+recall_at_thrs1: 84.9
+recall_at_thrs2: 96.4
+recall_at_thrs3: 99.3
+test_sequence: recording_2020-03-24_17-45-31
+threshold_rot:
+- .inf
+- .inf
+- .inf
+threshold_trans:
+- 0.1
+- 0.2
+- 0.5

@@ -1,0 +1,13 @@
+method: s85_d100_
+recall_at_thrs1: 66.5
+recall_at_thrs2: 92.3
+recall_at_thrs3: 98.4
+test_sequence: recording_2020-04-23_19-37-00
+threshold_rot:
+- .inf
+- .inf
+- .inf
+threshold_trans:
+- 0.1
+- 0.2
+- 0.5
