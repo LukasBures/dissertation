@@ -1,0 +1,55 @@
+--- Aachen - day + night
+static = 913474
+dynamic = 54226
+total = 967700
+dynamic percentage = 5,60
+static percentage = 94,40
+
+--- Aachen v1.1 - day + night
+static = 3194429
+dynamic = 296338
+total = 3490767
+dynamic percentage = 8,49
+static percentage = 91,51
+
+--- Aachen - day
+static = 802431
+dynamic = 50652
+total = 853083
+dynamic percentage = 5,94
+static percentage = 94,06
+
+--- Aachen v1.1 - day
+static = 2989512
+dynamic = 291406
+total = 3280918
+dynamic percentage = 8,88
+static percentage = 91,12
+
+--- 4Seasons - training
+static = 2560160
+dynamic = 285282
+total = 2845442
+dynamic percentage = 10,03
+static percentage = 89,97
+
+--- 4Seasons - validation
+static = 1398449
+dynamic = 400868
+total = 1799317
+dynamic percentage = 22,28
+static percentage = 77,72
+
+--- 4Seasons - test0
+static = 4054606
+dynamic = 437626
+total = 4492232
+dynamic percentage = 9,74
+static percentage = 90,26
+
+--- 4Seasons - test1
+static = 2436298
+dynamic = 259880
+total = 2696178
+dynamic percentage = 9,64
+static percentage = 90,36
