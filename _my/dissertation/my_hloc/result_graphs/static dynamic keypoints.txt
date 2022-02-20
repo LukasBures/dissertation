@@ -12,7 +12,12 @@ total = 3490767
 dynamic percentage = 8,49
 static percentage = 91,51
 
+
+# count of images
+# du -a | cut -d/ -f2 | sort | uniq -c | sort -nr
+
 --- Aachen - day
+count of images = 824
 static = 802431
 dynamic = 50652
 total = 853083
@@ -20,6 +25,7 @@ dynamic percentage = 5,94
 static percentage = 94,06
 
 --- Aachen v1.1 - day
+count of images = 824
 static = 2989512
 dynamic = 291406
 total = 3280918
@@ -27,6 +33,7 @@ dynamic percentage = 8,88
 static percentage = 91,12
 
 --- 4Seasons - training
+count of images = 824
 static = 2560160
 dynamic = 285282
 total = 2845442

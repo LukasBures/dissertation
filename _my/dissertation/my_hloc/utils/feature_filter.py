@@ -226,8 +226,6 @@ class FeatureFilter:
         # Variable initialization.
         total_static_kp_count: int = 0
         total_dynamic_kp_count: int = 0
-        kept_static_kp_count: int = 0
-        kept_dynamic_kp_count: int = 0
 
         with h5py.File(self._h5_file_path, "r") as source_file:
             with h5py.File(str(segmentation_h5_file_path), "r") as segmentation_file:
@@ -257,11 +255,14 @@ class FeatureFilter:
                     total_static_kp_count += len(static)
                     total_dynamic_kp_count += len(dynamic)
 
+        total_kp_count: int = total_static_kp_count + total_dynamic_kp_count
+        percentage_static: float = float((total_static_kp_count / total_kp_count) * 100.0)
+        percentage_dynamic: float = float((total_dynamic_kp_count / total_kp_count) * 100.0)
         summary_info: dict = {
             "total_static_kp_count": total_static_kp_count,
             "total_dynamic_kp_count": total_dynamic_kp_count,
-            "kept_static_kp_count": kept_static_kp_count,
-            "kept_dynamic_kp_count": kept_dynamic_kp_count,
+            "static_kp_percentage": f"{percentage_static:2.2f}",
+            "dynamic_kp_percentage": f"{percentage_dynamic:2.2f}",
         }
         print(f"Filter summary info: {summary_info}.")
         return summary_info
