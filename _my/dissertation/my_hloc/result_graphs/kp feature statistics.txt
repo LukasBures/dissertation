@@ -1,0 +1,60 @@
+# file count
+# find ./day/ -type f | wc -l
+
+
+--- Aachen v1.1 - day
+count of images = 824
+static = 802431 * 0.9868263473 = 791,860
+dynamic = 50652 * 0.9868263473 = 49,985
+total = 791860 + 49985 = 841,845 < 843,776
+dynamic percentage = 5,94
+static percentage = 94,06
+Average count of KPs / image (static) = 791860 / 824 = 961
+Average count of KPs / image (dynamic) = 49985 / 824 = 61
+Maximum KP count utilization = 841845 / (824 * 1024) = 99.77\%
+
+
+--- 4Seasons - training
+count of images = 824 * 1024
+static = 2560160
+dynamic = 285282
+total = 2845442
+dynamic percentage = 10,03
+static percentage = 89,97
+Average count of KPs / image (static) = 2560160 / 3156 = 811
+Average count of KPs / image (dynamic) = 285282 / 3156 = 90
+Maximum KP count utilization = 2845442 / (3156 * 1024) = 88.05\%
+
+
+--- 4Seasons - validation
+static = 1398449
+dynamic = 400868
+total = 1799317
+dynamic percentage = 22,28
+static percentage = 77,72
+Average count of KPs / image (static) = 1398449 / 1994 = 701
+Average count of KPs / image (dynamic) = 400868 / 1994 = 201
+Maximum KP count utilization = 1799317 / (1994 * 1024) = 88.12\%
+
+
+--- 4Seasons - test0
+static = 4054606
+dynamic = 437626
+total = 4492232
+dynamic percentage = 9,74
+static percentage = 90,26
+Average count of KPs / image (static) = 4054606 / 5024 = 807
+Average count of KPs / image (dynamic) = 437626 / 5024 = 87
+Maximum KP count utilization = 4492232 / (5024 * 1024) = 87.32\%
+
+
+--- 4Seasons - test1
+static = 2436298
+dynamic = 259880
+total = 2696178
+dynamic percentage = 9,64
+static percentage = 90,36
+Average count of KPs / image (static) = 2436298 / 3622 = 673
+Average count of KPs / image (dynamic) = 259880 / 3622 = 72
+Maximum KP count utilization = 2696178 / (3622 * 1024) = 72.69\%
+
