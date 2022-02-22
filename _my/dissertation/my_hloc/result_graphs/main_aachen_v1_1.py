@@ -1084,19 +1084,19 @@ plt.plot(
     y_day_without_dynamic_kp[offset:, 2],
     "bx--",
 )
-plt.title(f"{dataset_name}, day")
+plt.title(f"{dataset_name}, query, day, all thresholds")
 plt.xlabel("% of kept static keypoints")
 plt.ylabel("% of successfully localized images")
 plt.legend(
     [
-        "0.25m, 2°, with dynamic KPs",
-        "0.50m, 5°, with dynamic KPs",
-        "5.00m, 10°, with dynamic KPs",
-        "0.25m, 2°, without dynamic KPs",
-        "0.50m, 5°, without dynamic KPs",
-        "5.00m, 10°, without dynamic KPs",
+        "0.25m and 2°, with dynamic KPs",
+        "0.50m and 5°, with dynamic KPs",
+        "5.00m and 10°, with dynamic KPs",
+        "0.25m and 2°, without dynamic KPs",
+        "0.50m and 5°, without dynamic KPs",
+        "5.00m and 10°, without dynamic KPs",
     ],
-    title="Conditions",
+    title="Thresholds:",
     loc=4,
 )
 plt.xlim(xmin=0)
@@ -1131,15 +1131,15 @@ for i in range(0, 3):
         y_day_without_dynamic_kp[offset:, i],
         f"{color}x--",
     )
-    plt.title(f"{dataset_name}, day, conditions: {limit:2.2f}m, {angle}°")
+    plt.title(f"{dataset_name}, query, day, threshold: {limit:2.2f}m and {angle}°")
     plt.xlabel("% of kept static keypoints")
     plt.ylabel("% of successfully localized images")
     plt.legend(
         [
-            f"{limit:2.2f}m, {angle}°, with dynamic KPs",
-            f"{limit:2.2f}m, {angle}°, without dynamic KPs",
+            f"{limit:2.2f}m and {angle}°, with dynamic KPs",
+            f"{limit:2.2f}m and {angle}°, without dynamic KPs",
         ],
-        title="Conditions:",
+        title="Threshold:",
         loc=4,
     )
     plt.xlim(xmin=0)
