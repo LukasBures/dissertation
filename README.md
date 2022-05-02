@@ -1,0 +1,1 @@
+Semantic Segmentation in Long-term Visual Localization by Lukas Bures
